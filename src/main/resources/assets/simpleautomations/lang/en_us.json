@@ -1,0 +1,9 @@
+{
+	"_comment": "Items",
+	"item.simpleautomations.silence_tonic": "Silence Tonic",
+	"item.simpleautomations.silence_tonic.tooltip": "§7(Hold §e§oshift §7for details)",
+	"item.simpleautomations.silence_tonic.tooltip_details": "Those damn noises!\n§7A little bit of potent glue and \n§7something to mask the taste \n§7should do the trick.\n§9(Shuts up mobs permanently)",
+	"item.simpleautomations.antidote": "Antidote",
+	"item.simpleautomations.antidote.tooltip": "§7(Hold §e§oshift §7for details)",
+	"item.simpleautomations.antidote.tooltip_details": "The universal problem solver.\n§7Highly concentrated alcohol and \n§7some spider eyes, which you really \n§7do not want to skip. Unless you \n§7are okay with the imbiber going blind. \n§7Tastier than it sounds!\n§9(Clears tonic effects)"
+}

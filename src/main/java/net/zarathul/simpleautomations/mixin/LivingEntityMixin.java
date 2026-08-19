@@ -1,10 +1,9 @@
 package net.zarathul.simpleautomations.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.happyghast.HappyGhast;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.zarathul.simpleautomations.mobs.IGaggableMob;
@@ -18,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Debug(export = true)
 @Mixin(LivingEntity.class)
-public class LivingEntityMixin implements IGaggableMob
+public abstract class LivingEntityMixin implements IGaggableMob
 {
 	@Unique
 	private boolean simpleautomations_isGagged = false;
@@ -32,9 +31,10 @@ public class LivingEntityMixin implements IGaggableMob
 	@Inject(method = "makeSound", at = @At("HEAD"), cancellable = true)
 	public void simpleautomations_makeSoundInject(CallbackInfo info, @Local final @Nullable SoundEvent sound)
 	{
-		// TODO: Remove debug output
-//		System.out.println("original:" + ((sound != null) ? sound.toString() : "") + " gagged: " + simpleautomations_isGagged);
-		if (simpleautomations_isGagged) info.cancel();
+		// isGagged should never be true on players, because the SilenceTonic checks if it is used on a player.
+		// Also, Player and derived classes don't seem to use makeSound(). Still check for extra safety.
+		boolean isPlayer = ((Object)this) instanceof Player;
+		if (!isPlayer && simpleautomations_isGagged) info.cancel();
 	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At("TAIL"))

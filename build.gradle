@@ -9,7 +9,7 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-    //implementation "net.zarathul:simplemodslib:${project.simplemodslib_version}"
+    implementation "net.zarathul:simplemodslib:${project.simplemodslib_version}"
 }
 
 processResources {
@@ -22,6 +22,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
 	it.options.release = 25
 }
 

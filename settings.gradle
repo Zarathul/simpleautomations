@@ -11,8 +11,8 @@ pluginManagement {
 // Should match your modid
 rootProject.name = 'simpleautomations'
 
-//includeBuild("libs/simplemodslib") {
-//    dependencySubstitution {
-//        substitute module("net.zarathul:simplemodslib") using project(":")
-//    }
-//}
+includeBuild("libs/simplemodslib") {
+    dependencySubstitution {
+        substitute module("net.zarathul:simplemodslib") using project(":")
+    }
+}

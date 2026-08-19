@@ -1,0 +1,9 @@
+{
+	"_comment": "Items",
+	"item.simpleautomations.silence_tonic": "Tonikum der Stille",
+	"item.simpleautomations.silence_tonic.tooltip": "§7(§e§oUmschalten §7gedrückt halten für Details)",
+	"item.simpleautomations.silence_tonic.tooltip_details": "Dieser verdammte Lärm!\n§7Ein wenig starken Kleber und etwas \n§7um dem Geschmack zu überdecken \n§7sollte das gewünschte Ergebnis \n§7herbeiführen.\n§9(Lässt Mobs permanent verstummen)",
+	"item.simpleautomations.antidote": "Gegenmittel",
+	"item.simpleautomations.antidote.tooltip": "§7(§e§oUmschalten §7gedrückt halten für Details)",
+	"item.simpleautomations.antidote.tooltip_details": "Der universelle Problemlöser.\n§7Hochkonzentrierter Alkohol und \n§7ein paar Spinnenaugen, die man \n§7wirklich nicht weglassen sollte. \n§7Außer man findet es okay, daß \n§7der Trinkende erblindet.\n§7Leckerer als es sich anhört!\n§9(Entfernt Tonikum Effekte)"
+}
