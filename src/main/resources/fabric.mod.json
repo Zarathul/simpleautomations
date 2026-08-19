@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "simpleautomations",
+	"version": "${version}",
+	"name": "simpleautomations",
+	"description": "Automation and MORE!",
+	"authors": [
+		"Zarathul"
+	],
+	"contact": {
+		"homepage": "https://github.com/Zarathul/simpleautomations_fabric",
+		"sources": "https://github.com/Zarathul/simpleautomations_fabric"
+	},
+	"license": "MIT",
+	"icon": "assets/simpleautomations/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.zarathul.simpleautomations.Simpleautomations"
+		],
+		"client": [
+			"net.zarathul.simpleautomations.SimpleautomationsClient"
+		]
+	},
+	"mixins": [
+		"simpleautomations.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*",
+		"simplemodslib": ">=1.0.0"
+	}
+}

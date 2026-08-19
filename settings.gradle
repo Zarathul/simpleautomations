@@ -1,0 +1,18 @@
+pluginManagement {
+	repositories {
+		maven {
+			name = 'Fabric'
+			url = 'https://maven.fabricmc.net/'
+		}
+		gradlePluginPortal()
+	}
+}
+
+// Should match your modid
+rootProject.name = 'simpleautomations'
+
+//includeBuild("libs/simplemodslib") {
+//    dependencySubstitution {
+//        substitute module("net.zarathul:simplemodslib") using project(":")
+//    }
+//}
