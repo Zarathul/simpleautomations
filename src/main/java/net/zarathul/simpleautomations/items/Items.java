@@ -18,11 +18,11 @@ public class Items
 {
 	public static final SilenceTonicItem silenceTonicItem;
 	public static final String SILENCE_TONIC_NAME = "silence_tonic";
-	public static final Identifier SILENCE_TONIC_ID = Simpleautomations.id(SILENCE_TONIC_NAME);
+	public static final Identifier SILENCE_TONIC_ID = Simpleautomations.modId(SILENCE_TONIC_NAME);
 
 	public static final AntidoteItem antidoteItem;
 	public static final String ANTIDOTE_NAME = "antidote";
-	public static final Identifier ANTIDOTE_ID = Simpleautomations.id(ANTIDOTE_NAME);
+	public static final Identifier ANTIDOTE_ID = Simpleautomations.modId(ANTIDOTE_NAME);
 
 	static
 	{
@@ -54,6 +54,6 @@ public class Items
 
 	public static ResourceKey<Item> createItemKey(String name)
 	{
-		return ResourceKey.create(Registries.ITEM, Simpleautomations.id(name));
+		return ResourceKey.create(Registries.ITEM, Simpleautomations.modId(name));
 	}
 }

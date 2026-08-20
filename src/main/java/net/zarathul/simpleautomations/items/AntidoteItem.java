@@ -24,6 +24,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.zarathul.simpleautomations.Simpleautomations;
 import net.zarathul.simpleautomations.mobs.IGaggableMob;
+import net.zarathul.simplemodslib.Utils;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -90,7 +91,7 @@ public class AntidoteItem extends Item
 
 		if (leftShiftState == GLFW.GLFW_PRESS || rightShiftState == GLFW.GLFW_PRESS)
 		{
-			lines.addAll(Simpleautomations.multiLineTranslate(TOOLTIP_DETAILS_KEY));
+			lines.addAll(Utils.multiLineTranslate(TOOLTIP_DETAILS_KEY));
 		}
 		else
 		{
