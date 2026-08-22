@@ -1,14 +1,9 @@
 package net.zarathul.simpleautomations.items;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -17,29 +12,19 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.zarathul.simpleautomations.Simpleautomations;
 import net.zarathul.simpleautomations.mobs.IGaggableMob;
-import net.zarathul.simplemodslib.Utils;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
 public class SilenceTonicItem extends Item
 {
-	private static final String TOOLTIP_KEY = "item." + Simpleautomations.MOD_ID + "." + Items.SILENCE_TONIC_NAME + ".tooltip";
-	private static final String TOOLTIP_DETAILS_KEY = "item." + Simpleautomations.MOD_ID + "." + Items.SILENCE_TONIC_NAME + ".tooltip_details";
-
-	public SilenceTonicItem(ResourceKey<Item> id)
+	public SilenceTonicItem(Item.Properties properties)
 	{
-		super(new Item.Properties()
-			.setId(id)
-			.stacksTo(1)
-		);
+		super(properties);
 
 		DispenserBlock.registerBehavior(this, new DefaultDispenseItemBehavior()
 		{
@@ -80,22 +65,5 @@ public class SilenceTonicItem extends Item
 		}
 
 		return (player.level().isClientSide()) ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void addTooltip(ItemStack stack, TooltipContext context, TooltipFlag flag, List<Component> lines)
-	{
-		long windowHandle = Minecraft.getInstance().getWindow().handle();
-		int leftShiftState = GLFW.glfwGetKey(windowHandle, GLFW.GLFW_KEY_LEFT_SHIFT);
-		int rightShiftState = GLFW.glfwGetKey(windowHandle, GLFW.GLFW_KEY_RIGHT_SHIFT);
-
-		if (leftShiftState == GLFW.GLFW_PRESS || rightShiftState == GLFW.GLFW_PRESS)
-		{
-			lines.addAll(Utils.multiLineTranslate(TOOLTIP_DETAILS_KEY));
-		}
-		else
-		{
-			lines.add(Component.translatable(TOOLTIP_KEY));
-		}
 	}
 }
