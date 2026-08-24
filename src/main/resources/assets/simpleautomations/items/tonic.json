@@ -1,0 +1,31 @@
+{
+	"model": {
+		"type": "minecraft:select",
+		"property": "minecraft:component",
+		"component": "simpleautomations:tonic",
+		"cases": [
+			{
+				"when": {
+					"type": "ANTIDOTE"
+				},
+				"model": {
+					"type": "minecraft:model",
+					"model": "simpleautomations:item/antidote"
+				}
+			},
+			{
+				"when": {
+					"type": "SILENCE"
+				},
+				"model": {
+					"type": "minecraft:model",
+					"model": "simpleautomations:item/silence_tonic"
+				}
+			}
+		],
+		"fallback": {
+			"type": "minecraft:model",
+			"model": "simpleautomations:item/antidote"
+		}
+	}
+}

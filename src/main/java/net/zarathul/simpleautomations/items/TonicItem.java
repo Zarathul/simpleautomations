@@ -16,13 +16,15 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.zarathul.simpleautomations.components.ModComponents;
+import net.zarathul.simpleautomations.components.Tonic;
 import net.zarathul.simpleautomations.mobs.IGaggableMob;
 
 import java.util.List;
 
-public class AntidoteItem extends Item
+public class TonicItem extends Item
 {
-	public AntidoteItem(Item.Properties properties)
+	public TonicItem(Item.Properties properties)
 	{
 		super(properties);
 
@@ -35,17 +37,27 @@ public class AntidoteItem extends Item
 			{
 				ServerLevel world = source.level();
 				BlockState dispenser = world.getBlockState(source.pos());
+				Tonic tonic = stack.get(ModComponents.TONIC);
 
-				Direction dispenserFacing = dispenser.getValue(DispenserBlock.FACING);
-				BlockPos searchStartPos = source.pos().relative(dispenserFacing);
-				List<Entity> entities = world.getEntities(null, AABB.ofSize(Vec3.atBottomCenterOf(searchStartPos), 1, 1, 1));
-
-				if (!entities.isEmpty())
+				if (tonic != null)
 				{
-					if (entities.getFirst() instanceof IGaggableMob gaggableMob && !(gaggableMob instanceof Player))
+					switch (tonic.type())
 					{
-						gaggableMob.simpleautomations_setGagged(false);
-						stack.consume(1, null);
+						case ANTIDOTE:
+						case SILENCE:
+							Direction dispenserFacing = dispenser.getValue(DispenserBlock.FACING);
+							BlockPos searchStartPos = source.pos().relative(dispenserFacing);
+							List<Entity> entities = world.getEntities(null, AABB.ofSize(Vec3.atBottomCenterOf(searchStartPos), 1, 1, 1));
+
+							if (!entities.isEmpty())
+							{
+								if (entities.getFirst() instanceof IGaggableMob gaggableMob && !(gaggableMob instanceof Player))
+								{
+									boolean doGag = (tonic.type() == Tonic.Type.SILENCE);
+									gaggableMob.simpleautomations_setGagged(doGag);
+									stack.consume(1, null);
+								}
+							}
 					}
 				}
 
@@ -57,11 +69,21 @@ public class AntidoteItem extends Item
 	@Override
 	public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity target, InteractionHand type)
 	{
-		if (!(target instanceof Player))
+		Tonic tonic = itemStack.get(ModComponents.TONIC);
+
+		if (tonic != null && !(target instanceof Player))
 		{
-			IGaggableMob gaggableMob = (IGaggableMob) target;
-			gaggableMob.simpleautomations_setGagged(false);
-			itemStack.consume(1, player);
+			switch (tonic.type())
+			{
+				case ANTIDOTE:
+				case SILENCE:
+					if (target instanceof IGaggableMob gaggableMob)
+					{
+						boolean doGag = (tonic.type() == Tonic.Type.SILENCE);
+						gaggableMob.simpleautomations_setGagged(doGag);
+						itemStack.consume(1, player);
+					}
+			}
 		}
 
 		return (player.level().isClientSide()) ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;

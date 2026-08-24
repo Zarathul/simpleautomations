@@ -30,6 +30,6 @@ public enum DistillationLevel implements StringRepresentable
 	@Override
 	public String getSerializedName()
 	{
-		return this.name;
+		return name;
 	}
 }
