@@ -11,17 +11,15 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.zarathul.simpleautomations.Simpleautomations;
+import net.zarathul.simpleautomations.common.Colors;
 import net.zarathul.simpleautomations.common.DistillationLevel;
 
-import java.util.Arrays;
 import java.util.Set;
 
 public final class ModFluids
@@ -73,11 +71,11 @@ public final class ModFluids
 						return (distillationLevel.isPresent())
 							   ? switch (distillationLevel.get())
 							   {
-								   case CONCENTRATED  -> ARGB.opaque(0xf24000);
-								   case PURE  		  -> ARGB.opaque(0xff7f3b);
-								   default 			  -> ARGB.opaque(0x9e2800);
+								   case CONCENTRATED  -> Colors.ALCOHOL_CONCENTRATED;
+								   case PURE  		  -> Colors.ALCOHOL_PURE;
+								   default 			  -> Colors.ALCOHOL_NORMAL;
 							   }
-							   : ARGB.opaque(0x9e2800);
+							   : Colors.ALCOHOL_NORMAL;
 					}
 				}
 			)

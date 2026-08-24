@@ -6,6 +6,7 @@ import net.zarathul.simpleautomations.blocks.ModBlocks;
 import net.zarathul.simpleautomations.components.ModComponents;
 import net.zarathul.simpleautomations.fluids.ModFluids;
 import net.zarathul.simpleautomations.items.ModItems;
+import net.zarathul.simpleautomations.particles.ModParticles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,7 @@ public class Simpleautomations implements ModInitializer
 		ModFluids.init();
 		ModItems.init();
 		ModBlocks.init();
+		ModParticles.init();
 	}
 
 	public static Identifier modId(String path) { return Identifier.fromNamespaceAndPath(MOD_ID, path); }

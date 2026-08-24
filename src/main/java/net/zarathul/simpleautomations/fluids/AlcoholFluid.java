@@ -34,6 +34,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.zarathul.simpleautomations.blocks.ModBlocks;
 import net.zarathul.simpleautomations.common.DistillationLevel;
 import net.zarathul.simpleautomations.items.ModItems;
+import net.zarathul.simpleautomations.particles.ModParticles;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -43,6 +44,8 @@ import java.util.Optional;
 public abstract class AlcoholFluid extends FlowingFluid
 {
 	public static final EnumProperty<DistillationLevel> DISTILLATION_LEVEL = ModFluids.DISTILLATION_LEVEL;
+
+	private static final int MAX_FILL_LEVEL = 8;
 
 	@Override
 	public void animateTick(Level level, BlockPos pos, FluidState state, RandomSource random)
@@ -76,8 +79,13 @@ public abstract class AlcoholFluid extends FlowingFluid
 				0.0, 0.0, 0.0);
 		}
 
-		// TODO: Investigate making a custom particle type, similar to CRIMSON_SPORE with the fluid color and not moving as far out (shorter livetime).
-		level.addParticle(ParticleTypes.CRIMSON_SPORE, x + random.nextFloat(), y + random.nextFloat(), z + random.nextFloat(), 0.0, 0.0, 0.0);
+		int fluidLevel = state.getValueOrElse(LEVEL, MAX_FILL_LEVEL);
+		float heightOffset = 1.0f - ((float)fluidLevel / MAX_FILL_LEVEL); // Make particles spawn directly on the fluids surface.
+
+		float particleX = x + random.nextFloat();
+		float particleY = y + 1.0f - heightOffset;
+		float particleZ = z + random.nextFloat();
+		level.addParticle(ModParticles.ALCOHOL_EVAPORATION, particleX, particleY, particleZ, 0.0, 0.0, 0.0);
 	}
 
 	@Override
@@ -260,7 +268,7 @@ public abstract class AlcoholFluid extends FlowingFluid
 		@Override
 		public int getAmount(FluidState state)
 		{
-			return 8;
+			return MAX_FILL_LEVEL;
 		}
 
 		@Override
@@ -281,6 +289,8 @@ public abstract class AlcoholFluid extends FlowingFluid
 			super.randomTick(level, pos, fluidState, random);
 
 			if (!fluidState.isSource()) return;
+
+			// Randomly evaporate alcohol sources. The purer the alcohol the faster the evaporation.
 
 			int randomTickSpeed = level.getGameRules().get(GameRules.RANDOM_TICK_SPEED).intValue();
 			DistillationLevel distillationLevel = fluidState.getValue(DISTILLATION_LEVEL);
