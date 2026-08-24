@@ -5,5 +5,14 @@
 	"item.simpleautomations.silence_tonic.tooltip_details": "§2Those §2damn §2noises!\nA little bit of potent glue and something to mask the taste should do the trick.\n§9(Silences §9mobs §9permanently)",
 	"item.simpleautomations.antidote": "Antidote",
 	"item.simpleautomations.antidote.tooltip": "§7(Hold §e§oshift §7for details)",
-	"item.simpleautomations.antidote.tooltip_details": "§2The §2universal §2problem §2solver.\nHighly concentrated alcohol and some spider eyes. Definitely tastier than it sounds!\n§9(Clears §9tonic §9effects)"
+	"item.simpleautomations.antidote.tooltip_details": "§2The §2universal §2problem §2solver.\nHighly concentrated alcohol and some spider eyes. Definitely tastier than it sounds!\n§9(Clears §9tonic §9effects)",
+	"item.simpleautomations.alcohol_bucket": "Alcohol Bucket",
+	"item.simpleautomations.alcohol_bucket.tooltip": "§7(Hold §e§oshift §7for details)",
+	"item.simpleautomations.alcohol_bucket.tooltip_details": "§2The §2first §2step §2to §greatness.",
+	"item.simpleautomations.concentrated_alcohol_bucket": "Concentrated Alcohol Bucket",
+	"item.simpleautomations.concentrated_alcohol_bucket.tooltip": "§7(Hold §e§oshift §7for details)",
+	"item.simpleautomations.concentrated_alcohol_bucket.tooltip_details": "§2The §2first §2step §2to §greatness.",
+	"item.simpleautomations.pure_alcohol_bucket": "Pure Alcohol Bucket",
+	"item.simpleautomations.pure_alcohol_bucket.tooltip": "§7(Hold §e§oshift §7for details)",
+	"item.simpleautomations.pure_alcohol_bucket.tooltip_details": "§2The §2first §2step §2to §greatness."
 }

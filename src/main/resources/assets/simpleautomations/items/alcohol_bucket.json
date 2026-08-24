@@ -1,0 +1,40 @@
+{
+	"model": {
+		"type": "minecraft:select",
+		"property": "minecraft:component",
+		"component": "simpleautomations:alcohol_distillation_level",
+		"cases": [
+			{
+				"when": {
+					"level": "NORMAL"
+				},
+				"model": {
+					"type": "minecraft:model",
+					"model": "simpleautomations:item/alcohol_bucket"
+				}
+			},
+			{
+				"when": {
+					"level": "CONCENTRATED"
+				},
+				"model": {
+					"type": "minecraft:model",
+					"model": "simpleautomations:item/concentrated_alcohol_bucket"
+				}
+			},
+			{
+				"when": {
+					"level": "PURE"
+				},
+				"model": {
+					"type": "minecraft:model",
+					"model": "simpleautomations:item/pure_alcohol_bucket"
+				}
+			}
+		],
+		"fallback": {
+			"type": "minecraft:model",
+			"model": "simpleautomations:item/alcohol_bucket"
+		}
+	}
+}

@@ -1,6 +1,7 @@
 package net.zarathul.simpleautomations;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.zarathul.simpleautomations.fluids.ModFluids;
 import net.zarathul.simpleautomations.items.ModItems;
 
 public class SimpleautomationsClient implements ClientModInitializer
@@ -9,5 +10,6 @@ public class SimpleautomationsClient implements ClientModInitializer
 	public void onInitializeClient()
 	{
 		ModItems.registerTooltips();
+		ModFluids.registerRendering();
 	}
 }
