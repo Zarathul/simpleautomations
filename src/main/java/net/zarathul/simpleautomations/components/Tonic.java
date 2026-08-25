@@ -19,6 +19,7 @@ public record Tonic(Type type)
 
 	public enum Type
 	{
+		EMPTY,
 		ANTIDOTE,
 		SILENCE,
 		BINDING

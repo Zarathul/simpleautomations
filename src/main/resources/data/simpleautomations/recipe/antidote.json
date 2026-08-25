@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		"simpleautomations:concentrated_alcohol_bucket",
+		"simpleautomations:empty_tonic",
+		"simpleautomations:empty_tonic",
+		"simpleautomations:empty_tonic",
+		"simpleautomations:empty_tonic",
+		"minecraft:spider_eye",
+		"minecraft:spider_eye",
+		"minecraft:spider_eye",
+		"minecraft:spider_eye"
+	],
+	"result": {
+		"count": 4,
+		"id": "simpleautomations:antidote"
+	}
+}

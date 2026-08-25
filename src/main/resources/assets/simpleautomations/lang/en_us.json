@@ -1,5 +1,8 @@
 {
 	"_comment": "Items",
+	"item.simpleautomations.empty_tonic": "Tonic Flask",
+	"item.simpleautomations.empty_tonic.tooltip": "§7(Hold §e§oshift §7for details)",
+	"item.simpleautomations.empty_tonic.tooltip_details": "§2Endless §2possibilities.\nIt's a fancy glass bottle, what did you expect?",
 	"item.simpleautomations.antidote": "Antidote",
 	"item.simpleautomations.antidote.tooltip": "§7(Hold §e§oshift §7for details)",
 	"item.simpleautomations.antidote.tooltip_details": "§2The §2universal §2problem §2solver.\nConcentrated alcohol and some spider eyes. Definitely tastier than it sounds!\n§9(Clears §9tonic §9effects)",
@@ -8,7 +11,7 @@
 	"item.simpleautomations.silence_tonic.tooltip_details": "§2Those §2damn §2noises!\nA little bit of alcohol, potent glue and something to mask the taste should do the trick.\n§9(Silences §9mobs §9permanently)",
 	"item.simpleautomations.binding_tonic": "Binding Tonic",
 	"item.simpleautomations.binding_tonic.tooltip": "§7(Hold §e§oshift §7for details)",
-	"item.simpleautomations.binding_tonic.tooltip_details": "§2Don't §2you §2hate §2running §2after §2your §2prey?\nFinally a use for those poisonous potatoes.\n§9(Paralyzes §9mobs §9permanently)",
+	"item.simpleautomations.binding_tonic.tooltip_details": "§2Don't §2you §2hate §2running §2after §2your §2prey?\nFinally a use for those poisonous foods.\n§9(Paralyzes §9mobs §9permanently)",
 	"item.simpleautomations.alcohol_bucket": "Alcohol Bucket",
 	"item.simpleautomations.alcohol_bucket.tooltip": "§7(Hold §e§oshift §7for details)",
 	"item.simpleautomations.alcohol_bucket.tooltip_details": "§2The §2first §2step §2to §2greatness.\nFull of impurities and heavily diluted, but it is a start.",

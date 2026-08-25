@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		"simpleautomations:alcohol_bucket",
+		"simpleautomations:empty_tonic",
+		"simpleautomations:empty_tonic",
+		"simpleautomations:empty_tonic",
+		"simpleautomations:empty_tonic",
+		"#c:slime_balls",
+		"#c:slime_balls",
+		"#c:drinks/honey",
+		"#c:drinks/honey"
+	],
+	"result": {
+		"count": 4,
+		"id": "simpleautomations:silence_tonic"
+	}
+}

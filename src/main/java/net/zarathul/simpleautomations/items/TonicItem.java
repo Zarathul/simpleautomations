@@ -46,9 +46,8 @@ public class TonicItem extends Item
 					BlockPos searchStartPos = source.pos().relative(dispenserFacing);
 					List<Entity> entities = world.getEntities(null, AABB.ofSize(Vec3.atBottomCenterOf(searchStartPos), 1, 1, 1));
 
-					if (!entities.isEmpty())
+					if (!entities.isEmpty() && applyEffect(entities.getFirst(), tonic.type()))
 					{
-						applyEffect(entities.getFirst(), tonic.type());
 						stack.consume(1, null);
 					}
 				}
@@ -63,31 +62,34 @@ public class TonicItem extends Item
 	{
 		Tonic tonic = itemStack.get(ModComponents.TONIC);
 
-		if (tonic != null)
+		if (tonic != null && applyEffect(target, tonic.type()))
 		{
-			applyEffect(target, tonic.type());
 			itemStack.consume(1, player);
 		}
 
 		return (player.level().isClientSide()) ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
 	}
 
-	private void applyEffect(Entity entity, Tonic.Type type)
+	private boolean applyEffect(Entity entity, Tonic.Type type)
 	{
-		if (entity instanceof Player) return;
+		if (entity instanceof Player) return false;
 
 		boolean doApplyEffect = true;
 
 		switch (type)
 		{
+			case EMPTY:
+				return false;
+
 			case ANTIDOTE:
-				doApplyEffect = false;
+				doApplyEffect = false;	// Fall through the remaining cases and remove all effects on the way.
 
 			case SILENCE:
 				if (entity instanceof IGaggableMob gaggableMob)
 				{
 					gaggableMob.simpleautomations_setGagged(doApplyEffect);
 				}
+				else return false;
 				if (type == Tonic.Type.SILENCE) break;
 
 			case BINDING:
@@ -95,7 +97,10 @@ public class TonicItem extends Item
 				{
 					paralyzableMob.simpleautomations_setParalyzed(doApplyEffect);
 				}
+				else return false;
 				if (type == Tonic.Type.BINDING) break;
 		}
+
+		return true;
 	}
 }

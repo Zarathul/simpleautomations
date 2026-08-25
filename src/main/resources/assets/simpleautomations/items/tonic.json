@@ -6,6 +6,15 @@
 		"cases": [
 			{
 				"when": {
+					"type": "EMPTY"
+				},
+				"model": {
+					"type": "minecraft:model",
+					"model": "simpleautomations:item/empty_tonic"
+				}
+			},
+			{
+				"when": {
 					"type": "ANTIDOTE"
 				},
 				"model": {

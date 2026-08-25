@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		"simpleautomations:alcohol_bucket",
+		"simpleautomations:empty_tonic",
+		"simpleautomations:empty_tonic",
+		"simpleautomations:empty_tonic",
+		"simpleautomations:empty_tonic",
+		"#c:foods/food_poisoning",
+		"#c:foods/food_poisoning",
+		"#c:foods/food_poisoning",
+		"#c:foods/food_poisoning"
+	],
+	"result": {
+		"count": 4,
+		"id": "simpleautomations:binding_tonic"
+	}
+}
