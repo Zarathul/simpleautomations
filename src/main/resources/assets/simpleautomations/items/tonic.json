@@ -21,6 +21,15 @@
 					"type": "minecraft:model",
 					"model": "simpleautomations:item/silence_tonic"
 				}
+			},
+			{
+				"when": {
+					"type": "BINDING"
+				},
+				"model": {
+					"type": "minecraft:model",
+					"model": "simpleautomations:item/binding_tonic"
+				}
 			}
 		],
 		"fallback": {

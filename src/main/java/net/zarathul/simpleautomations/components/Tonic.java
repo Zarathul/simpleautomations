@@ -20,6 +20,7 @@ public record Tonic(Type type)
 	public enum Type
 	{
 		ANTIDOTE,
-		SILENCE
+		SILENCE,
+		BINDING
 	}
 }

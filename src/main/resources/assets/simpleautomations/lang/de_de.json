@@ -1,9 +1,21 @@
 {
 	"_comment": "Items",
-	"item.simpleautomations.silence_tonic": "Tonikum der Stille",
-	"item.simpleautomations.silence_tonic.tooltip": "§7(§e§oUmschalten §7gedrückt halten für Details)",
-	"item.simpleautomations.silence_tonic.tooltip_details": "§2Dieser §2verdammte §2Lärm!\nEin wenig starker Kleber und etwas um dem Geschmack zu überdecken sollte das gewünschte Ergebnis herbeiführen.\n§9(Lässt §9Mobs §9permanent §9verstummen)",
-	"item.simpleautomations.antidote": "Gegenmittel",
-	"item.simpleautomations.antidote.tooltip": "§7(§e§oUmschalten §7gedrückt halten für Details)",
-	"item.simpleautomations.antidote.tooltip_details": "§2Der §2universelle §2Problemlöser.\nHochkonzentrierter Alkohol und ein paar Spinnenaugen. Auf jeden Fall leckerer als es sich anhört!\n§9(Entfernt §9Tonikum §9Effekte)"
+	"item.simpleautomations.antidote": "Gegengift",
+	"item.simpleautomations.antidote.tooltip": "§7(§e§oShift §7für Details gedrückt halten)",
+	"item.simpleautomations.antidote.tooltip_details": "§2Der §2universelle §2Problemlöser.\nKonzentrierter Alkohol und ein paar Spinnenaugen. Definitiv schmackhafter, als es klingt!\n§9(Entfernt §9Tonikum-Effekte)",
+	"item.simpleautomations.silence_tonic": "Stille-Tonikum",
+	"item.simpleautomations.silence_tonic.tooltip": "§7(§e§oShift §7für Details gedrückt halten)",
+	"item.simpleautomations.silence_tonic.tooltip_details": "§2Diese §2verfluchten §2Geräusche!\nEin bisschen Alkohol, ordentlich Klebstoff und etwas zum Überdecken des Geschmacks sollten reichen.\n§9(Bringt §9Mobs §9dauerhaft §9zum §9Schweigen)",
+	"item.simpleautomations.binding_tonic": "Fessel-Tonikum",
+	"item.simpleautomations.binding_tonic.tooltip": "§7(§e§oShift §7für Details gedrückt halten)",
+	"item.simpleautomations.binding_tonic.tooltip_details": "§2Hast §2du §2es §2nicht §2satt, §2deiner §2Beute §2hinterherzurennen?\nEndlich eine Verwendung für diese giftigen Kartoffeln.\n§9(Lähmt §9Mobs §9dauerhaft)",
+	"item.simpleautomations.alcohol_bucket": "Alkoholeimer",
+	"item.simpleautomations.alcohol_bucket.tooltip": "§7(§e§oShift §7für Details gedrückt halten)",
+	"item.simpleautomations.alcohol_bucket.tooltip_details": "§2Der §2erste §2Schritt §2zur §2Größe.\nVoller Verunreinigungen und stark verdünnt, aber immerhin ein Anfang.",
+	"item.simpleautomations.concentrated_alcohol_bucket": "Eimer mit konzentriertem Alkohol",
+	"item.simpleautomations.concentrated_alcohol_bucket.tooltip": "§7(§e§oShift §7für Details gedrückt halten)",
+	"item.simpleautomations.concentrated_alcohol_bucket.tooltip_details": "§2Eine §2gewaltige §2Verbesserung!\nDie meisten Verunreinigungen sind verschwunden, aber immer noch ziemlich verdünnt.",
+	"item.simpleautomations.pure_alcohol_bucket": "Eimer mit reinem Alkohol",
+	"item.simpleautomations.pure_alcohol_bucket.tooltip": "§7(§e§oShift §7für Details gedrückt halten)",
+	"item.simpleautomations.pure_alcohol_bucket.tooltip_details": "§2PERFEKTION.\nDamit lassen sich die letzten Creeper-Reste an deinen Wänden problemlos entfernen."
 }

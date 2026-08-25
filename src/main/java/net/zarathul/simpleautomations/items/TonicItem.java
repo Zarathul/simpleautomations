@@ -19,6 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import net.zarathul.simpleautomations.components.ModComponents;
 import net.zarathul.simpleautomations.components.Tonic;
 import net.zarathul.simpleautomations.mobs.IGaggableMob;
+import net.zarathul.simpleautomations.mobs.IParalyzable;
 
 import java.util.List;
 
@@ -41,23 +42,14 @@ public class TonicItem extends Item
 
 				if (tonic != null)
 				{
-					switch (tonic.type())
-					{
-						case ANTIDOTE:
-						case SILENCE:
-							Direction dispenserFacing = dispenser.getValue(DispenserBlock.FACING);
-							BlockPos searchStartPos = source.pos().relative(dispenserFacing);
-							List<Entity> entities = world.getEntities(null, AABB.ofSize(Vec3.atBottomCenterOf(searchStartPos), 1, 1, 1));
+					Direction dispenserFacing = dispenser.getValue(DispenserBlock.FACING);
+					BlockPos searchStartPos = source.pos().relative(dispenserFacing);
+					List<Entity> entities = world.getEntities(null, AABB.ofSize(Vec3.atBottomCenterOf(searchStartPos), 1, 1, 1));
 
-							if (!entities.isEmpty())
-							{
-								if (entities.getFirst() instanceof IGaggableMob gaggableMob && !(gaggableMob instanceof Player))
-								{
-									boolean doGag = (tonic.type() == Tonic.Type.SILENCE);
-									gaggableMob.simpleautomations_setGagged(doGag);
-									stack.consume(1, null);
-								}
-							}
+					if (!entities.isEmpty())
+					{
+						applyEffect(entities.getFirst(), tonic.type());
+						stack.consume(1, null);
 					}
 				}
 
@@ -71,21 +63,39 @@ public class TonicItem extends Item
 	{
 		Tonic tonic = itemStack.get(ModComponents.TONIC);
 
-		if (tonic != null && !(target instanceof Player))
+		if (tonic != null)
 		{
-			switch (tonic.type())
-			{
-				case ANTIDOTE:
-				case SILENCE:
-					if (target instanceof IGaggableMob gaggableMob)
-					{
-						boolean doGag = (tonic.type() == Tonic.Type.SILENCE);
-						gaggableMob.simpleautomations_setGagged(doGag);
-						itemStack.consume(1, player);
-					}
-			}
+			applyEffect(target, tonic.type());
+			itemStack.consume(1, player);
 		}
 
 		return (player.level().isClientSide()) ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
+	}
+
+	private void applyEffect(Entity entity, Tonic.Type type)
+	{
+		if (entity instanceof Player) return;
+
+		boolean doApplyEffect = true;
+
+		switch (type)
+		{
+			case ANTIDOTE:
+				doApplyEffect = false;
+
+			case SILENCE:
+				if (entity instanceof IGaggableMob gaggableMob)
+				{
+					gaggableMob.simpleautomations_setGagged(doApplyEffect);
+				}
+				if (type == Tonic.Type.SILENCE) break;
+
+			case BINDING:
+				if (entity instanceof IParalyzable paralyzableMob)
+				{
+					paralyzableMob.simpleautomations_setParalyzed(doApplyEffect);
+				}
+				if (type == Tonic.Type.BINDING) break;
+		}
 	}
 }
