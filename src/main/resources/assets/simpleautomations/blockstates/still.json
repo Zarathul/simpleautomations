@@ -1,202 +1,304 @@
 {
 	"multipart": [
 		{
-			"when": {
-				"OR": [
-					{ "part": "proxy" },
-					{ "part": "fluid_input" },
-					{ "part": "fluid_output" },
-					{ "part": "items_input" },
-					{ "part": "fuel_input" },
-					{ "part": "interactable" }
-				]
-			},
-			"apply": {
-				"model": "minecraft:block/air"
-			}
+			"_comment": "Base - North",
+			"when": { "part": "core", "facing": "north" },
+			"apply": { "model": "simpleautomations:block/still" }
 		},
 		{
-			"_comment": "Base model - facing North",
-			"when": {
-				"part": "core",
-				"facing": "north"
-			},
-			"apply": {
-				"model": "simpleautomations:block/still"
-			}
+			"_comment": "Base - East",
+			"when": { "part": "core", "facing": "east" },
+			"apply": { "model": "simpleautomations:block/still", "y": 90 }
 		},
 		{
-			"_comment": "Base model - facing South",
-			"when": {
-				"part": "core",
-				"facing": "south"
-			},
-			"apply": {
-				"model": "simpleautomations:block/still",
-				"y": 180
-			}
+			"_comment": "Base - South",
+			"when": { "part": "core", "facing": "south" },
+			"apply": { "model": "simpleautomations:block/still", "y": 180 }
 		},
 		{
-			"_comment": "Base model - facing East",
-			"when": {
-				"part": "core",
-				"facing": "east"
-			},
-			"apply": {
-				"model": "simpleautomations:block/still",
-				"y": 90
-			}
+			"_comment": "Base - West",
+			"when": { "part": "core", "facing": "west" },
+			"apply": { "model": "simpleautomations:block/still", "y": 270 }
 		},
 		{
-			"_comment": "Base model - facing West",
-			"when": {
-				"part": "core",
-				"facing": "west"
-			},
-			"apply": {
-				"model": "simpleautomations:block/still",
-				"y": 270
-			}
+			"_comment": "Power switch ON - North",
+			"when": { "part": "core", "facing": "north", "powered_on": true },
+			"apply": { "model": "simpleautomations:block/still_power_switch_on" }
 		},
 		{
-			"_comment": "Power switch ON",
-			"when": {
-				"part": "core",
-				"powered_on": true
-			},
-			"apply": {
-				"model": "simpleautomations:block/still_power_switch_on"
-			}
+			"_comment": "Power switch ON - East",
+			"when": { "part": "core", "facing": "east", "powered_on": true },
+			"apply": { "model": "simpleautomations:block/still_power_switch_on", "y": 90 }
 		},
 		{
-			"_comment": "Power switch OFF",
-			"when": {
-				"part": "core",
-				"powered_on": false
-			},
-			"apply": {
-				"model": "simpleautomations:block/still_power_switch_off"
-			}
+			"_comment": "Power switch ON - South",
+			"when": { "part": "core", "facing": "south", "powered_on": true },
+			"apply": { "model": "simpleautomations:block/still_power_switch_on", "y": 180 }
 		},
 		{
-			"_comment": "Fuel hatch open",
-			"when": {
-				"part": "core",
-				"fuel_hatch_open": true
-			},
-			"apply": {
-				"model": "simpleautomations:block/fuel_hatch_open"
-			}
+			"_comment": "Power switch ON - West",
+			"when": { "part": "core", "facing": "west", "powered_on": true },
+			"apply": { "model": "simpleautomations:block/still_power_switch_on", "y": 270 }
 		},
 		{
-			"_comment": "Fuel hatch closed",
-			"when": {
-				"part": "core",
-				"fuel_hatch_open": false
-			},
-			"apply": {
-				"model": "simpleautomations:block/fuel_hatch_closed"
-			}
+			"_comment": "Power switch OFF - North",
+			"when": { "part": "core", "facing": "north", "powered_on": false },
+			"apply": { "model": "simpleautomations:block/still_power_switch_off" }
 		},
 		{
-			"_comment": "Pressure release pulled",
-			"when": {
-				"part": "core",
-				"pressure_release_pulled": true
-			},
-			"apply": {
-				"model": "simpleautomations:block/still_pressure_release_pulled"
-			}
+			"_comment": "Power switch OFF - East",
+			"when": { "part": "core", "facing": "east", "powered_on": false },
+			"apply": { "model": "simpleautomations:block/still_power_switch_off", "y": 90 }
 		},
 		{
-			"_comment": "Pressure release idle",
-			"when": {
-				"part": "core",
-				"pressure_release_pulled": false
-			},
-			"apply": {
-				"model": "simpleautomations:block/still_pressure_release_idle"
-			}
+			"_comment": "Power switch OFF - South",
+			"when": { "part": "core", "facing": "south", "powered_on": false },
+			"apply": { "model": "simpleautomations:block/still_power_switch_off", "y": 180 }
 		},
 		{
-			"_comment": "Pressure gauge 0",
-			"when": {
-				"part": "core",
-				"pressure": 0
-			},
-			"apply": {
-				"model": "simpleautomations:block/still_pressure_gauge_0"
-			}
+			"_comment": "Power switch OFF - West",
+			"when": { "part": "core", "facing": "west", "powered_on": false },
+			"apply": { "model": "simpleautomations:block/still_power_switch_off", "y": 270 }
 		},
 		{
-			"_comment": "Pressure gauge 1",
-			"when": {
-				"part": "core",
-				"pressure": 1
-			},
-			"apply": {
-				"model": "simpleautomations:block/still_pressure_gauge_1"
-			}
+			"_comment": "Fuel hatch OPEN - North",
+			"when": { "part": "core", "facing": "north", "fuel_hatch_open": true },
+			"apply": { "model": "simpleautomations:block/fuel_hatch_open" }
 		},
 		{
-			"_comment": "Pressure gauge 2",
-			"when": {
-				"part": "core",
-				"pressure": 2
-			},
-			"apply": {
-				"model": "simpleautomations:block/still_pressure_gauge_2"
-			}
+			"_comment": "Fuel hatch OPEN - East",
+			"when": { "part": "core", "facing": "east", "fuel_hatch_open": true },
+			"apply": { "model": "simpleautomations:block/fuel_hatch_open", "y": 90 }
 		},
 		{
-			"_comment": "Pressure gauge 3",
-			"when": {
-				"part": "core",
-				"pressure": 3
-			},
-			"apply": {
-				"model": "simpleautomations:block/still_pressure_gauge_3"
-			}
+			"_comment": "Fuel hatch OPEN - South",
+			"when": { "part": "core", "facing": "south", "fuel_hatch_open": true },
+			"apply": { "model": "simpleautomations:block/fuel_hatch_open", "y": 180 }
 		},
 		{
-			"_comment": "Pressure gauge 4",
-			"when": {
-				"part": "core",
-				"pressure": 4
-			},
-			"apply": {
-				"model": "simpleautomations:block/still_pressure_gauge_4"
-			}
+			"_comment": "Fuel hatch OPEN - West",
+			"when": { "part": "core", "facing": "west", "fuel_hatch_open": true },
+			"apply": { "model": "simpleautomations:block/fuel_hatch_open", "y": 270 }
 		},
 		{
-			"_comment": "Pressure gauge 5",
-			"when": {
-				"part": "core",
-				"pressure": 5
-			},
-			"apply": {
-				"model": "simpleautomations:block/still_pressure_gauge_5"
-			}
+			"_comment": "Fuel hatch CLOSED - North",
+			"when": { "part": "core", "facing": "north", "fuel_hatch_open": false },
+			"apply": { "model": "simpleautomations:block/fuel_hatch_closed" }
 		},
 		{
-			"_comment": "Pressure gauge 6",
-			"when": {
-				"part": "core",
-				"pressure": 6
-			},
-			"apply": {
-				"model": "simpleautomations:block/still_pressure_gauge_6"
-			}
+			"_comment": "Fuel hatch CLOSED - East",
+			"when": { "part": "core", "facing": "east", "fuel_hatch_open": false },
+			"apply": { "model": "simpleautomations:block/fuel_hatch_closed", "y": 90 }
 		},
 		{
-			"_comment": "Pressure gauge 7",
-			"when": {
-				"part": "core",
-				"pressure": 7
-			},
-			"apply": {
-				"model": "simpleautomations:block/still_pressure_gauge_7"
-			}
+			"_comment": "Fuel hatch CLOSED - South",
+			"when": { "part": "core", "facing": "south", "fuel_hatch_open": false },
+			"apply": { "model": "simpleautomations:block/fuel_hatch_closed", "y": 180 }
+		},
+		{
+			"_comment": "Fuel hatch CLOSED - West",
+			"when": { "part": "core", "facing": "west", "fuel_hatch_open": false },
+			"apply": { "model": "simpleautomations:block/fuel_hatch_closed", "y": 270 }
+		},
+		{
+			"_comment": "Pressure release PULLED - North",
+			"when": { "part": "core", "facing": "north", "pressure_release_pulled": true },
+			"apply": { "model": "simpleautomations:block/still_pressure_release_pulled" }
+		},
+		{
+			"_comment": "Pressure release PULLED - East",
+			"when": { "part": "core", "facing": "east", "pressure_release_pulled": true },
+			"apply": { "model": "simpleautomations:block/still_pressure_release_pulled", "y": 90 }
+		},
+		{
+			"_comment": "Pressure release PULLED - South",
+			"when": { "part": "core", "facing": "south", "pressure_release_pulled": true },
+			"apply": { "model": "simpleautomations:block/still_pressure_release_pulled", "y": 180 }
+		},
+		{
+			"_comment": "Pressure release PULLED - West",
+			"when": { "part": "core", "facing": "west", "pressure_release_pulled": true },
+			"apply": { "model": "simpleautomations:block/still_pressure_release_pulled", "y": 270 }
+		},
+		{
+			"_comment": "Pressure release IDLE - North",
+			"when": { "part": "core", "facing": "north", "pressure_release_pulled": false },
+			"apply": { "model": "simpleautomations:block/still_pressure_release_idle" }
+		},
+		{
+			"_comment": "Pressure release IDLE - East",
+			"when": { "part": "core", "facing": "east", "pressure_release_pulled": false },
+			"apply": { "model": "simpleautomations:block/still_pressure_release_idle", "y": 90 }
+		},
+		{
+			"_comment": "Pressure release IDLE - South",
+			"when": { "part": "core", "facing": "south", "pressure_release_pulled": false },
+			"apply": { "model": "simpleautomations:block/still_pressure_release_idle", "y": 180 }
+		},
+		{
+			"_comment": "Pressure release IDLE - West",
+			"when": { "part": "core", "facing": "west", "pressure_release_pulled": false },
+			"apply": { "model": "simpleautomations:block/still_pressure_release_idle", "y": 270 }
+		},
+		{
+			"_comment": "Pressure gauge 0 - North",
+			"when": { "part": "core", "facing": "north", "pressure": 0 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_0" }
+		},
+		{
+			"_comment": "Pressure gauge 0 - East",
+			"when": { "part": "core", "facing": "east", "pressure": 0 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_0", "y": 90 }
+		},
+		{
+			"_comment": "Pressure gauge 0 - South",
+			"when": { "part": "core", "facing": "south", "pressure": 0 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_0", "y": 180 }
+		},
+		{
+			"_comment": "Pressure gauge 0 - West",
+			"when": { "part": "core", "facing": "west", "pressure": 0 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_0", "y": 270 }
+		},
+		{
+			"_comment": "Pressure gauge 1 - North",
+			"when": { "part": "core", "facing": "north", "pressure": 1 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_1" }
+		},
+		{
+			"_comment": "Pressure gauge 1 - East",
+			"when": { "part": "core", "facing": "east", "pressure": 1 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_1", "y": 90 }
+		},
+		{
+			"_comment": "Pressure gauge 1 - South",
+			"when": { "part": "core", "facing": "south", "pressure": 1 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_1", "y": 180 }
+		},
+		{
+			"_comment": "Pressure gauge 1 - West",
+			"when": { "part": "core", "facing": "west", "pressure": 1 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_1", "y": 270 }
+		},
+		{
+			"_comment": "Pressure gauge 2 - North",
+			"when": { "part": "core", "facing": "north", "pressure": 2 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_2" }
+		},
+		{
+			"_comment": "Pressure gauge 2 - East",
+			"when": { "part": "core", "facing": "east", "pressure": 2 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_2", "y": 90 }
+		},
+		{
+			"_comment": "Pressure gauge 2 - South",
+			"when": { "part": "core", "facing": "south", "pressure": 2 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_2", "y": 180 }
+		},
+		{
+			"_comment": "Pressure gauge 2 - West",
+			"when": { "part": "core", "facing": "west", "pressure": 2 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_2", "y": 270 }
+		},
+		{
+			"_comment": "Pressure gauge 3 - North",
+			"when": { "part": "core", "facing": "north", "pressure": 3 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_3" }
+		},
+		{
+			"_comment": "Pressure gauge 3 - East",
+			"when": { "part": "core", "facing": "east", "pressure": 3 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_3", "y": 90 }
+		},
+		{
+			"_comment": "Pressure gauge 3 - South",
+			"when": { "part": "core", "facing": "south", "pressure": 3 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_3", "y": 180 }
+		},
+		{
+			"_comment": "Pressure gauge 3 - West",
+			"when": { "part": "core", "facing": "west", "pressure": 3 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_3", "y": 270 }
+		},
+		{
+			"_comment": "Pressure gauge 4 - North",
+			"when": { "part": "core", "facing": "north", "pressure": 4 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_4" }
+		},
+		{
+			"_comment": "Pressure gauge 4 - East",
+			"when": { "part": "core", "facing": "east", "pressure": 4 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_4", "y": 90 }
+		},
+		{
+			"_comment": "Pressure gauge 4 - South",
+			"when": { "part": "core", "facing": "south", "pressure": 4 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_4", "y": 180 }
+		},
+		{
+			"_comment": "Pressure gauge 4 - West",
+			"when": { "part": "core", "facing": "west", "pressure": 4 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_4", "y": 270 }
+		},
+		{
+			"_comment": "Pressure gauge 5 - North",
+			"when": { "part": "core", "facing": "north", "pressure": 5 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_5" }
+		},
+		{
+			"_comment": "Pressure gauge 5 - East",
+			"when": { "part": "core", "facing": "east", "pressure": 5 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_5", "y": 90 }
+		},
+		{
+			"_comment": "Pressure gauge 5 - South",
+			"when": { "part": "core", "facing": "south", "pressure": 5 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_5", "y": 180 }
+		},
+		{
+			"_comment": "Pressure gauge 5 - West",
+			"when": { "part": "core", "facing": "west", "pressure": 5 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_5", "y": 270 }
+		},
+		{
+			"_comment": "Pressure gauge 6 - North",
+			"when": { "part": "core", "facing": "north", "pressure": 6 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_6" }
+		},
+		{
+			"_comment": "Pressure gauge 6 - East",
+			"when": { "part": "core", "facing": "east", "pressure": 6 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_6", "y": 90 }
+		},
+		{
+			"_comment": "Pressure gauge 6 - South",
+			"when": { "part": "core", "facing": "south", "pressure": 6 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_6", "y": 180 }
+		},
+		{
+			"_comment": "Pressure gauge 6 - West",
+			"when": { "part": "core", "facing": "west", "pressure": 6 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_6", "y": 270 }
+		},
+		{
+			"_comment": "Pressure gauge 7 - North",
+			"when": { "part": "core", "facing": "north", "pressure": 7 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_7" }
+		},
+		{
+			"_comment": "Pressure gauge 7 - East",
+			"when": { "part": "core", "facing": "east", "pressure": 7 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_7", "y": 90 }
+		},
+		{
+			"_comment": "Pressure gauge 7 - South",
+			"when": { "part": "core", "facing": "south", "pressure": 7 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_7", "y": 180 }
+		},
+		{
+			"_comment": "Pressure gauge 7 - West",
+			"when": { "part": "core", "facing": "west", "pressure": 7 },
+			"apply": { "model": "simpleautomations:block/still_pressure_gauge_7", "y": 270 }
 		}
 	]
 }
