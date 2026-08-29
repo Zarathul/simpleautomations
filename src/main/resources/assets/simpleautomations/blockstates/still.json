@@ -22,7 +22,7 @@
 				"facing": "north"
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still"
+				"model": "simpleautomations:block/still"
 			}
 		},
 		{
@@ -32,7 +32,7 @@
 				"facing": "south"
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still",
+				"model": "simpleautomations:block/still",
 				"y": 180
 			}
 		},
@@ -43,7 +43,7 @@
 				"facing": "east"
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still",
+				"model": "simpleautomations:block/still",
 				"y": 90
 			}
 		},
@@ -54,7 +54,7 @@
 				"facing": "west"
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still",
+				"model": "simpleautomations:block/still",
 				"y": 270
 			}
 		},
@@ -65,7 +65,7 @@
 				"powered_on": true
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still_power_switch_on"
+				"model": "simpleautomations:block/still_power_switch_on"
 			}
 		},
 		{
@@ -75,7 +75,7 @@
 				"powered_on": false
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still_power_switch_off"
+				"model": "simpleautomations:block/still_power_switch_off"
 			}
 		},
 		{
@@ -85,7 +85,7 @@
 				"fuel_hatch_open": true
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/fuel_hatch_open"
+				"model": "simpleautomations:block/fuel_hatch_open"
 			}
 		},
 		{
@@ -95,7 +95,7 @@
 				"fuel_hatch_open": false
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/fuel_hatch_closed"
+				"model": "simpleautomations:block/fuel_hatch_closed"
 			}
 		},
 		{
@@ -105,7 +105,7 @@
 				"pressure_release_pulled": true
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still_pressure_release_pulled"
+				"model": "simpleautomations:block/still_pressure_release_pulled"
 			}
 		},
 		{
@@ -115,7 +115,7 @@
 				"pressure_release_pulled": false
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still_pressure_release_idle"
+				"model": "simpleautomations:block/still_pressure_release_idle"
 			}
 		},
 		{
@@ -125,7 +125,7 @@
 				"pressure": 0
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still_pressure_gauge_0"
+				"model": "simpleautomations:block/still_pressure_gauge_0"
 			}
 		},
 		{
@@ -135,7 +135,7 @@
 				"pressure": 1
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still_pressure_gauge_1"
+				"model": "simpleautomations:block/still_pressure_gauge_1"
 			}
 		},
 		{
@@ -145,7 +145,7 @@
 				"pressure": 2
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still_pressure_gauge_2"
+				"model": "simpleautomations:block/still_pressure_gauge_2"
 			}
 		},
 		{
@@ -155,7 +155,7 @@
 				"pressure": 3
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still_pressure_gauge_3"
+				"model": "simpleautomations:block/still_pressure_gauge_3"
 			}
 		},
 		{
@@ -165,7 +165,7 @@
 				"pressure": 4
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still_pressure_gauge_4"
+				"model": "simpleautomations:block/still_pressure_gauge_4"
 			}
 		},
 		{
@@ -175,7 +175,7 @@
 				"pressure": 5
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still_pressure_gauge_5"
+				"model": "simpleautomations:block/still_pressure_gauge_5"
 			}
 		},
 		{
@@ -185,7 +185,7 @@
 				"pressure": 6
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still_pressure_gauge_6"
+				"model": "simpleautomations:block/still_pressure_gauge_6"
 			}
 		},
 		{
@@ -195,7 +195,7 @@
 				"pressure": 7
 			},
 			"apply": {
-				"model": "simplefluidtanks:block/still_pressure_gauge_7"
+				"model": "simpleautomations:block/still_pressure_gauge_7"
 			}
 		}
 	]
