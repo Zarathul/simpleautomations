@@ -1,5 +1,5 @@
 {
-	"parent": "item/handheld",
+	"parent": "simpleautomations:item/basic_handheld",
 	"textures": {
 		"layer0": "simpleautomations:item/empty_tonic"
 	}

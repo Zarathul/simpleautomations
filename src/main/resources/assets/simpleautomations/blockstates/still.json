@@ -1,0 +1,202 @@
+{
+	"multipart": [
+		{
+			"when": {
+				"OR": [
+					{ "part": "proxy" },
+					{ "part": "fluid_input" },
+					{ "part": "fluid_output" },
+					{ "part": "items_input" },
+					{ "part": "fuel_input" },
+					{ "part": "interactable" }
+				]
+			},
+			"apply": {
+				"model": "minecraft:block/air"
+			}
+		},
+		{
+			"_comment": "Base model - facing North",
+			"when": {
+				"part": "core",
+				"facing": "north"
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still"
+			}
+		},
+		{
+			"_comment": "Base model - facing South",
+			"when": {
+				"part": "core",
+				"facing": "south"
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still",
+				"y": 180
+			}
+		},
+		{
+			"_comment": "Base model - facing East",
+			"when": {
+				"part": "core",
+				"facing": "east"
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still",
+				"y": 90
+			}
+		},
+		{
+			"_comment": "Base model - facing West",
+			"when": {
+				"part": "core",
+				"facing": "west"
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still",
+				"y": 270
+			}
+		},
+		{
+			"_comment": "Power switch ON",
+			"when": {
+				"part": "core",
+				"powered_on": true
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still_power_switch_on"
+			}
+		},
+		{
+			"_comment": "Power switch OFF",
+			"when": {
+				"part": "core",
+				"powered_on": false
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still_power_switch_off"
+			}
+		},
+		{
+			"_comment": "Fuel hatch open",
+			"when": {
+				"part": "core",
+				"fuel_hatch_open": true
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/fuel_hatch_open"
+			}
+		},
+		{
+			"_comment": "Fuel hatch closed",
+			"when": {
+				"part": "core",
+				"fuel_hatch_open": false
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/fuel_hatch_closed"
+			}
+		},
+		{
+			"_comment": "Pressure release pulled",
+			"when": {
+				"part": "core",
+				"pressure_release_pulled": true
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still_pressure_release_pulled"
+			}
+		},
+		{
+			"_comment": "Pressure release idle",
+			"when": {
+				"part": "core",
+				"pressure_release_pulled": false
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still_pressure_release_idle"
+			}
+		},
+		{
+			"_comment": "Pressure gauge 0",
+			"when": {
+				"part": "core",
+				"pressure": 0
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still_pressure_gauge_0"
+			}
+		},
+		{
+			"_comment": "Pressure gauge 1",
+			"when": {
+				"part": "core",
+				"pressure": 1
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still_pressure_gauge_1"
+			}
+		},
+		{
+			"_comment": "Pressure gauge 2",
+			"when": {
+				"part": "core",
+				"pressure": 2
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still_pressure_gauge_2"
+			}
+		},
+		{
+			"_comment": "Pressure gauge 3",
+			"when": {
+				"part": "core",
+				"pressure": 3
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still_pressure_gauge_3"
+			}
+		},
+		{
+			"_comment": "Pressure gauge 4",
+			"when": {
+				"part": "core",
+				"pressure": 4
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still_pressure_gauge_4"
+			}
+		},
+		{
+			"_comment": "Pressure gauge 5",
+			"when": {
+				"part": "core",
+				"pressure": 5
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still_pressure_gauge_5"
+			}
+		},
+		{
+			"_comment": "Pressure gauge 6",
+			"when": {
+				"part": "core",
+				"pressure": 6
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still_pressure_gauge_6"
+			}
+		},
+		{
+			"_comment": "Pressure gauge 7",
+			"when": {
+				"part": "core",
+				"pressure": 7
+			},
+			"apply": {
+				"model": "simplefluidtanks:block/still_pressure_gauge_7"
+			}
+		}
+	]
+}

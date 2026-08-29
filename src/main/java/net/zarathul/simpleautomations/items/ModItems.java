@@ -1,8 +1,10 @@
 package net.zarathul.simpleautomations.items;
 
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.zarathul.simpleautomations.Simpleautomations;
+import net.zarathul.simpleautomations.blocks.ModBlocks;
 import net.zarathul.simpleautomations.common.DistillationLevel;
 import net.zarathul.simpleautomations.components.AlcoholDistillationLevel;
 import net.zarathul.simpleautomations.components.ModComponents;
@@ -65,6 +67,8 @@ public final class ModItems
 			.modelId(Simpleautomations.modId(ALCOHOL_BUCKET_NAME))
 	);
 
+	public static final BlockItem STILL = REGISTRAR.register("still", ModBlocks.STILL, BlockItem::new, new Item.Properties().stacksTo(64));
+
 	public static void init()
 	{
 		Simpleautomations.LOG.info("Registering items.");
@@ -76,7 +80,8 @@ public final class ModItems
 			BINDING_TONIC,
 			ALCOHOL_BUCKET,
 			CONCENTRATED_ALCOHOL_BUCKET,
-			PURE_ALCOHOL_BUCKET
+			PURE_ALCOHOL_BUCKET,
+			STILL
 		);
 	}
 

@@ -1,0 +1,93 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"elements": [
+		{
+			"from": [-15, 2, -6],
+			"to": [-14, 5, -3],
+			"color": 8,
+			"faces": {
+				"north": {"uv": [0, 0, 1, 3], "texture": "#missing"},
+				"east": {"uv": [0, 0, 3, 3], "texture": "#missing"},
+				"south": {"uv": [0, 0, 1, 3], "texture": "#missing"},
+				"west": {"uv": [0, 0, 3, 3], "texture": "#missing"},
+				"up": {"uv": [0, 0, 1, 3], "texture": "#missing"},
+				"down": {"uv": [0, 0, 1, 3], "texture": "#missing"}
+			}
+		},
+		{
+			"from": [-16, 3, -5],
+			"to": [-15, 16, -4],
+			"rotation": {"x": -60, "y": 0, "z": 0, "origin": [-15.5, 3.5, -4.5]},
+			"color": 8,
+			"faces": {
+				"north": {"uv": [0, 0, 1, 13], "texture": "#missing"},
+				"east": {"uv": [0, 0, 1, 13], "texture": "#missing"},
+				"south": {"uv": [0, 0, 1, 13], "texture": "#missing"},
+				"west": {"uv": [0, 0, 1, 13], "texture": "#missing"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#missing"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#missing"}
+			}
+		},
+		{
+			"from": [-16, 11, -3],
+			"to": [-15, 15, -2],
+			"rotation": {"x": -60, "y": 0, "z": 0, "origin": [-15.5, 3.5, -4.5]},
+			"color": 8,
+			"faces": {
+				"north": {"uv": [0, 1, 1, 5], "texture": "#missing"},
+				"east": {"uv": [0, 1, 1, 5], "texture": "#missing"},
+				"south": {"uv": [0, 1, 1, 5], "texture": "#missing"},
+				"west": {"uv": [0, 1, 1, 5], "texture": "#missing"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#missing"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#missing"}
+			}
+		},
+		{
+			"from": [-16, 14, -4],
+			"to": [-15, 15, -3],
+			"rotation": {"x": -60, "y": 0, "z": 0, "origin": [-15.5, 3.5, -4.5]},
+			"color": 8,
+			"faces": {
+				"north": {"uv": [0, 1, 1, 2], "texture": "#missing"},
+				"east": {"uv": [0, 1, 1, 2], "texture": "#missing"},
+				"south": {"uv": [0, 1, 1, 2], "texture": "#missing"},
+				"west": {"uv": [0, 1, 1, 2], "texture": "#missing"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#missing"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#missing"}
+			}
+		},
+		{
+			"from": [-16, 11, -4],
+			"to": [-15, 12, -3],
+			"rotation": {"x": -60, "y": 0, "z": 0, "origin": [-15.5, 3.5, -4.5]},
+			"color": 8,
+			"faces": {
+				"north": {"uv": [0, 1, 1, 2], "texture": "#missing"},
+				"east": {"uv": [0, 1, 1, 2], "texture": "#missing"},
+				"south": {"uv": [0, 1, 1, 2], "texture": "#missing"},
+				"west": {"uv": [0, 1, 1, 2], "texture": "#missing"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#missing"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#missing"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Pressure Release",
+			"origin": [8, 8, 8],
+			"scope": 0,
+			"color": 8,
+			"children": [
+				0,
+				{
+					"name": "Lever",
+					"origin": [8, 8, 8],
+					"scope": 0,
+					"color": 8,
+					"children": [1, 2, 3, 4]
+				}
+			]
+		}
+	]
+}

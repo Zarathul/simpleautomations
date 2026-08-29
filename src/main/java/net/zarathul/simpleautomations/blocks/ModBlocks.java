@@ -12,6 +12,7 @@ public final class ModBlocks
 	private static final BlockRegistrar REGISTRAR = new BlockRegistrar(Simpleautomations.MOD_ID);
 
 	public static final AlcoholBlock ALCOHOL = REGISTRAR.register("alcohol", properties -> new AlcoholBlock(ModFluids.ALCOHOL_STILL, properties), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).mapColor(MapColor.GOLD));
+	public static final StillBlock STILL = REGISTRAR.register("still", StillBlock::new);
 
 	public static void init()
 	{
