@@ -2,6 +2,7 @@ package net.zarathul.simplemodslib.api.fluid;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.component.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,79 +17,104 @@ import net.zarathul.simplemodslib.ModComponents;
 
 import java.util.Objects;
 
-public class FluidStack
+public class FluidStack implements DataComponentHolder
 {
-	public static final int BUCKET_VOLUME = 1000;	// in mB (milli-Buckets)
+	public static final int BUCKET_VOLUME = 1000; // in mB (milli-Buckets)
 
 	private static final FluidStack EMPTY = new FluidStack(Fluids.EMPTY, 0);
 	private static final Identifier EMPTY_FLUID_ID = BuiltInRegistries.FLUID.getDefaultKey();
 	private static final String FLUID_ID = "fluid_id";
 	private static final String FLUID_AMOUNT = "fluid_amount";
+	private static final String COMPONENTS = "components";
 
 	private Fluid fluid;
 	private int amount;
 	private Identifier fluidId;
+	private PatchedDataComponentMap components;
 
 	public FluidStack(Fluid fluid, int amount)
 	{
-		this(fluid, amount, BuiltInRegistries.FLUID.getKey(fluid));
+		this(fluid, amount, BuiltInRegistries.FLUID.getKey(fluid), DataComponentPatch.EMPTY);
 	}
 
 	private FluidStack(Fluid fluid, int amount, Identifier fluidId)
 	{
-		this.fluid   = fluid;
-		this.amount  = amount;
+		this(fluid, amount, fluidId, DataComponentPatch.EMPTY);
+	}
+
+	private FluidStack(Fluid fluid, int amount, Identifier fluidId, DataComponentPatch componentPatch)
+	{
+		this.fluid = fluid;
+		this.amount = amount;
 		this.fluidId = fluidId;
+
+		this.components = PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, componentPatch);
+	}
+
+	private FluidStack(Fluid fluid, int amount, Identifier fluidId, PatchedDataComponentMap components)
+	{
+		this.fluid = fluid;
+		this.amount = amount;
+		this.fluidId = fluidId;
+		this.components = components;
 	}
 
 	private FluidStack()
 	{
+		this.fluid = Fluids.EMPTY;
+		this.amount = 0;
+		this.fluidId = EMPTY_FLUID_ID;
+		this.components = PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, DataComponentPatch.EMPTY);
 	}
 
-	public static final Codec<FluidStack> CODEC = RecordCodecBuilder.create(instance ->
-		instance.group(
+	public static final Codec<FluidStack> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Identifier.CODEC
 				.fieldOf("fluid")
 				.forGetter(FluidStack::getRegistryKey),
 
 			Codec.INT
 				.fieldOf("amount")
-				.forGetter(FluidStack::getAmount)
+				.forGetter(FluidStack::getAmount),
+
+			DataComponentPatch.CODEC
+				.optionalFieldOf(
+					"components",
+					DataComponentPatch.EMPTY
+				)
+				.forGetter(FluidStack::getComponentsPatch)
 		).apply(instance, FluidStack::from)
 	);
 
-	public static final StreamCodec<RegistryFriendlyByteBuf, FluidStack> STREAM_CODEC =
-		StreamCodec.composite(
-			Identifier.STREAM_CODEC,
-			FluidStack::getRegistryKey,
+	public static final StreamCodec<RegistryFriendlyByteBuf, FluidStack> STREAM_CODEC = StreamCodec.composite(
+		Identifier.STREAM_CODEC,
+		FluidStack::getRegistryKey,
 
-			ByteBufCodecs.VAR_INT,
-			FluidStack::getAmount,
+		ByteBufCodecs.INT,
+		FluidStack::getAmount,
 
-			FluidStack::from
-		);
+		DataComponentPatch.STREAM_CODEC,
+		FluidStack::getComponentsPatch,
+
+		FluidStack::from
+	);
 
 	public static FluidStack from(Identifier fluidId, int amount)
+	{
+		return from(fluidId, amount, DataComponentPatch.EMPTY);
+	}
+
+	public static FluidStack from(Identifier fluidId, int amount, DataComponentPatch componentPatch)
 	{
 		if (amount <= 0) return empty();
 
 		var registryGetResult = BuiltInRegistries.FLUID.get(fluidId);
 
-		if (registryGetResult.isEmpty())
-		{
-			return empty();
-		}
-
-		return new FluidStack(
-			registryGetResult.get().value(),
-			amount,
-			fluidId
-		);
+		return (registryGetResult.isEmpty()) ? empty() : new FluidStack(registryGetResult.get().value(), amount, fluidId, componentPatch);
 	}
 
 	public FluidStack copy()
 	{
-		return new FluidStack(fluid, amount, fluidId);
+		return new FluidStack(fluid, amount, fluidId, components.copy());
 	}
 
 	public Fluid getFluid()
@@ -123,9 +149,69 @@ public class FluidStack
 		return ((this == EMPTY) || (amount <= 0));
 	}
 
+	@Override
+	public DataComponentMap getComponents()
+	{
+		return components;
+	}
+
+	public DataComponentPatch getComponentsPatch()
+	{
+		return components.asPatch();
+	}
+
+	public boolean isComponentsPatchEmpty()
+	{
+		return components.isEmpty();
+	}
+
+	@Override
+	public <T> T get(DataComponentType<? extends T> type)
+	{
+		return components.get(type);
+	}
+
+	@Override
+	public <T> T getOrDefault(DataComponentType<? extends T> type, T defaultValue)
+	{
+		return components.getOrDefault(type, defaultValue);
+	}
+
+	@Override
+	public boolean has(DataComponentType<?> type)
+	{
+		return components.has(type);
+	}
+
+	public <T> T set(DataComponentType<T> type, T value)
+	{
+		return components.set(type, value);
+	}
+
+	public <T> FluidStack with(DataComponentType<T> type, T value)
+	{
+		set(type, value);
+		return this;
+	}
+
+	public <T> T remove(DataComponentType<T> type)
+	{
+		return components.remove(type);
+	}
+
+	public void applyComponents(DataComponentPatch patch)
+	{
+		components.applyPatch(patch);
+	}
+
 	public boolean isSameFluid(FluidStack other)
 	{
-		return (other.fluid.isSame(this.fluid));
+		return other != null && other.fluid.isSame(this.fluid);
+	}
+
+	public boolean isSameFluidSameComponents(FluidStack other)
+	{
+		return other != null && other.fluid.isSame(this.fluid) && components.equals(other.components);
 	}
 
 	public static FluidStack empty()
@@ -133,15 +219,29 @@ public class FluidStack
 		return EMPTY.copy();
 	}
 
+	private void makeEmpty()
+	{
+		amount = 0;
+		fluidId = EMPTY_FLUID_ID;
+		fluid = Fluids.EMPTY;
+		components = PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, DataComponentPatch.EMPTY);
+	}
+
 	public void save(ValueOutput output)
 	{
 		output.putInt(FLUID_AMOUNT, amount);
 		output.putString(FLUID_ID, fluidId.toString());
+
+		if (!components.isEmpty())
+		{
+			output.store(COMPONENTS, DataComponentPatch.CODEC, components.asPatch());
+		}
 	}
 
 	public void load(ValueInput input)
 	{
 		amount = input.getInt(FLUID_AMOUNT).get();
+
 		if (amount <= 0)
 		{
 			makeEmpty();
@@ -157,59 +257,50 @@ public class FluidStack
 		}
 		else
 		{
-			// In case the fluid is no longer available, e.g. a mod got removed.
+			// In case the fluid is no longer available,
+			// e.g. a mod got removed.
 			makeEmpty();
+			return;
 		}
-	}
 
-	private void makeEmpty()
-	{
-		amount  = 0;
-		fluidId = EMPTY_FLUID_ID;
-		fluid   = EMPTY.fluid;
+		DataComponentPatch patch = input.read(COMPONENTS, DataComponentPatch.CODEC).orElse(DataComponentPatch.EMPTY);
+
+		components = PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, patch);
 	}
 
 	public static FluidStack from(FluidContainerComponent input)
 	{
-		int amount = input.amount();
-		if (amount <= 0) return EMPTY;
-
-		Identifier id = input.fluidId();
-
-		var registryGetResult = BuiltInRegistries.FLUID.get(id);
-		if (registryGetResult.isPresent())
-		{
-			Fluid fluid = registryGetResult.get().value();
-			FluidStack stack = new FluidStack(fluid, amount, id);
-
-			return stack;
-		}
-
-		return EMPTY;
+		return input.fluid().copy();
 	}
 
 	public static FluidStack getFluid(ItemStack stack)
 	{
 		var component = stack.get(ModComponents.FLUID_CONTAINER_COMPONENT);
-		if (component == null) return FluidStack.empty();
 
-		FluidStack fluidStack = FluidStack.from(component);
+		if (component == null)
+		{
+			return FluidStack.empty();
+		}
 
-		return fluidStack;
+		return FluidStack.from(component);
 	}
 
 	@Override
 	public boolean equals(Object other)
 	{
-		if (!(other instanceof FluidStack)) return false;
+		if (!(other instanceof FluidStack otherStack))
+		{
+			return false;
+		}
 
-		FluidStack otherStack = (FluidStack)other;
-		return (otherStack.getFluid().isSame(fluid) && (otherStack.getAmount() == amount));
+		return otherStack.fluid.isSame(fluid) &&
+			otherStack.amount == amount &&
+			components.equals(otherStack.components);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(fluid, amount, fluidId);
+		return Objects.hash(fluid, amount, components);
 	}
 }

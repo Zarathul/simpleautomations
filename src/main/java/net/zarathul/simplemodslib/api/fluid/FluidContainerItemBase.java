@@ -30,7 +30,7 @@ public abstract class FluidContainerItemBase extends Item implements IFluidConta
 	protected FluidContainerItemBase(Properties properties, int defaultCapacity)
 	{
 		super(properties
-			.component(ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(0, defaultCapacity, FluidStack.empty().getRegistryKey(), false))
+			.component(ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(FluidStack.empty(), defaultCapacity, false))
 			.component(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(1.0f), Collections.emptyList(), Collections.emptyList(), List.of(0)))
 		);
 	}
@@ -47,7 +47,7 @@ public abstract class FluidContainerItemBase extends Item implements IFluidConta
 		FluidContainerComponent componentData = stack.get(ModComponents.FLUID_CONTAINER_COMPONENT);
 		if (componentData != null)
 		{
-			int fillLevel = Mth.clamp(Math.round((componentData.amount() / (float)componentData.capacity()) * 13.0f), 0, 13);
+			int fillLevel = Mth.clamp(Math.round((componentData.fluid().getAmount() / (float)componentData.capacity()) * 13.0f), 0, 13);
 			return fillLevel;
 		}
 		else return super.getBarWidth(stack);
@@ -60,7 +60,7 @@ public abstract class FluidContainerItemBase extends Item implements IFluidConta
 		if (componentData != null)
 		{
 			int capacity = componentData.capacity();
-			float freeCapacity = Math.max(0.0F, ((float)capacity - componentData.amount()) / capacity);
+			float freeCapacity = Math.max(0.0F, ((float)capacity - componentData.fluid().getAmount()) / capacity);
 			return Mth.hsvToRgb(freeCapacity / 3.0F, 1.0F, 1.0F);
 		}
 		else return super.getBarColor(stack);
@@ -77,7 +77,7 @@ public abstract class FluidContainerItemBase extends Item implements IFluidConta
 			{
 				// Cycle the fill mode between max, always drain/fill the maximum amount, and bucket, drain/fill one bucket at a time.
 				boolean newMode = !component.singleBucketMode();
-				itemStack.set(ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(component.amount(), component.capacity(), component.fluidId(), newMode));
+				itemStack.set(ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(component.fluid(), component.capacity(), newMode));
 
 				return InteractionResult.SUCCESS_SERVER;
 			}

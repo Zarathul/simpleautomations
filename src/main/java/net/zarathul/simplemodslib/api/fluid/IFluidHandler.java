@@ -42,7 +42,7 @@ public interface IFluidHandler
 	FluidStack drain(FluidStack drainFluid)
 	{
 		FluidStack fluid = getFluid();
-		if (fluid.isEmpty() || !fluid.isSameFluid(drainFluid) || (drainFluid.getAmount() <= 0)) return FluidStack.empty();
+		if (fluid.isEmpty() || !fluid.isSameFluidSameComponents(drainFluid) || (drainFluid.getAmount() <= 0)) return FluidStack.empty();
 
 		FluidStack drainedFluid = fluid.copy();
 		drainedFluid.setAmount(Math.min(fluid.getAmount(), drainFluid.getAmount()));
@@ -77,7 +77,7 @@ public interface IFluidHandler
 			return getFluid().getAmount();
 		}
 
-		if (!fluid.isSameFluid(fillFluid)) return 0;
+		if (!fluid.isSameFluidSameComponents(fillFluid)) return 0;
 
 		int fillAmount = Math.min(getCapacity() - fluid.getAmount(), fillFluid.getAmount());
 

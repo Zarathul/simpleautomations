@@ -15,13 +15,13 @@ public interface IFluidContainerItem
 		FluidStack itemFluidStack = FluidStack.from(dataComponent);
 
 		int drainAmount = (dataComponent.singleBucketMode()) ? FluidStack.BUCKET_VOLUME : drainFluidStack.getAmount();
-		if (itemFluidStack.isEmpty() || !itemFluidStack.isSameFluid(drainFluidStack) || (drainAmount <= 0)) return FluidStack.empty();
+		if (itemFluidStack.isEmpty() || !itemFluidStack.isSameFluidSameComponents(drainFluidStack) || (drainAmount <= 0)) return FluidStack.empty();
 
 		FluidStack drainedFluid = itemFluidStack.copy();
 		drainedFluid.setAmount(Math.min(itemFluidStack.getAmount(), drainAmount));
 		itemFluidStack.changeAmount(-drainedFluid.getAmount());
 
-		itemStack.set(ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(itemFluidStack.getAmount(), dataComponent.capacity(), itemFluidStack.getRegistryKey(), dataComponent.singleBucketMode()));
+		itemStack.set(ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(itemFluidStack, dataComponent.capacity(), dataComponent.singleBucketMode()));
 		onFluidChanged(itemStack, itemFluidStack.getAmount(), dataComponent.capacity(), itemFluidStack.getRegistryKey());
 
 		return drainedFluid;
@@ -43,13 +43,13 @@ public interface IFluidContainerItem
 			itemFluidStack = fillFluidStack.copy();
 			// limit the stored fluid to the tanks capacity
 			if (!itemFluidStack.isEmpty()) itemFluidStack.setAmount(Math.min(itemFluidStack.getAmount(), itemCapacity));
-			itemStack.set(ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(itemFluidStack.getAmount(), dataComponent.capacity(), itemFluidStack.getRegistryKey(), dataComponent.singleBucketMode()));
+			itemStack.set(ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(itemFluidStack, dataComponent.capacity(), dataComponent.singleBucketMode()));
 			onFluidChanged(itemStack, itemFluidStack.getAmount(), dataComponent.capacity(), itemFluidStack.getRegistryKey());
 
 			return itemFluidStack.getAmount();
 		}
 
-		if (!itemFluidStack.isSameFluid(fillFluidStack)) return 0;
+		if (!itemFluidStack.isSameFluidSameComponents(fillFluidStack)) return 0;
 
 		int remainingCapacity = itemCapacity - itemFluidStack.getAmount();
 		if (dataComponent.singleBucketMode()) remainingCapacity = Math.min(remainingCapacity, FluidStack.BUCKET_VOLUME);
@@ -58,7 +58,7 @@ public interface IFluidContainerItem
 		if (fillAmount > 0)
 		{
 			itemFluidStack.changeAmount(fillAmount);
-			itemStack.set(ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(itemFluidStack.getAmount(), dataComponent.capacity(), itemFluidStack.getRegistryKey(), dataComponent.singleBucketMode()));
+			itemStack.set(ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(itemFluidStack, dataComponent.capacity(), dataComponent.singleBucketMode()));
 			onFluidChanged(itemStack, itemFluidStack.getAmount(), dataComponent.capacity(), itemFluidStack.getRegistryKey());
 		}
 
