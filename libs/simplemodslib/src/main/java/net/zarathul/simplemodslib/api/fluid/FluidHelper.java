@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.zarathul.simplemodslib.ModComponents;
 import net.zarathul.simplemodslib.mixin.OverworldBiomesAccessor;
 import net.zarathul.simplemodslib.mixin.SpriteContentsAccessor;
 
@@ -267,16 +268,19 @@ public final class FluidHelper
 		// the empty bucket in the players hand with a filled one of the correct type.
 		if ((handlerFluid.getAmount() >= FluidStack.BUCKET_VOLUME))
 		{
-			FluidStack drainedFluid = handler.drain(new FluidStack(handlerFluid.getFluid(), FluidStack.BUCKET_VOLUME));
+			FluidStack fluidToDrain = handlerFluid.copy();
+			fluidToDrain.setAmount(FluidStack.BUCKET_VOLUME);
+
+			FluidStack drainedFluid = handler.drain(fluidToDrain);
 
 			if (!drainedFluid.isEmpty())
 			{
 				if (!player.isCreative())
 				{
-					Item bucket = getFilledBucket(handlerFluid);
-					if (bucket != null)
+					ItemStack filledBucket = getFilledBucket(drainedFluid);
+					if (filledBucket != null)
 					{
-						ItemStack filledBucket = new ItemStack(bucket);
+						player.getItemInHand(hand).consume(1, player);
 
 						if (!player.getInventory().add(filledBucket))
 						{
@@ -294,16 +298,28 @@ public final class FluidHelper
 
 	private static FluidHandlerInteractionResult drainBucket(Player player, InteractionHand hand, IFluidHandler handler)
 	{
-		BucketItem heldBucket = (BucketItem)player.getItemInHand(hand).getItem();
-		Fluid bucketFluid = heldBucket.getContent();
+		ItemStack heldBucketStack = player.getItemInHand(hand);
+		var containerComponent = heldBucketStack.get(ModComponents.FLUID_CONTAINER_COMPONENT);
+		FluidStack fillFluid;
+
+		if (containerComponent != null)	// Custom bucket that has a fluid container component.
+		{
+			fillFluid = containerComponent.fluid();
+		}
+		else	// Vanilla and other simple buckets.
+		{
+			BucketItem heldBucket = (BucketItem)heldBucketStack.getItem();
+			Fluid bucketFluid = heldBucket.getContent();
+			fillFluid = new FluidStack(bucketFluid, FluidStack.BUCKET_VOLUME);
+		}
+
 		FluidStack handlerFluid = handler.getFluid();
 
 		// Try to fill one bucket worth of fluid into the handler, if there is enough room. The type of
-		// fluid is determined by the bucket. If successful, replace the bucket in the players hand with an empty one.
+		// fluid is determined by the bucket. If successful, give the player an empty bucket (skipped in
+		// creative mode).
 		if ((handler.getCapacity() - handlerFluid.getAmount()) >= FluidStack.BUCKET_VOLUME)
 		{
-			FluidStack fillFluid = new FluidStack(bucketFluid, FluidStack.BUCKET_VOLUME);
-
 			if (handler.fill(fillFluid) > 0)
 			{
 				if (!player.isCreative())
@@ -426,13 +442,13 @@ public final class FluidHelper
 		return FluidHandlerInteractionResult.failure();
 	}
 
-	private static Item getFilledBucket(FluidStack fluidStack)
+	private static ItemStack getFilledBucket(FluidStack fluidStack)
 	{
 		Fluid fluid = fluidStack.getFluid();
-		if (fluid.isSame(Fluids.EMPTY)) return Items.BUCKET;
+		if (fluid.isSame(Fluids.EMPTY)) return Items.BUCKET.getDefaultInstance();
 		if (fluid instanceof IBucketProvider provider) return provider.getBucket(fluidStack);
 
-		return fluid.getBucket();
+		return fluid.getBucket().getDefaultInstance();
 	}
 
 	private static boolean isFilledBucket(ItemStack item)

@@ -42,7 +42,7 @@ public record ContainerItemFluidTintSource() implements ItemTintSource
 		FluidContainerComponent dataComponent = itemStack.get(ModComponents.FLUID_CONTAINER_COMPONENT);
 		if (dataComponent == null) return -1;
 
-		Identifier itemFluidId = dataComponent.fluidId();
+		Identifier itemFluidId = dataComponent.fluid().getRegistryKey();
 
 		Fluid fluid = BuiltInRegistries.FLUID.get(itemFluidId).get().value();
 		int tintColor = FluidHelper.getFluidColor(fluid, level, (owner != null) ? owner.blockPosition() : null, true);
