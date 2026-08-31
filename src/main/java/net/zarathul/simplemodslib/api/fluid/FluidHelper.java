@@ -38,7 +38,6 @@ import java.util.HashMap;
 
 public final class FluidHelper
 {
-	private static final HashMap<Fluid, Item> FLUID_TO_BUCKET = new HashMap<>();
 	private static final RandomSource random = RandomSource.create();
 
 	public enum FluidHandlerInteraction
@@ -56,15 +55,15 @@ public final class FluidHelper
 
 	public static FluidHandlerInteractionResult InteractWithFluidHandler(ServerPlayer player, InteractionHand hand, IFluidHandler handler)
 	{
-		ItemStack items = player.getItemInHand(hand);
-		Item heldItem = items.getItem();
+		ItemStack heldItemsStack = player.getItemInHand(hand);
+		Item heldItem = heldItemsStack.getItem();
 		FluidHandlerInteractionResult result;
 
 		if (heldItem == Items.BUCKET)	// empty bucket
 		{
 			result = fillEmptyBucket(player, hand, handler);
 		}
-		else if (isFilledBucket(heldItem))
+		else if (isFilledBucket(heldItemsStack))
 		{
 			result = drainBucket(player, hand, handler);
 		}
@@ -80,11 +79,11 @@ public final class FluidHelper
 		{
 			if (player.isCrouching())
 			{
-				result = fillFluidContainerItem(items, handler);
+				result = fillFluidContainerItem(heldItemsStack, handler);
 			}
 			else
 			{
-				result = drainFluidContainerItem(items, handler);
+				result = drainFluidContainerItem(heldItemsStack, handler);
 			}
 		}
 		else
@@ -135,17 +134,6 @@ public final class FluidHelper
 		String fluidName = fluid.defaultFluidState().createLegacyBlock().getBlock().getName().getString();
 
 		return fluidName;
-	}
-
-	public static void registerBucket(Fluid fluid, Item bucket)
-	{
-		// TODO: Find a better way to do this
-		if (FLUID_TO_BUCKET.isEmpty()) BuiltInRegistries.FLUID.forEach(x -> FLUID_TO_BUCKET.put(x, x.getBucket()));
-
-		if (!FLUID_TO_BUCKET.containsKey(fluid))
-		{
-			FLUID_TO_BUCKET.put(fluid, bucket);
-		}
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -279,11 +267,13 @@ public final class FluidHelper
 		// the empty bucket in the players hand with a filled one of the correct type.
 		if ((handlerFluid.getAmount() >= FluidStack.BUCKET_VOLUME))
 		{
-			if (!handler.drain(new FluidStack(handlerFluid.getFluid(), FluidStack.BUCKET_VOLUME)).isEmpty())
+			FluidStack drainedFluid = handler.drain(new FluidStack(handlerFluid.getFluid(), FluidStack.BUCKET_VOLUME));
+
+			if (!drainedFluid.isEmpty())
 			{
 				if (!player.isCreative())
 				{
-					Item bucket = getBucketForFluid(handlerFluid.getFluid());
+					Item bucket = getFilledBucket(handlerFluid);
 					if (bucket != null)
 					{
 						ItemStack filledBucket = new ItemStack(bucket);
@@ -295,7 +285,7 @@ public final class FluidHelper
 					}
 				}
 
-				return FluidHandlerInteractionResult.success(FluidHandlerInteraction.FILL, new FluidStack(handlerFluid.getFluid(), FluidStack.BUCKET_VOLUME));
+				return FluidHandlerInteractionResult.success(FluidHandlerInteraction.FILL, drainedFluid);
 			}
 		}
 
@@ -436,23 +426,24 @@ public final class FluidHelper
 		return FluidHandlerInteractionResult.failure();
 	}
 
-	private static Item getBucketForFluid(Fluid fluid)
+	private static Item getFilledBucket(FluidStack fluidStack)
 	{
+		Fluid fluid = fluidStack.getFluid();
 		if (fluid.isSame(Fluids.EMPTY)) return Items.BUCKET;
+		if (fluid instanceof IBucketProvider provider) return provider.getBucket(fluidStack);
 
-		// TODO: Find a better way to do this
-		if (FLUID_TO_BUCKET.isEmpty()) BuiltInRegistries.FLUID.forEach(x -> FLUID_TO_BUCKET.put(x, x.getBucket()));
-
-		return FLUID_TO_BUCKET.get(fluid);
+		return fluid.getBucket();
 	}
 
-	private static boolean isFilledBucket(Item item)
+	private static boolean isFilledBucket(ItemStack item)
 	{
-		if (item == Items.AIR) return false;
+		if (item.getItem() == Items.AIR) return false;
 
-		// TODO: Find a better way to do this
-		if (FLUID_TO_BUCKET.isEmpty()) BuiltInRegistries.FLUID.forEach(x -> FLUID_TO_BUCKET.put(x, x.getBucket()));
+		for (Fluid fluid : BuiltInRegistries.FLUID)
+		{
+			if ((fluid instanceof IBucketProvider provider && provider.isFilledBucket(item)) || (fluid.getBucket() == item.getItem())) return true;
+		}
 
-		return FLUID_TO_BUCKET.containsValue(item);
+		return false;
 	}
 }
