@@ -1,6 +1,11 @@
 package net.zarathul.simplemodslib.api.fluid;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
@@ -38,6 +43,47 @@ public class FluidStack
 
 	private FluidStack()
 	{
+	}
+
+	public static final Codec<FluidStack> CODEC = RecordCodecBuilder.create(instance ->
+		instance.group(
+			Identifier.CODEC
+				.fieldOf("fluid")
+				.forGetter(FluidStack::getRegistryKey),
+
+			Codec.INT
+				.fieldOf("amount")
+				.forGetter(FluidStack::getAmount)
+		).apply(instance, FluidStack::from)
+	);
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, FluidStack> STREAM_CODEC =
+		StreamCodec.composite(
+			Identifier.STREAM_CODEC,
+			FluidStack::getRegistryKey,
+
+			ByteBufCodecs.VAR_INT,
+			FluidStack::getAmount,
+
+			FluidStack::from
+		);
+
+	public static FluidStack from(Identifier fluidId, int amount)
+	{
+		if (amount <= 0) return empty();
+
+		var registryGetResult = BuiltInRegistries.FLUID.get(fluidId);
+
+		if (registryGetResult.isEmpty())
+		{
+			return empty();
+		}
+
+		return new FluidStack(
+			registryGetResult.get().value(),
+			amount,
+			fluidId
+		);
 	}
 
 	public FluidStack copy()
