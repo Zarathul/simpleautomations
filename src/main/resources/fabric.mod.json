@@ -16,10 +16,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.zarathul.simpleautomations.Simpleautomations"
+			"net.zarathul.simpleautomations.SimpleAutomations"
 		],
 		"client": [
-			"net.zarathul.simpleautomations.SimpleautomationsClient"
+			"net.zarathul.simpleautomations.SimpleAutomationsClient"
 		]
 	},
 	"mixins": [
