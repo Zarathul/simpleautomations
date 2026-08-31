@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -292,17 +291,16 @@ public abstract class AlcoholFluid extends FlowingFluid
 
 			// Randomly evaporate alcohol sources. The purer the alcohol the faster the evaporation.
 
-			int randomTickSpeed = level.getGameRules().get(GameRules.RANDOM_TICK_SPEED).intValue();
 			DistillationLevel distillationLevel = fluidState.getValue(DISTILLATION_LEVEL);
 
-			float baseChance = switch (distillationLevel)
+			float chance = switch (distillationLevel)
 			{
-				case NORMAL 	  -> 1.00f;
-				case CONCENTRATED -> 0.75f;
-				case PURE 	      -> 0.50f;
+				case NORMAL 	  -> 0.30f;
+				case CONCENTRATED -> 0.50f;
+				case PURE 	      -> 0.75f;
 			};
-			float chance = baseChance * getTickDelay(level) / randomTickSpeed;
-			boolean doEvaporate = (random.nextFloat() < Math.min(chance, 1.0f));
+
+			boolean doEvaporate = (random.nextFloat() < chance);
 
 			if (doEvaporate)
 			{

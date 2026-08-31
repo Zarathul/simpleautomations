@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
-import net.zarathul.simpleautomations.Simpleautomations;
+import net.zarathul.simpleautomations.SimpleAutomations;
 import net.zarathul.simpleautomations.common.Colors;
 import net.zarathul.simpleautomations.common.DistillationLevel;
 
@@ -38,12 +38,12 @@ public final class ModFluids
 
 	public static void init()
 	{
-		Simpleautomations.LOG.info("Registering fluids.");
+		SimpleAutomations.LOG.info("Registering fluids.");
 	}
 
 	private static ResourceKey<Fluid> createKey(String name)
 	{
-		return ResourceKey.create(Registries.FLUID, Simpleautomations.modId(name));
+		return ResourceKey.create(Registries.FLUID, SimpleAutomations.modId(name));
 	}
 
 	@Environment(EnvType.CLIENT)

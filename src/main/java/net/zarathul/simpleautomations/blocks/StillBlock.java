@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -28,9 +29,12 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.zarathul.simpleautomations.Simpleautomations;
-import net.zarathul.simpleautomations.blocks.entities.InventoryBlockEntity;
+import net.zarathul.simpleautomations.SimpleAutomations;
+import net.zarathul.simpleautomations.blocks.entities.MultiBlockFluidInventoryBlockEntity;
+import net.zarathul.simpleautomations.blocks.entities.MultiBlockInventoryBlockEntity;
 import net.zarathul.simplemodslib.Utils;
+import net.zarathul.simplemodslib.api.fluid.FluidHelper;
+import net.zarathul.simplemodslib.api.fluid.FluidStack;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -44,6 +48,9 @@ public class StillBlock extends BaseEntityBlock
 	public static final BooleanProperty FUEL_HATCH_OPEN = BooleanProperty.create("fuel_hatch_open");
 	public static final BooleanProperty PRESSURE_RELEASE_PULLED = BooleanProperty.create("pressure_release_pulled");
 	public static final IntegerProperty PRESSURE = IntegerProperty.create("pressure", 0, 7);
+
+	public static final int PRESSURE_RELEASE_INDEX = 0;
+	public static final int POWER_LEVER_INDEX = 2;
 
 	private static final MultiBlockPart[][] PARTS;
 
@@ -117,15 +124,11 @@ public class StillBlock extends BaseEntityBlock
 //			case CORE ->
 //			{
 //			}
-//			case FLUID_INPUT ->
-//			{
-//			}
-//			case FLUID_OUTPUT ->
-//			{
-//			}
-			case ITEMS_INPUT -> new InventoryBlockEntity(worldPosition, blockState, 8, 64);
-			case FUEL_INPUT  -> new InventoryBlockEntity(worldPosition, blockState, 4, 64);
-			default 		 -> null;
+			case FLUID_INPUT  -> new MultiBlockFluidInventoryBlockEntity(worldPosition, blockState, 32 * FluidStack.BUCKET_VOLUME);
+			case FLUID_OUTPUT -> new MultiBlockFluidInventoryBlockEntity(worldPosition, blockState, 32 * FluidStack.BUCKET_VOLUME);
+			case ITEMS_INPUT  -> new MultiBlockInventoryBlockEntity(worldPosition, blockState, 4, 64);
+			case FUEL_INPUT   -> new MultiBlockInventoryBlockEntity(worldPosition, blockState, 1, 64);
+			default 		  -> null;
 		};
 	}
 
@@ -209,7 +212,7 @@ public class StillBlock extends BaseEntityBlock
 		BlockPos corePos = getCorePos(level, pos, state);
 		if (corePos == null)
 		{
-			Simpleautomations.LOG.error("Core block not found for multiblock part at {}.", Utils.getReadableBlockPos(pos));
+			SimpleAutomations.LOG.error("Core block not found for multiblock part at {}.", Utils.getReadableBlockPos(pos));
 			return (level.isClientSide()) ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
 		}
 
@@ -222,34 +225,32 @@ public class StillBlock extends BaseEntityBlock
 				boolean hatchOpen = coreState.getValue(FUEL_HATCH_OPEN);
 				if (hatchOpen && player.isCrouching())	// Take out fuel
 				{
-					InventoryBlockEntity fuelInventory = level.getBlockEntity(pos, ModBlocks.BASIC_INVENTORY_ENTITY).get();
-
-					for (int i = 0; i < fuelInventory.getContainerSize(); i++)
-					{
-						ItemStack itemInSlot = fuelInventory.getItem(i);
-
-						if (!itemInSlot.isEmpty())
-						{
-							player.getInventory().addAndPickItem(fuelInventory.removeItem(i, itemInSlot.count()));
-							break;
-						}
-					}
+					MultiBlockInventoryBlockEntity fuelInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
+					fuelInventory.takeItem(player);
 				}
 				else
 				{
 					level.setBlockAndUpdate(corePos, coreState.setValue(FUEL_HATCH_OPEN, !hatchOpen));
 				}
 			}
+			case ITEMS_INPUT ->
+			{
+				if (player.isCrouching())
+				{
+					MultiBlockInventoryBlockEntity itemsInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
+					itemsInventory.takeItem(player);
+				}
+			}
 			case INTERACTABLE ->
 			{
 				int partIndex = getMultiBlockPartIndex(corePos, pos, state.getValue(FACING));
 
-				if (partIndex == 0)
+				if (partIndex == PRESSURE_RELEASE_INDEX)
 				{
 					boolean pressureReleaseEngaged = coreState.getValue(PRESSURE_RELEASE_PULLED);
 					level.setBlockAndUpdate(corePos, coreState.setValue(PRESSURE_RELEASE_PULLED, !pressureReleaseEngaged));
 				}
-				else if (partIndex == 2)
+				else if (partIndex == POWER_LEVER_INDEX)
 				{
 					boolean poweredOn = coreState.getValue(POWERED_ON);
 					level.setBlockAndUpdate(corePos, coreState.setValue(POWERED_ON, !poweredOn));
@@ -267,51 +268,75 @@ public class StillBlock extends BaseEntityBlock
 		if (itemStack.isEmpty()) return InteractionResult.TRY_WITH_EMPTY_HAND;
 
 		BlockPos corePos = getCorePos(level, pos, state);
-		if (corePos == null)
+
+		if (corePos != null)
 		{
-			Simpleautomations.LOG.error("Core block not found for multiblock part at {}.", Utils.getReadableBlockPos(pos));
-			return (level.isClientSide()) ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
+			BlockState coreState = level.getBlockState(corePos);
+
+			InteractionResult result = switch (state.getValue(PART))
+			{
+				case FUEL_INPUT -> handleFuelItemInput(itemStack, level, pos, coreState);
+				case ITEMS_INPUT -> handleItemsInput(itemStack, level, pos, coreState);
+				case FLUID_INPUT,FLUID_OUTPUT -> handleFluidInputOutput(player, hand, itemStack, level, pos, coreState);
+
+				default -> InteractionResult.PASS;
+			};
+
+			if (result != InteractionResult.PASS) return result;
+		}
+		else
+		{
+			SimpleAutomations.LOG.error("Core block not found for multiblock part at {}.", Utils.getReadableBlockPos(pos));
 		}
 
-		BlockState coreState = level.getBlockState(corePos);
+		return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
+	}
 
-		switch (state.getValue(PART))
+	private InteractionResult handleFuelItemInput(ItemStack itemStack, Level level, BlockPos pos, BlockState coreState)
+	{
+		if (coreState.getValue(FUEL_HATCH_OPEN) && level.fuelValues().isFuel(itemStack))
 		{
-			case FUEL_INPUT ->
+			if (!level.isClientSide())
 			{
-				InventoryBlockEntity fuelInventory = level.getBlockEntity(pos, ModBlocks.BASIC_INVENTORY_ENTITY).get();
-
-				if (coreState.getValue(FUEL_HATCH_OPEN) && level.fuelValues().isFuel(itemStack))
-				{
-					ItemStack remainingStack = itemStack;
-
-					for (int i = 0; i < fuelInventory.getContainerSize(); i++)
-					{
-						ItemStack itemInSlot = fuelInventory.getItem(i);
-						if (itemInSlot.isEmpty())
-						{
-							int amountToStore = Math.max(remainingStack.count(), fuelInventory.getMaxStackSize());
-							fuelInventory.setItem(i, remainingStack.copy());
-							remainingStack.consume(amountToStore, null);
-						}
-						else if (itemInSlot.count() < fuelInventory.getMaxStackSize() && ItemStack.isSameItemSameComponents(remainingStack, itemInSlot))
-						{
-							int spaceLeftInSlot = fuelInventory.getMaxStackSize() - itemInSlot.count();
-							int amountToStore = Math.min(remainingStack.count(), spaceLeftInSlot);
-
-							remainingStack.consume(amountToStore, null);
-							itemInSlot.setCount(itemInSlot.count() + amountToStore);
-						}
-
-						if (remainingStack.isEmpty()) break;
-					}
-				}
+				MultiBlockInventoryBlockEntity fuelInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
+				fuelInventory.putItem(itemStack);
 			}
 
-			default -> {}
+			return (level.isClientSide()) ?  InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
 		}
 
-		return (level.isClientSide()) ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
+		return InteractionResult.PASS;
+	}
+
+	private InteractionResult handleItemsInput(ItemStack itemStack, Level level, BlockPos pos, BlockState coreState)
+	{
+		if (!level.isClientSide())
+		{
+			MultiBlockInventoryBlockEntity itemsInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
+			itemsInventory.putItem(itemStack);
+		}
+
+		return (level.isClientSide()) ?  InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
+	}
+
+	private InteractionResult handleFluidInputOutput(Player player, InteractionHand hand, ItemStack itemStack, Level level, BlockPos pos, BlockState coreState)
+	{
+		if (!level.isClientSide())
+		{
+			var fluidInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_FLUID_INVENTORY);
+
+			if (fluidInventory.isPresent())
+			{
+				if (FluidHelper.InteractWithFluidHandler((ServerPlayer)player, hand, fluidInventory.get()).success()) return InteractionResult.SUCCESS_SERVER;
+			}
+			else
+			{
+				SimpleAutomations.LOG.error("Missing MultiBlockFluidInventoryBlockEntity at {}", pos.toShortString());
+			}
+		}
+
+		if (FluidHelper.isFluidContainerItem(player.getItemInHand(hand))) return InteractionResult.SUCCESS;
+		else return InteractionResult.PASS;
 	}
 
 	@Override

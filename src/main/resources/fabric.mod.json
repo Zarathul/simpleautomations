@@ -8,8 +8,8 @@
 		"Zarathul"
 	],
 	"contact": {
-		"homepage": "https://github.com/Zarathul/simpleautomations_fabric",
-		"sources": "https://github.com/Zarathul/simpleautomations_fabric"
+		"homepage": "https://github.com/Zarathul/simpleautomations",
+		"sources": "https://github.com/Zarathul/simpleautomations"
 	},
 	"license": "MIT",
 	"icon": "assets/simpleautomations/icon.png",

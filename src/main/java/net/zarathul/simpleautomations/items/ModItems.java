@@ -3,7 +3,7 @@ package net.zarathul.simpleautomations.items;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.zarathul.simpleautomations.Simpleautomations;
+import net.zarathul.simpleautomations.SimpleAutomations;
 import net.zarathul.simpleautomations.blocks.ModBlocks;
 import net.zarathul.simpleautomations.common.DistillationLevel;
 import net.zarathul.simpleautomations.components.AlcoholDistillationLevel;
@@ -20,31 +20,31 @@ public final class ModItems
 	public static final String TONIC_NAME = "tonic";
 	public static final String ALCOHOL_BUCKET_NAME = "alcohol_bucket";
 
-	private static final ItemRegistrar REGISTRAR = new ItemRegistrar(Simpleautomations.MOD_ID);
+	private static final ItemRegistrar REGISTRAR = new ItemRegistrar(SimpleAutomations.MOD_ID);
 
 	public static final TonicItem EMPTY_TONIC = REGISTRAR.register("empty_tonic", TonicItem::new,
 		new Item.Properties()
 			.stacksTo(16)
 			.component(ModComponents.TONIC, new Tonic(Tonic.Type.EMPTY))
-			.modelId(Simpleautomations.modId(TONIC_NAME))
+			.modelId(SimpleAutomations.modId(TONIC_NAME))
 	);
 	public static final TonicItem ANTIDOTE = REGISTRAR.register("antidote", TonicItem::new,
 		new Item.Properties()
 			.stacksTo(16)
 			.component(ModComponents.TONIC, new Tonic(Tonic.Type.ANTIDOTE))
-			.modelId(Simpleautomations.modId(TONIC_NAME))
+			.modelId(SimpleAutomations.modId(TONIC_NAME))
 	);
 	public static final TonicItem SILENCE_TONIC = REGISTRAR.register("silence_tonic", TonicItem::new,
 		new Item.Properties()
 			.stacksTo(16)
 			.component(ModComponents.TONIC, new Tonic(Tonic.Type.SILENCE))
-			.modelId(Simpleautomations.modId(TONIC_NAME))
+			.modelId(SimpleAutomations.modId(TONIC_NAME))
 	);
 	public static final TonicItem BINDING_TONIC = REGISTRAR.register("binding_tonic", TonicItem::new,
 		new Item.Properties()
 			.stacksTo(16)
 			.component(ModComponents.TONIC, new Tonic(Tonic.Type.BINDING))
-			.modelId(Simpleautomations.modId(TONIC_NAME))
+			.modelId(SimpleAutomations.modId(TONIC_NAME))
 	);
 	public static final AlcoholBucketItem ALCOHOL_BUCKET = REGISTRAR.register(ALCOHOL_BUCKET_NAME, properties -> new AlcoholBucketItem(ModFluids.ALCOHOL_STILL, properties),
 		new Item.Properties()
@@ -57,21 +57,21 @@ public final class ModItems
 			.craftRemainder(Items.BUCKET)
 			.stacksTo(1)
 			.component(ModComponents.ALCOHOL_DISTILLATION_LEVEL, new AlcoholDistillationLevel(DistillationLevel.CONCENTRATED))
-			.modelId(Simpleautomations.modId(ALCOHOL_BUCKET_NAME))
+			.modelId(SimpleAutomations.modId(ALCOHOL_BUCKET_NAME))
 	);
 	public static final AlcoholBucketItem PURE_ALCOHOL_BUCKET = REGISTRAR.register("pure_alcohol_bucket", properties -> new AlcoholBucketItem(ModFluids.ALCOHOL_STILL, properties),
 		new Item.Properties()
 			.craftRemainder(Items.BUCKET)
 			.stacksTo(1)
 			.component(ModComponents.ALCOHOL_DISTILLATION_LEVEL, new AlcoholDistillationLevel(DistillationLevel.PURE))
-			.modelId(Simpleautomations.modId(ALCOHOL_BUCKET_NAME))
+			.modelId(SimpleAutomations.modId(ALCOHOL_BUCKET_NAME))
 	);
 
 	public static final BlockItem STILL = REGISTRAR.register("still", ModBlocks.STILL, BlockItem::new, new Item.Properties().stacksTo(64));
 
 	public static void init()
 	{
-		Simpleautomations.LOG.info("Registering items.");
+		SimpleAutomations.LOG.info("Registering items.");
 
 		Collections.addAll(SimpleModsLib.creativeModeTabItems,
 			EMPTY_TONIC,

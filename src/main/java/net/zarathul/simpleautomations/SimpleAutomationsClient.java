@@ -5,7 +5,7 @@ import net.zarathul.simpleautomations.fluids.ModFluids;
 import net.zarathul.simpleautomations.items.ModItems;
 import net.zarathul.simpleautomations.particles.ModParticles;
 
-public class SimpleautomationsClient implements ClientModInitializer
+public class SimpleAutomationsClient implements ClientModInitializer
 {
 	@Override
 	public void onInitializeClient()

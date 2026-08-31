@@ -10,7 +10,7 @@ import net.zarathul.simpleautomations.particles.ModParticles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Simpleautomations implements ModInitializer
+public class SimpleAutomations implements ModInitializer
 {
 	public static final String MOD_ID = "simpleautomations";
 	public static final Logger LOG = LoggerFactory.getLogger(MOD_ID);
