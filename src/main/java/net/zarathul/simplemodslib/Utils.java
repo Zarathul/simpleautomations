@@ -7,6 +7,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Vec3i;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -370,5 +371,71 @@ public final class Utils
 
 			return false;
 		}
+	}
+
+	/**
+	 * Get the center point of 4 directly adjacent blocks.<br>
+	 * The order of block positions does not matter.
+	 * <pre>
+	 *     {@code
+	 *    ┌───┬───┐    ┌───┬───┐
+	 *    │ A │ B │    │ C │ B │
+	 *    ├───┼───┤ or ├───┼───┤ etc.
+	 *    │ C │ D │    │ A │ D │
+	 *    └───┴───┘    └───┴───┘
+	 *
+	 *    For the first example:
+	 *    A=0,0,0 /  B=1,0,0 / C=0,0,-1 / D=1,0,-1
+	 *    Center is 1,0,0
+	 *     }
+	 * </pre>
+	 *
+	 * @param a
+	 * One of the block positions.
+	 * @param b
+	 * One of the block positions.
+	 * @param c
+	 * One of the block positions.
+	 * @param d
+	 * One of the block positions.
+	 * @return
+	 * The center point.
+	 */
+
+	public static Vec3i getCenter(BlockPos a, BlockPos b, BlockPos c, BlockPos d)
+	{
+		int x = Math.max(
+			Math.max(a.getX(), b.getX()),
+			Math.max(c.getX(), d.getX())
+		);
+
+		int z = Math.max(
+			Math.max(a.getZ(), b.getZ()),
+			Math.max(c.getZ(), d.getZ())
+		);
+
+		return new Vec3i(x, a.getY(), z);
+	}
+
+	/**
+	 * Offsets a position by the reverse of the passed in offset.<br>
+	 * When used on a previously offset position with the same offset will get the origin.
+	 * <pre>
+	 *     {@code
+	 *     A offset by F = B
+	 *     B reverseOffset by F = A
+	 *     }
+	 * </pre>
+	 *
+	 * @param pos
+	 * The position to offset.
+	 * @param offset
+	 * The offset that will get reversed.
+	 * @return
+	 * The origin of {@code pos} before being offset by {@code offset}.
+	 */
+	public static BlockPos reverseOffset(BlockPos pos, Vec3i offset)
+	{
+		return pos.offset(-offset.getX(), -offset.getY(), -offset.getZ());
 	}
 }
