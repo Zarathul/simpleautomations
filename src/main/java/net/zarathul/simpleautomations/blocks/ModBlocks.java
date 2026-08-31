@@ -10,6 +10,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.zarathul.simpleautomations.SimpleAutomations;
 import net.zarathul.simpleautomations.blocks.entities.MultiBlockFluidInventoryBlockEntity;
 import net.zarathul.simpleautomations.blocks.entities.MultiBlockInventoryBlockEntity;
+import net.zarathul.simpleautomations.blocks.entities.StillCoreBlockEntity;
 import net.zarathul.simpleautomations.fluids.ModFluids;
 import net.zarathul.simplemodslib.api.block.BlockRegistrar;
 
@@ -22,6 +23,7 @@ public final class ModBlocks
 
 	public static final BlockEntityType<MultiBlockInventoryBlockEntity> MULTI_BLOCK_INVENTORY = REGISTRAR.register("multi_block_inventory", MultiBlockInventoryBlockEntity::new, STILL);
 	public static final BlockEntityType<MultiBlockFluidInventoryBlockEntity> MULTI_BLOCK_FLUID_INVENTORY = REGISTRAR.register("multi_block_fluid_inventory", MultiBlockFluidInventoryBlockEntity::new, STILL);
+	public static final BlockEntityType<StillCoreBlockEntity> STILL_CORE = REGISTRAR.register("still_core", StillCoreBlockEntity::new, STILL);
 
 	public static void init()
 	{

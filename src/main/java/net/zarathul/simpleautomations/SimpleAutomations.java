@@ -7,6 +7,7 @@ import net.zarathul.simpleautomations.components.ModComponents;
 import net.zarathul.simpleautomations.fluids.ModFluids;
 import net.zarathul.simpleautomations.items.ModItems;
 import net.zarathul.simpleautomations.particles.ModParticles;
+import net.zarathul.simpleautomations.recipes.ModRecipes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ public class SimpleAutomations implements ModInitializer
 		ModFluids.init();
 		ModItems.init();
 		ModBlocks.init();
+		ModRecipes.init();
 		ModParticles.init();
 	}
 

@@ -1,0 +1,21 @@
+{
+	"type": "simpleautomations:still",
+	"fluid": {
+		"fluid": "minecraft:water",
+		"amount": 1000
+	},
+	"items": [
+		{
+			"ingredient": "#c:crops",
+			"count": 16
+		},
+		{
+			"ingredient": "minecraft:sugar",
+			"count": 4
+		}
+	],
+	"result": {
+		"fluid": "simpleautomations:alcohol",
+		"amount": 250
+	}
+}

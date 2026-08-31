@@ -19,6 +19,8 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -32,12 +34,16 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.zarathul.simpleautomations.SimpleAutomations;
 import net.zarathul.simpleautomations.blocks.entities.MultiBlockFluidInventoryBlockEntity;
 import net.zarathul.simpleautomations.blocks.entities.MultiBlockInventoryBlockEntity;
+import net.zarathul.simpleautomations.blocks.entities.StillCoreBlockEntity;
 import net.zarathul.simplemodslib.Utils;
 import net.zarathul.simplemodslib.api.fluid.FluidHelper;
 import net.zarathul.simplemodslib.api.fluid.FluidStack;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+
+import static net.zarathul.simplemodslib.Utils.getCenter;
+import static net.zarathul.simplemodslib.Utils.reverseOffset;
 
 public class StillBlock extends BaseEntityBlock
 {
@@ -51,6 +57,9 @@ public class StillBlock extends BaseEntityBlock
 
 	public static final int PRESSURE_RELEASE_INDEX = 0;
 	public static final int POWER_LEVER_INDEX = 2;
+	public static final int FLUID_OUTPUT_INDEX = 5;
+	public static final int FLUID_INPUT_INDEX = 7;
+	public static final int ITEMS_INPUT_INDEX = 12;
 
 	private static final MultiBlockPart[][] PARTS;
 
@@ -121,14 +130,11 @@ public class StillBlock extends BaseEntityBlock
 
 		return switch (partType)
 		{
-//			case CORE ->
-//			{
-//			}
-			case FLUID_INPUT  -> new MultiBlockFluidInventoryBlockEntity(worldPosition, blockState, 32 * FluidStack.BUCKET_VOLUME);
-			case FLUID_OUTPUT -> new MultiBlockFluidInventoryBlockEntity(worldPosition, blockState, 32 * FluidStack.BUCKET_VOLUME);
-			case ITEMS_INPUT  -> new MultiBlockInventoryBlockEntity(worldPosition, blockState, 4, 64);
-			case FUEL_INPUT   -> new MultiBlockInventoryBlockEntity(worldPosition, blockState, 1, 64);
-			default 		  -> null;
+			case CORE 		 			   -> new StillCoreBlockEntity(worldPosition, blockState);
+			case FLUID_INPUT, FLUID_OUTPUT -> new MultiBlockFluidInventoryBlockEntity(worldPosition, blockState, 32 * FluidStack.BUCKET_VOLUME);
+			case ITEMS_INPUT  			   -> new MultiBlockInventoryBlockEntity(worldPosition, blockState, 4, 64);
+			case FUEL_INPUT   			   -> new MultiBlockInventoryBlockEntity(worldPosition, blockState, 1, 64);
+			default 		  			   -> null;
 		};
 	}
 
@@ -142,6 +148,12 @@ public class StillBlock extends BaseEntityBlock
 	protected MapCodec<? extends BaseEntityBlock> codec()
 	{
 		return CODEC;
+	}
+
+	@Override
+	public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> type)
+	{
+		return createTickerHelper(type, ModBlocks.STILL_CORE, StillCoreBlockEntity::tick);
 	}
 
 	@Override
@@ -397,6 +409,7 @@ public class StillBlock extends BaseEntityBlock
 			// and calculate the two center points where the chimneys are located.
 			Vec3i[] chimneys = new Vec3i[]
 			{
+				// TODO: use getPartPos()
 				getCenter(
 					pos.offset(parts[10].offsetToCore),
 					pos.offset(parts[11].offsetToCore),
@@ -428,22 +441,6 @@ public class StillBlock extends BaseEntityBlock
 		}
 	}
 
-	// TODO: move to simplemodslib Utils
-	public static Vec3i getCenter(BlockPos a, BlockPos b, BlockPos c, BlockPos d)
-	{
-		int x = Math.max(
-			Math.max(a.getX(), b.getX()),
-			Math.max(c.getX(), d.getX())
-		);
-
-		int z = Math.max(
-			Math.max(a.getZ(), b.getZ()),
-			Math.max(c.getZ(), d.getZ())
-		);
-
-		return new Vec3i(x, a.getY(), z);
-	}
-
 	protected BlockPos getCorePos(LevelAccessor level, BlockPos pos, BlockState state)
 	{
 		if (state.getValue(PART) == MultiBlockPartType.CORE) return pos;
@@ -462,6 +459,25 @@ public class StillBlock extends BaseEntityBlock
 		}
 
 		return null;
+	}
+
+	public static BlockPos getPartPos(BlockPos corePos, Direction facing, int index)
+	{
+		return corePos.offset(PARTS[facing.get2DDataValue()][index].offsetToCore());
+	}
+
+	public static BlockPos[] getPartPos(BlockPos corePos, Direction facing, int[] indexes)
+	{
+		if (indexes == null || indexes.length == 0) return null;
+
+		BlockPos[] result = new BlockPos[indexes.length];
+
+		for (int i = 0; i < indexes.length; i++)
+		{
+			result[i] = getPartPos(corePos, facing, indexes[i]);
+		}
+
+		return result;
 	}
 
 	/**
@@ -530,12 +546,6 @@ public class StillBlock extends BaseEntityBlock
 		// Add 1 to deltaX to move its range to 0..2. Which corresponds to the column index. Add on top of the index in the first column.
 		// On the bottom layer the deltaY * 9 term is always 0, on the top layer it is always 9. Add the result to the previously calculated index to get the top layer index.
 		return deltaY * 9 + (deltaZ + 1) * 3 + (deltaX + 1);
-	}
-
-	// TODO: move to simplemodslib Utils
-	public static BlockPos reverseOffset(BlockPos pos, Vec3i offset)
-	{
-		return pos.offset(-offset.getX(), -offset.getY(), -offset.getZ());
 	}
 
 	public record MultiBlockPart(Vec3i offsetToCore, MultiBlockPartType type)
