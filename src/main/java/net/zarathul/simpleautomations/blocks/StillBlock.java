@@ -4,14 +4,20 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -23,12 +29,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.zarathul.simpleautomations.Simpleautomations;
+import net.zarathul.simpleautomations.blocks.entities.InventoryBlockEntity;
 import net.zarathul.simplemodslib.Utils;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-public class StillBlock extends Block
+public class StillBlock extends BaseEntityBlock
 {
 	public static final MapCodec<StillBlock> CODEC = simpleCodec(StillBlock::new);
 	public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -46,28 +53,29 @@ public class StillBlock extends Block
 		PARTS = new MultiBlockPart[4][];
 		PARTS[northIndex] = new MultiBlockPart[]
 		{
-			new MultiBlockPart(new Vec3i( 0, 0, -1), MultiBlockPartType.FUEL_INPUT),	// North: Fuel Hatch
-			new MultiBlockPart(new Vec3i( 1, 0, -1), MultiBlockPartType.INTERACTABLE),	// North, East: Power Lever
-			new MultiBlockPart(new Vec3i(-1, 0, -1), MultiBlockPartType.INTERACTABLE),	// North, West: Power Gauge + Pressure Release
+			new MultiBlockPart(new Vec3i(-1, 0, -1), MultiBlockPartType.INTERACTABLE),	//  0 North, West: Power Gauge + Pressure Release
+			new MultiBlockPart(new Vec3i( 0, 0, -1), MultiBlockPartType.FUEL_INPUT),	//  1 North: Fuel Hatch
+			new MultiBlockPart(new Vec3i( 1, 0, -1), MultiBlockPartType.INTERACTABLE),	//  2 North, East: Power Lever
 
-			new MultiBlockPart(new Vec3i( 0, 1, -1), MultiBlockPartType.PROXY),		// North, Up: Proxy
-			new MultiBlockPart(new Vec3i( 1, 1, -1), MultiBlockPartType.PROXY),		// North, Up, East: Proxy
-			new MultiBlockPart(new Vec3i(-1, 1, -1), MultiBlockPartType.PROXY),		// North, Up, West: Proxy
+			new MultiBlockPart(new Vec3i(-1, 0, 0), MultiBlockPartType.PROXY),			//  3 West: Proxy
+			new MultiBlockPart(new Vec3i( 0, 0, 0), MultiBlockPartType.CORE),			//  4 Core
+			new MultiBlockPart(new Vec3i( 1, 0, 0), MultiBlockPartType.FLUID_OUTPUT),	//  5 East: Fluid Output
 
-			new MultiBlockPart(new Vec3i( 1, 0, 0), MultiBlockPartType.FLUID_OUTPUT),	// East: Fluid Output
-			new MultiBlockPart(new Vec3i(-1, 0, 0), MultiBlockPartType.PROXY),			// West: Proxy
+			new MultiBlockPart(new Vec3i(-1, 0, 1), MultiBlockPartType.PROXY),			//  6 South, West: Proxy
+			new MultiBlockPart(new Vec3i( 0, 0, 1), MultiBlockPartType.FLUID_INPUT),	//  7 South: Fluid Input
+			new MultiBlockPart(new Vec3i( 1, 0, 1), MultiBlockPartType.PROXY),			//  8 South, East: Proxy
 
-			new MultiBlockPart(new Vec3i( 0, 1, 0), MultiBlockPartType.PROXY),			// Up: Proxy
-			new MultiBlockPart(new Vec3i( 1, 1, 0), MultiBlockPartType.PROXY),			// Up, East: Proxy
-			new MultiBlockPart(new Vec3i(-1, 1, 0), MultiBlockPartType.ITEMS_INPUT),	// Up, West: Item Input
+			new MultiBlockPart(new Vec3i(-1, 1, -1), MultiBlockPartType.PROXY),		//  9 North, Up, West: Proxy
+			new MultiBlockPart(new Vec3i( 0, 1, -1), MultiBlockPartType.PROXY),		// 10 North, Up: Proxy
+			new MultiBlockPart(new Vec3i( 1, 1, -1), MultiBlockPartType.PROXY),		// 11 North, Up, East: Proxy
 
-			new MultiBlockPart(new Vec3i( 0, 0, 1), MultiBlockPartType.FLUID_INPUT),	// South: Fluid Input
-			new MultiBlockPart(new Vec3i( 1, 0, 1), MultiBlockPartType.PROXY),			// South, East: Proxy
-			new MultiBlockPart(new Vec3i(-1, 0, 1), MultiBlockPartType.PROXY),			// South, West: Proxy
+			new MultiBlockPart(new Vec3i(-1, 1, 0), MultiBlockPartType.ITEMS_INPUT),	// 12 Up, West: Item Input
+			new MultiBlockPart(new Vec3i( 0, 1, 0), MultiBlockPartType.PROXY),			// 13 Up: Proxy
+			new MultiBlockPart(new Vec3i( 1, 1, 0), MultiBlockPartType.PROXY),			// 14 Up, East: Proxy
 
-			new MultiBlockPart(new Vec3i( 0, 1, 1), MultiBlockPartType.PROXY),			// South, Up: Proxy
-			new MultiBlockPart(new Vec3i( 1, 1, 1), MultiBlockPartType.PROXY),			// South, Up, East: Proxy
-			new MultiBlockPart(new Vec3i(-1, 1, 1), MultiBlockPartType.PROXY)			// South, Up, West: Proxy
+			new MultiBlockPart(new Vec3i(-1, 1, 1), MultiBlockPartType.PROXY),			// 15 South, Up, West: Proxy
+			new MultiBlockPart(new Vec3i( 0, 1, 1), MultiBlockPartType.PROXY),			// 16 South, Up: Proxy
+			new MultiBlockPart(new Vec3i( 1, 1, 1), MultiBlockPartType.PROXY)			// 17 South, Up, East: Proxy
 		};
 
 		List<Direction> directions = List.of(Direction.SOUTH, Direction.EAST, Direction.WEST);
@@ -88,6 +96,7 @@ public class StillBlock extends Block
 	public StillBlock(Properties properties)
 	{
 		super(properties);
+
 		registerDefaultState(getStateDefinition().any()
 			.setValue(FACING, Direction.NORTH)
 			.setValue(PART, MultiBlockPartType.CORE)
@@ -99,7 +108,35 @@ public class StillBlock extends Block
 	}
 
 	@Override
-	protected MapCodec<? extends Block> codec()
+	public @Nullable BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState)
+	{
+		MultiBlockPartType partType = blockState.getValue(PART);
+
+		return switch (partType)
+		{
+//			case CORE ->
+//			{
+//			}
+//			case FLUID_INPUT ->
+//			{
+//			}
+//			case FLUID_OUTPUT ->
+//			{
+//			}
+			case ITEMS_INPUT -> new InventoryBlockEntity(worldPosition, blockState, 8, 64);
+			case FUEL_INPUT  -> new InventoryBlockEntity(worldPosition, blockState, 4, 64);
+			default 		 -> null;
+		};
+	}
+
+	@Override
+	protected boolean isRandomlyTicking(BlockState state)
+	{
+		return false;
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec()
 	{
 		return CODEC;
 	}
@@ -121,7 +158,7 @@ public class StillBlock extends Block
 		BlockPos corePos = context.getClickedPos();
 		Level level = context.getLevel();
 		Direction facing = context.getHorizontalDirection().getOpposite();
-		MultiBlockPart[] parts = getMultiBlockParts(facing);
+		MultiBlockPart[] parts = PARTS[facing.get2DDataValue()];
 
 		for (MultiBlockPart part : parts)
 		{
@@ -154,11 +191,13 @@ public class StillBlock extends Block
 		if (state.getValue(PART) != MultiBlockPartType.CORE) return;
 
 		Direction facing = state.getValue(FACING);
-		MultiBlockPart[] parts = getMultiBlockParts(facing);
+		MultiBlockPart[] parts = PARTS[facing.get2DDataValue()];
 		BlockState defaultState = defaultBlockState();
 
 		for (MultiBlockPart part : parts)
 		{
+			if (part.type() == MultiBlockPartType.CORE) continue;
+
 			BlockPos partPos = pos.offset(part.offsetToCore());
 			level.setBlockAndUpdate(partPos, defaultState.setValue(PART, part.type()).setValue(FACING, facing));
 		}
@@ -181,7 +220,25 @@ public class StillBlock extends Block
 			case FUEL_INPUT ->
 			{
 				boolean hatchOpen = coreState.getValue(FUEL_HATCH_OPEN);
-				level.setBlockAndUpdate(corePos, coreState.setValue(FUEL_HATCH_OPEN, !hatchOpen));
+				if (hatchOpen && player.isCrouching())	// Take out fuel
+				{
+					InventoryBlockEntity fuelInventory = level.getBlockEntity(pos, ModBlocks.BASIC_INVENTORY_ENTITY).get();
+
+					for (int i = 0; i < fuelInventory.getContainerSize(); i++)
+					{
+						ItemStack itemInSlot = fuelInventory.getItem(i);
+
+						if (!itemInSlot.isEmpty())
+						{
+							player.getInventory().addAndPickItem(fuelInventory.removeItem(i, itemInSlot.count()));
+							break;
+						}
+					}
+				}
+				else
+				{
+					level.setBlockAndUpdate(corePos, coreState.setValue(FUEL_HATCH_OPEN, !hatchOpen));
+				}
 			}
 			case INTERACTABLE ->
 			{
@@ -202,6 +259,82 @@ public class StillBlock extends Block
 		}
 
 		return (level.isClientSide()) ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
+	}
+
+	@Override
+	protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+	{
+		if (itemStack.isEmpty()) return InteractionResult.TRY_WITH_EMPTY_HAND;
+
+		BlockPos corePos = getCorePos(level, pos, state);
+		if (corePos == null)
+		{
+			Simpleautomations.LOG.error("Core block not found for multiblock part at {}.", Utils.getReadableBlockPos(pos));
+			return (level.isClientSide()) ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
+		}
+
+		BlockState coreState = level.getBlockState(corePos);
+
+		switch (state.getValue(PART))
+		{
+			case FUEL_INPUT ->
+			{
+				InventoryBlockEntity fuelInventory = level.getBlockEntity(pos, ModBlocks.BASIC_INVENTORY_ENTITY).get();
+
+				if (coreState.getValue(FUEL_HATCH_OPEN) && level.fuelValues().isFuel(itemStack))
+				{
+					ItemStack remainingStack = itemStack;
+
+					for (int i = 0; i < fuelInventory.getContainerSize(); i++)
+					{
+						ItemStack itemInSlot = fuelInventory.getItem(i);
+						if (itemInSlot.isEmpty())
+						{
+							int amountToStore = Math.max(remainingStack.count(), fuelInventory.getMaxStackSize());
+							fuelInventory.setItem(i, remainingStack.copy());
+							remainingStack.consume(amountToStore, null);
+						}
+						else if (itemInSlot.count() < fuelInventory.getMaxStackSize() && ItemStack.isSameItemSameComponents(remainingStack, itemInSlot))
+						{
+							int spaceLeftInSlot = fuelInventory.getMaxStackSize() - itemInSlot.count();
+							int amountToStore = Math.min(remainingStack.count(), spaceLeftInSlot);
+
+							remainingStack.consume(amountToStore, null);
+							itemInSlot.setCount(itemInSlot.count() + amountToStore);
+						}
+
+						if (remainingStack.isEmpty()) break;
+					}
+				}
+			}
+
+			default -> {}
+		}
+
+		return (level.isClientSide()) ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
+	}
+
+	@Override
+	public void destroy(LevelAccessor level, BlockPos pos, BlockState state)
+	{
+		// TODO: Drop item, and inventory eventually.
+		BlockPos corePos = getCorePos(level, pos, state);
+
+		if (corePos != null)
+		{
+			Direction facing = state.getValue(FACING);
+			MultiBlockPart[] parts = PARTS[facing.get2DDataValue()];
+
+			for (MultiBlockPart part : parts)
+			{
+				if (part.type() == MultiBlockPartType.CORE) continue;
+
+				BlockPos partPos = corePos.offset(part.offsetToCore());
+				level.setBlock(partPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+			}
+
+			level.setBlock(corePos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+		}
 	}
 
 	@Override
@@ -229,24 +362,61 @@ public class StillBlock extends Block
 	}
 
 	@Override
-	public void destroy(LevelAccessor level, BlockPos pos, BlockState state)
+	public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random)
 	{
-		// TODO: Drop item, and inventory eventually.
-		BlockPos corePos = getCorePos(level, pos, state);
-
-		if (corePos != null)
+		if (state.getValue(PART) == MultiBlockPartType.CORE && state.getValue(POWERED_ON))
 		{
-			Direction facing = state.getValue(FACING);
-			MultiBlockPart[] parts = getMultiBlockParts(facing);
-
-			for (MultiBlockPart part : parts)
+			MultiBlockPart[] parts = PARTS[state.getValue(FACING).get2DDataValue()];
+			// The chimneys do not align with any block directly, but each of them is in the center of 4 blocks of the top layer.
+			// The indexes of the parts of the multi-block structure are stable. So they can be used to retrieve the block positions
+			// and calculate the two center points where the chimneys are located.
+			Vec3i[] chimneys = new Vec3i[]
 			{
-				BlockPos partPos = corePos.offset(part.offsetToCore());
-				level.setBlock(partPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-			}
+				getCenter(
+					pos.offset(parts[10].offsetToCore),
+					pos.offset(parts[11].offsetToCore),
+					pos.offset(parts[13].offsetToCore),
+					pos.offset(parts[14].offsetToCore)
+				),
+				getCenter(
+					pos.offset(parts[13].offsetToCore),
+					pos.offset(parts[14].offsetToCore),
+					pos.offset(parts[16].offsetToCore),
+					pos.offset(parts[17].offsetToCore)
+				)
+			};
 
-			level.setBlock(corePos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+			for (int i = 0; i < chimneys.length; i++)
+			{
+				Vec3i chimneyPos = chimneys[i];
+				float particleY = chimneyPos.getY() + 0.9f;
+
+				for (int j = 0; j < 10; j++)
+				{
+					float particleX = chimneyPos.getX() + random.nextIntBetweenInclusive(-1, 1) * random.nextFloat() / 5;
+					float particleZ = chimneyPos.getZ() + random.nextIntBetweenInclusive(-1, 1) * random.nextFloat() / 5;
+					particleY += random.nextIntBetweenInclusive(0, 1) * random.nextFloat() / 10;
+
+					level.addParticle(ParticleTypes.SMOKE, particleX, particleY, particleZ, 0.0, 0.0, 0.0);
+				}
+			}
 		}
+	}
+
+	// TODO: move to simplemodslib Utils
+	public static Vec3i getCenter(BlockPos a, BlockPos b, BlockPos c, BlockPos d)
+	{
+		int x = Math.max(
+			Math.max(a.getX(), b.getX()),
+			Math.max(c.getX(), d.getX())
+		);
+
+		int z = Math.max(
+			Math.max(a.getZ(), b.getZ()),
+			Math.max(c.getZ(), d.getZ())
+		);
+
+		return new Vec3i(x, a.getY(), z);
 	}
 
 	protected BlockPos getCorePos(LevelAccessor level, BlockPos pos, BlockState state)
@@ -255,7 +425,7 @@ public class StillBlock extends Block
 
 		MultiBlockPartType type = state.getValue(PART);
 		Direction facing = state.getValue(FACING);
-		MultiBlockPart[] parts = getMultiBlockParts(facing);
+		MultiBlockPart[] parts = PARTS[facing.get2DDataValue()];
 
 		for (MultiBlockPart part : parts)
 		{
@@ -337,11 +507,7 @@ public class StillBlock extends Block
 		return deltaY * 9 + (deltaZ + 1) * 3 + (deltaX + 1);
 	}
 
-	protected static MultiBlockPart[] getMultiBlockParts(Direction facing)
-	{
-		return PARTS[facing.get2DDataValue()];
-	}
-
+	// TODO: move to simplemodslib Utils
 	public static BlockPos reverseOffset(BlockPos pos, Vec3i offset)
 	{
 		return pos.offset(-offset.getX(), -offset.getY(), -offset.getZ());
