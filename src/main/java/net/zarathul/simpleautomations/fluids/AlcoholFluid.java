@@ -16,6 +16,7 @@ import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.InsideBlockEffectType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -32,15 +33,18 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.zarathul.simpleautomations.blocks.ModBlocks;
 import net.zarathul.simpleautomations.common.DistillationLevel;
+import net.zarathul.simpleautomations.components.ModComponents;
 import net.zarathul.simpleautomations.items.ModItems;
 import net.zarathul.simpleautomations.particles.ModParticles;
+import net.zarathul.simplemodslib.api.fluid.FluidStack;
+import net.zarathul.simplemodslib.api.fluid.IBucketProvider;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class AlcoholFluid extends FlowingFluid
+public abstract class AlcoholFluid extends FlowingFluid implements IBucketProvider
 {
 	public static final EnumProperty<DistillationLevel> DISTILLATION_LEVEL = ModFluids.DISTILLATION_LEVEL;
 
@@ -187,6 +191,21 @@ public abstract class AlcoholFluid extends FlowingFluid
 	public Item getBucket()
 	{
 		return ModItems.ALCOHOL_BUCKET;
+	}
+
+	@Override
+	public Item getBucket(FluidStack fluid)
+	{
+		// TODO: Fix this as soon as FluidStack gets components.
+		return null;
+	}
+
+	@Override
+	public boolean isFilledBucket(ItemStack item)
+	{
+		return ItemStack.isSameItemSameComponents(item, ModItems.ALCOHOL_BUCKET.getDefaultInstance()) ||
+			   ItemStack.isSameItemSameComponents(item, ModItems.CONCENTRATED_ALCOHOL_BUCKET.getDefaultInstance()) ||
+			   ItemStack.isSameItemSameComponents(item, ModItems.PURE_ALCOHOL_BUCKET.getDefaultInstance());
 	}
 
 	@Override
