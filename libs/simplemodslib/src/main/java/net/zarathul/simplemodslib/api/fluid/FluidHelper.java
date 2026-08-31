@@ -137,6 +137,17 @@ public final class FluidHelper
 		return fluidName;
 	}
 
+	public static void registerBucket(Fluid fluid, Item bucket)
+	{
+		// TODO: Find a better way to do this
+		if (FLUID_TO_BUCKET.isEmpty()) BuiltInRegistries.FLUID.forEach(x -> FLUID_TO_BUCKET.put(x, x.getBucket()));
+
+		if (!FLUID_TO_BUCKET.containsKey(fluid))
+		{
+			FLUID_TO_BUCKET.put(fluid, bucket);
+		}
+	}
+
 	@Environment(EnvType.CLIENT)
 	public static int getFluidColor(Fluid fluid, BlockAndTintGetter level, BlockPos pos)
 	{
@@ -273,7 +284,15 @@ public final class FluidHelper
 				if (!player.isCreative())
 				{
 					Item bucket = getBucketForFluid(handlerFluid.getFluid());
-					player.setItemInHand(hand, new ItemStack(bucket));
+					if (bucket != null)
+					{
+						ItemStack filledBucket = new ItemStack(bucket);
+
+						if (!player.getInventory().add(filledBucket))
+						{
+							player.drop(filledBucket, false);
+						}
+					}
 				}
 
 				return FluidHandlerInteractionResult.success(FluidHandlerInteraction.FILL, new FluidStack(handlerFluid.getFluid(), FluidStack.BUCKET_VOLUME));
@@ -297,7 +316,16 @@ public final class FluidHelper
 
 			if (handler.fill(fillFluid) > 0)
 			{
-				if (!player.isCreative()) player.setItemInHand(hand, new ItemStack(Items.BUCKET));
+				if (!player.isCreative())
+				{
+					player.getItemInHand(hand).consume(1, player);
+					ItemStack emptyBucket = new ItemStack(Items.BUCKET);
+
+					if (!player.getInventory().add(emptyBucket))
+					{
+						player.drop(emptyBucket, false);
+					}
+				}
 
 				return FluidHandlerInteractionResult.success(FluidHandlerInteraction.DRAIN, fillFluid);
 			}
@@ -356,6 +384,7 @@ public final class FluidHelper
 				{
 					player.getItemInHand(hand).consume(1, player);
 					ItemStack emptyBottle = new ItemStack(Items.GLASS_BOTTLE);
+
 					if (!player.getInventory().add(emptyBottle))
 					{
 						player.drop(emptyBottle, false);
