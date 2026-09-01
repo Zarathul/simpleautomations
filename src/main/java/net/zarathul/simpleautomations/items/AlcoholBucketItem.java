@@ -23,8 +23,8 @@ public class AlcoholBucketItem extends BucketItem
 	@Override
 	public void checkExtraContent(@Nullable LivingEntity user, Level level, ItemStack itemStack, BlockPos pos)
 	{
-		var distillationLevel = itemStack.get(ModComponents.ALCOHOL_DISTILLATION_LEVEL);
-		if (distillationLevel == null) return;
+		var containerComponent = itemStack.get(net.zarathul.simplemodslib.ModComponents.FLUID_CONTAINER_COMPONENT);
+		var distillationLevel = containerComponent.fluid().get(ModComponents.ALCOHOL_DISTILLATION_LEVEL);
 
 		BlockState oldBlockState = level.getBlockState(pos);
 		if (!oldBlockState.is(ModBlocks.ALCOHOL)) return;

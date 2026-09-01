@@ -11,6 +11,8 @@ import net.zarathul.simpleautomations.components.ModComponents;
 import net.zarathul.simpleautomations.components.Tonic;
 import net.zarathul.simpleautomations.fluids.ModFluids;
 import net.zarathul.simplemodslib.SimpleModsLib;
+import net.zarathul.simplemodslib.api.fluid.FluidContainerComponent;
+import net.zarathul.simplemodslib.api.fluid.FluidStack;
 import net.zarathul.simplemodslib.api.item.ItemRegistrar;
 
 import java.util.Collections;
@@ -50,20 +52,29 @@ public final class ModItems
 		new Item.Properties()
 			.craftRemainder(Items.BUCKET)
 			.stacksTo(1)
-			.component(ModComponents.ALCOHOL_DISTILLATION_LEVEL, new AlcoholDistillationLevel(DistillationLevel.NORMAL))
+			.component(net.zarathul.simplemodslib.ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(
+				new FluidStack(ModFluids.ALCOHOL_STILL, FluidStack.BUCKET_VOLUME).with(ModComponents.ALCOHOL_DISTILLATION_LEVEL, new AlcoholDistillationLevel(DistillationLevel.NORMAL)),
+				FluidStack.BUCKET_VOLUME)
+			)
 	);
 	public static final AlcoholBucketItem CONCENTRATED_ALCOHOL_BUCKET = REGISTRAR.register("concentrated_alcohol_bucket", properties -> new AlcoholBucketItem(ModFluids.ALCOHOL_STILL, properties),
 		new Item.Properties()
 			.craftRemainder(Items.BUCKET)
 			.stacksTo(1)
-			.component(ModComponents.ALCOHOL_DISTILLATION_LEVEL, new AlcoholDistillationLevel(DistillationLevel.CONCENTRATED))
+			.component(net.zarathul.simplemodslib.ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(
+				new FluidStack(ModFluids.ALCOHOL_STILL, FluidStack.BUCKET_VOLUME).with(ModComponents.ALCOHOL_DISTILLATION_LEVEL, new AlcoholDistillationLevel(DistillationLevel.CONCENTRATED)),
+				FluidStack.BUCKET_VOLUME)
+			)
 			.modelId(SimpleAutomations.modId(ALCOHOL_BUCKET_NAME))
 	);
 	public static final AlcoholBucketItem PURE_ALCOHOL_BUCKET = REGISTRAR.register("pure_alcohol_bucket", properties -> new AlcoholBucketItem(ModFluids.ALCOHOL_STILL, properties),
 		new Item.Properties()
 			.craftRemainder(Items.BUCKET)
 			.stacksTo(1)
-			.component(ModComponents.ALCOHOL_DISTILLATION_LEVEL, new AlcoholDistillationLevel(DistillationLevel.PURE))
+			.component(net.zarathul.simplemodslib.ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(
+				new FluidStack(ModFluids.ALCOHOL_STILL, FluidStack.BUCKET_VOLUME).with(ModComponents.ALCOHOL_DISTILLATION_LEVEL, new AlcoholDistillationLevel(DistillationLevel.PURE)),
+				FluidStack.BUCKET_VOLUME)
+			)
 			.modelId(SimpleAutomations.modId(ALCOHOL_BUCKET_NAME))
 	);
 

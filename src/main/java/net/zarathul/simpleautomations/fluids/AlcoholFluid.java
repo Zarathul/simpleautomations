@@ -31,11 +31,13 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.zarathul.simpleautomations.SimpleAutomations;
 import net.zarathul.simpleautomations.blocks.ModBlocks;
 import net.zarathul.simpleautomations.common.DistillationLevel;
 import net.zarathul.simpleautomations.components.ModComponents;
 import net.zarathul.simpleautomations.items.ModItems;
 import net.zarathul.simpleautomations.particles.ModParticles;
+import net.zarathul.simplemodslib.api.fluid.FluidContainerComponent;
 import net.zarathul.simplemodslib.api.fluid.FluidStack;
 import net.zarathul.simplemodslib.api.fluid.IBucketProvider;
 
@@ -43,6 +45,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static net.zarathul.simpleautomations.common.DistillationLevel.*;
 
 public abstract class AlcoholFluid extends FlowingFluid implements IBucketProvider
 {
@@ -194,10 +198,18 @@ public abstract class AlcoholFluid extends FlowingFluid implements IBucketProvid
 	}
 
 	@Override
-	public Item getBucket(FluidStack fluid)
+	public ItemStack getBucket(FluidStack fluid)
 	{
-		// TODO: Fix this as soon as FluidStack gets components.
-		return null;
+		// Exceptions are possible here if fluid is null or fluid lacks the required component.
+		// Both should never happen, and if either does it is an error warranting an exception.
+		var component = fluid.get(ModComponents.ALCOHOL_DISTILLATION_LEVEL);
+
+		return switch (component.level())
+		{
+			case NORMAL 	  -> ModItems.ALCOHOL_BUCKET.getDefaultInstance();
+			case CONCENTRATED -> ModItems.CONCENTRATED_ALCOHOL_BUCKET.getDefaultInstance();
+			case PURE 		  -> ModItems.PURE_ALCOHOL_BUCKET.getDefaultInstance();
+		};
 	}
 
 	@Override
