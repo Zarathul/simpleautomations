@@ -94,7 +94,7 @@ public class StillCoreBlockEntity extends BlockEntity
 		setChanged();
 	}
 
-	private void process(StillRecipe recipe, MultiBlockFluidInventoryBlockEntity fluidInput, MultiBlockFluidInventoryBlockEntity fluidOutput, MultiBlockInventoryBlockEntity itemInput)
+	private void process(StillRecipe recipe, MultiBlockFluidInventory fluidInput, MultiBlockFluidInventory fluidOutput, MultiBlockInventory itemInput)
 	{
 		FluidStack inputFluid = fluidInput.getFluid().copy();
 		inputFluid.changeAmount(-recipe.getFluidInput().getAmount());
@@ -115,7 +115,7 @@ public class StillCoreBlockEntity extends BlockEntity
 		}
 	}
 
-	private void consumeItems(MultiBlockInventoryBlockEntity inventory, StillRecipe recipe)
+	private void consumeItems(MultiBlockInventory inventory, StillRecipe recipe)
 	{
 		for (var required : recipe.getItemInputs())
 		{
@@ -142,7 +142,7 @@ public class StillCoreBlockEntity extends BlockEntity
 		inventory.setChanged();
 	}
 
-	private boolean canOutput(MultiBlockFluidInventoryBlockEntity output, FluidStack result)
+	private boolean canOutput(MultiBlockFluidInventory output, FluidStack result)
 	{
 		FluidStack existing = output.getFluid();
 
@@ -174,17 +174,17 @@ public class StillCoreBlockEntity extends BlockEntity
 		output.putInt(PROGRESS, progress);
 	}
 
-	private MultiBlockFluidInventoryBlockEntity getFluidInput()
+	private MultiBlockFluidInventory getFluidInput()
 	{
 		return getFluidInventory(StillBlock.FLUID_INPUT_INDEX);
 	}
 
-	private MultiBlockFluidInventoryBlockEntity getFluidOutput()
+	private MultiBlockFluidInventory getFluidOutput()
 	{
 		return getFluidInventory(StillBlock.FLUID_OUTPUT_INDEX);
 	}
 	// TODO: Make generic version to reduce code
-	private MultiBlockFluidInventoryBlockEntity getFluidInventory(int index)
+	private MultiBlockFluidInventory getFluidInventory(int index)
 	{
 		Direction facing = getBlockState().getValue(StillBlock.FACING);
 		BlockPos partPos = StillBlock.getPartPos(worldPosition, facing, index);
@@ -192,7 +192,7 @@ public class StillCoreBlockEntity extends BlockEntity
 		return level.getBlockEntity(partPos, ModBlocks.MULTI_BLOCK_FLUID_INVENTORY).orElse(null);
 	}
 
-	private MultiBlockInventoryBlockEntity getItemInput()
+	private MultiBlockInventory getItemInput()
 	{
 		Direction facing = getBlockState().getValue(StillBlock.FACING);
 		BlockPos partPos = StillBlock.getPartPos(worldPosition, facing, StillBlock.ITEMS_INPUT_INDEX);

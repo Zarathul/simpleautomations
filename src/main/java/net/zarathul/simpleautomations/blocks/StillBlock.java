@@ -32,8 +32,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.zarathul.simpleautomations.SimpleAutomations;
-import net.zarathul.simpleautomations.blocks.entities.MultiBlockFluidInventoryBlockEntity;
-import net.zarathul.simpleautomations.blocks.entities.MultiBlockInventoryBlockEntity;
+import net.zarathul.simpleautomations.blocks.entities.MultiBlockFluidInventory;
+import net.zarathul.simpleautomations.blocks.entities.MultiBlockInventory;
 import net.zarathul.simpleautomations.blocks.entities.StillCoreBlockEntity;
 import net.zarathul.simplemodslib.Utils;
 import net.zarathul.simplemodslib.api.fluid.FluidHelper;
@@ -131,9 +131,9 @@ public class StillBlock extends BaseEntityBlock
 		return switch (partType)
 		{
 			case CORE 		 			   -> new StillCoreBlockEntity(worldPosition, blockState);
-			case FLUID_INPUT, FLUID_OUTPUT -> new MultiBlockFluidInventoryBlockEntity(worldPosition, blockState, 32 * FluidStack.BUCKET_VOLUME);
-			case ITEMS_INPUT  			   -> new MultiBlockInventoryBlockEntity(worldPosition, blockState, 4, 64);
-			case FUEL_INPUT   			   -> new MultiBlockInventoryBlockEntity(worldPosition, blockState, 1, 64);
+			case FLUID_INPUT, FLUID_OUTPUT -> new MultiBlockFluidInventory(worldPosition, blockState, 32 * FluidStack.BUCKET_VOLUME);
+			case ITEMS_INPUT  			   -> new MultiBlockInventory(worldPosition, blockState, 4, 64);
+			case FUEL_INPUT   			   -> new MultiBlockInventory(worldPosition, blockState, 1, 64);
 			default 		  			   -> null;
 		};
 	}
@@ -237,7 +237,7 @@ public class StillBlock extends BaseEntityBlock
 				boolean hatchOpen = coreState.getValue(FUEL_HATCH_OPEN);
 				if (hatchOpen && player.isCrouching())	// Take out fuel
 				{
-					MultiBlockInventoryBlockEntity fuelInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
+					MultiBlockInventory fuelInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
 					fuelInventory.takeItem(player);
 				}
 				else
@@ -249,7 +249,7 @@ public class StillBlock extends BaseEntityBlock
 			{
 				if (player.isCrouching())
 				{
-					MultiBlockInventoryBlockEntity itemsInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
+					MultiBlockInventory itemsInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
 					itemsInventory.takeItem(player);
 				}
 			}
@@ -310,7 +310,7 @@ public class StillBlock extends BaseEntityBlock
 		{
 			if (!level.isClientSide())
 			{
-				MultiBlockInventoryBlockEntity fuelInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
+				MultiBlockInventory fuelInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
 				fuelInventory.putItem(itemStack);
 			}
 
@@ -324,7 +324,7 @@ public class StillBlock extends BaseEntityBlock
 	{
 		if (!level.isClientSide())
 		{
-			MultiBlockInventoryBlockEntity itemsInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
+			MultiBlockInventory itemsInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
 			itemsInventory.putItem(itemStack);
 		}
 
@@ -343,7 +343,7 @@ public class StillBlock extends BaseEntityBlock
 			}
 			else
 			{
-				SimpleAutomations.LOG.error("Missing MultiBlockFluidInventoryBlockEntity at {}", pos.toShortString());
+				SimpleAutomations.LOG.error("Missing MultiBlockFluidInventory at {}", pos.toShortString());
 			}
 		}
 

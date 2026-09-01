@@ -25,7 +25,7 @@ public class FluidStack implements DataComponentHolder
 	private static final Identifier EMPTY_FLUID_ID = BuiltInRegistries.FLUID.getDefaultKey();
 	private static final String FLUID_ID = "fluid_id";
 	private static final String FLUID_AMOUNT = "fluid_amount";
-	private static final String COMPONENTS = "components";
+	private static final String COMPONENTS = "fluid_components";
 
 	private Fluid fluid;
 	private int amount;
@@ -109,7 +109,7 @@ public class FluidStack implements DataComponentHolder
 
 		var registryGetResult = BuiltInRegistries.FLUID.get(fluidId);
 
-		return (registryGetResult.isEmpty()) ? empty() : new FluidStack(registryGetResult.get().value(), amount, fluidId, componentPatch);
+		return (registryGetResult.isPresent()) ? new FluidStack(registryGetResult.get().value(), amount, fluidId, componentPatch) : empty();
 	}
 
 	public FluidStack copy()
@@ -162,7 +162,7 @@ public class FluidStack implements DataComponentHolder
 
 	public boolean isComponentsPatchEmpty()
 	{
-		return components.isEmpty();
+		return components.asPatch().isEmpty();
 	}
 
 	@Override
@@ -232,7 +232,7 @@ public class FluidStack implements DataComponentHolder
 		output.putInt(FLUID_AMOUNT, amount);
 		output.putString(FLUID_ID, fluidId.toString());
 
-		if (!components.isEmpty())
+		if (!isComponentsPatchEmpty())
 		{
 			output.store(COMPONENTS, DataComponentPatch.CODEC, components.asPatch());
 		}
@@ -276,11 +276,7 @@ public class FluidStack implements DataComponentHolder
 	public static FluidStack getFluid(ItemStack stack)
 	{
 		var component = stack.get(ModComponents.FLUID_CONTAINER_COMPONENT);
-
-		if (component == null)
-		{
-			return FluidStack.empty();
-		}
+		if (component == null) return FluidStack.empty();
 
 		return FluidStack.from(component);
 	}
@@ -288,10 +284,7 @@ public class FluidStack implements DataComponentHolder
 	@Override
 	public boolean equals(Object other)
 	{
-		if (!(other instanceof FluidStack otherStack))
-		{
-			return false;
-		}
+		if (!(other instanceof FluidStack otherStack)) return false;
 
 		return otherStack.fluid.isSame(fluid) &&
 			otherStack.amount == amount &&

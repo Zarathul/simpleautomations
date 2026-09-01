@@ -1,8 +1,7 @@
 {
 	"model": {
 		"type": "minecraft:select",
-		"property": "minecraft:component",
-		"component": "simpleautomations:alcohol_distillation_level",
+		"property": "simpleautomations:alcohol_distillation_level",
 		"cases": [
 			{
 				"when": {

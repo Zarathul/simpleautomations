@@ -9,21 +9,21 @@ import net.zarathul.simpleautomations.blocks.ModBlocks;
 import net.zarathul.simplemodslib.api.fluid.FluidStack;
 import net.zarathul.simplemodslib.api.fluid.IFluidHandler;
 
-public class MultiBlockFluidInventoryBlockEntity extends BlockEntity implements IFluidHandler
+public class MultiBlockFluidInventory extends BlockEntity implements IFluidHandler
 {
 	private static final String CAPACITY = "capacity";
 
 	private FluidStack fluid = FluidStack.empty();
 	private int capacity = FluidStack.BUCKET_VOLUME * 32;
 
-	public MultiBlockFluidInventoryBlockEntity(BlockPos worldPosition, BlockState blockState, int capacity)
+	public MultiBlockFluidInventory(BlockPos worldPosition, BlockState blockState, int capacity)
 	{
 		this(worldPosition, blockState);
 
 		this.capacity = capacity;
 	}
 
-	public MultiBlockFluidInventoryBlockEntity(BlockPos worldPosition, BlockState blockState)
+	public MultiBlockFluidInventory(BlockPos worldPosition, BlockState blockState)
 	{
 		super(ModBlocks.MULTI_BLOCK_FLUID_INVENTORY, worldPosition, blockState);
 	}

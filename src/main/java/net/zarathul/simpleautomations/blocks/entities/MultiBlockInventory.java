@@ -12,7 +12,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.zarathul.simpleautomations.blocks.ModBlocks;
 
-public class MultiBlockInventoryBlockEntity extends BlockEntity implements Container
+public class MultiBlockInventory extends BlockEntity implements Container
 {
 	private static final String MAX_STACK_SIZE = "maxStackSize";
 	private static final String SLOTS = "slots";
@@ -21,12 +21,12 @@ public class MultiBlockInventoryBlockEntity extends BlockEntity implements Conta
 	private int maxStackSize;
 	private int slots;
 
-	public MultiBlockInventoryBlockEntity(BlockPos worldPosition, BlockState blockState)
+	public MultiBlockInventory(BlockPos worldPosition, BlockState blockState)
 	{
 		this(worldPosition, blockState, 0, 0);
 	}
 
-	public MultiBlockInventoryBlockEntity(BlockPos worldPosition, BlockState blockState, int slots, int maxStackSize)
+	public MultiBlockInventory(BlockPos worldPosition, BlockState blockState, int slots, int maxStackSize)
 	{
 		super(ModBlocks.MULTI_BLOCK_INVENTORY, worldPosition, blockState);
 
@@ -80,30 +80,29 @@ public class MultiBlockInventoryBlockEntity extends BlockEntity implements Conta
 	public void putItem(ItemStack itemStack)
 	{
 		ItemStack originalStack = itemStack.copy();
-		ItemStack remainingStack = itemStack;
 
 		for (int i = 0; i < getContainerSize(); i++)
 		{
 			ItemStack itemInSlot = getItem(i);
 			if (itemInSlot.isEmpty())
 			{
-				int amountToStore = Math.max(remainingStack.count(), getMaxStackSize());
-				setItem(i, remainingStack.copy());
-				remainingStack.consume(amountToStore, null);
+				int amountToStore = Math.max(itemStack.count(), getMaxStackSize());
+				setItem(i, itemStack.copy());
+				itemStack.consume(amountToStore, null);
 			}
-			else if (itemInSlot.count() < getMaxStackSize() && ItemStack.isSameItemSameComponents(remainingStack, itemInSlot))
+			else if (itemInSlot.count() < getMaxStackSize() && ItemStack.isSameItemSameComponents(itemStack, itemInSlot))
 			{
 				int spaceLeftInSlot = getMaxStackSize() - itemInSlot.count();
-				int amountToStore = Math.min(remainingStack.count(), spaceLeftInSlot);
+				int amountToStore = Math.min(itemStack.count(), spaceLeftInSlot);
 
-				remainingStack.consume(amountToStore, null);
+				itemStack.consume(amountToStore, null);
 				itemInSlot.setCount(itemInSlot.count() + amountToStore);
 			}
 
-			if (remainingStack.isEmpty()) break;
+			if (itemStack.isEmpty()) break;
 		}
 
-		if (!ItemStack.isSameItemSameComponents(remainingStack, originalStack)) setChanged();
+		if (!ItemStack.isSameItemSameComponents(itemStack, originalStack)) setChanged();
 	}
 
 	// Container

@@ -9,7 +9,7 @@ public enum DistillationLevel implements StringRepresentable
 	PURE("pure", 1);
 
 	private final String name;
-	private int mixMultiplier;
+	private final int mixMultiplier;
 
 	public int getMixMultiplier()
 	{
