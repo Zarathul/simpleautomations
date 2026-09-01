@@ -16,6 +16,11 @@
 	],
 	"result": {
 		"fluid": "simpleautomations:alcohol",
+		"components": {
+			 "simpleautomations:alcohol_distillation_level": {
+				 "level": "NORMAL"
+			 }
+		},
 		"amount": 250
 	}
 }

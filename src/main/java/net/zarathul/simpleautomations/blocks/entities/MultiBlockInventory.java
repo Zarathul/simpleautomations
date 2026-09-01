@@ -12,6 +12,9 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.zarathul.simpleautomations.blocks.ModBlocks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MultiBlockInventory extends BlockEntity implements Container
 {
 	private static final String MAX_STACK_SIZE = "maxStackSize";
@@ -103,6 +106,18 @@ public class MultiBlockInventory extends BlockEntity implements Container
 		}
 
 		if (!ItemStack.isSameItemSameComponents(itemStack, originalStack)) setChanged();
+	}
+
+	public List<ItemStack> getAllItems()
+	{
+		List<ItemStack> items = new ArrayList<>(getContainerSize());
+
+		for (int i = 0; i < getContainerSize(); i++)
+		{
+			items.add(getItem(i).copy());
+		}
+
+		return items;
 	}
 
 	// Container

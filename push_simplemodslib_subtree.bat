@@ -1,0 +1,1 @@
+git subtree push --prefix libs/simplemodslib https://github.com/Zarathul/simplemodslib.git 26.2

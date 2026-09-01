@@ -56,6 +56,7 @@ public class StillBlock extends BaseEntityBlock
 	public static final IntegerProperty PRESSURE = IntegerProperty.create("pressure", 0, 7);
 
 	public static final int PRESSURE_RELEASE_INDEX = 0;
+	public static final int FUEL_INPUT_INDEX = 1;
 	public static final int POWER_LEVER_INDEX = 2;
 	public static final int FLUID_OUTPUT_INDEX = 5;
 	public static final int FLUID_INPUT_INDEX = 7;
@@ -354,23 +355,59 @@ public class StillBlock extends BaseEntityBlock
 	@Override
 	public void destroy(LevelAccessor level, BlockPos pos, BlockState state)
 	{
-		// TODO: Drop item, and inventory eventually.
-		BlockPos corePos = getCorePos(level, pos, state);
-
-		if (corePos != null)
+		if (!level.isClientSide())
 		{
-			Direction facing = state.getValue(FACING);
-			MultiBlockPart[] parts = PARTS[facing.get2DDataValue()];
+			BlockPos corePos = getCorePos(level, pos, state);
 
-			for (MultiBlockPart part : parts)
+			if (corePos != null)
 			{
-				if (part.type() == MultiBlockPartType.CORE) continue;
+				Direction facing = state.getValue(FACING);
+				destroyParts(level, facing, corePos);
 
-				BlockPos partPos = corePos.offset(part.offsetToCore());
-				level.setBlock(partPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+				level.setBlock(corePos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
 			}
+		}
+	}
 
-			level.setBlock(corePos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+//	private void dropItemsFromInventories(Level level, Direction facing, BlockPos corePos)
+//	{
+//		BlockPos[] inventoryPos = new BlockPos[]
+//		{
+//			getPartPos(corePos, facing, FUEL_INPUT_INDEX),
+//			getPartPos(corePos, facing, ITEMS_INPUT_INDEX)
+//		};
+//
+//		for (BlockPos pos : inventoryPos)
+//		{
+//			var inventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY);
+//			if (inventory.isEmpty()) SimpleAutomations.LOG.error("Missing MultiBlockInventory at {}", pos.toShortString());
+//			else
+//			{
+//				var container = inventory.get();
+//
+//				for (int i = 0; i < container.getContainerSize(); i++)
+//				{
+//					ItemStack itemInSlot = container.getItem(i);
+//					if (!itemInSlot.isEmpty())
+//					{
+//						ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5d, pos.getY() + 1.0d, pos.getZ() + 0.5d, itemInSlot);
+//						level.addFreshEntity(itemEntity);
+//					}
+//				}
+//			}
+//		}
+//	}
+
+	private void destroyParts(LevelAccessor level, Direction facing, BlockPos corePos)
+	{
+		MultiBlockPart[] parts = PARTS[facing.get2DDataValue()];
+
+		for (MultiBlockPart part : parts)
+		{
+			if (part.type() == MultiBlockPartType.CORE) continue;
+
+			BlockPos partPos = corePos.offset(part.offsetToCore());
+			level.setBlock(partPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
 		}
 	}
 
@@ -401,41 +438,37 @@ public class StillBlock extends BaseEntityBlock
 	@Override
 	public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random)
 	{
-		if (state.getValue(PART) == MultiBlockPartType.CORE && state.getValue(POWERED_ON))
+		if (state.getValue(PART) == MultiBlockPartType.CORE)
 		{
-			MultiBlockPart[] parts = PARTS[state.getValue(FACING).get2DDataValue()];
-			// The chimneys do not align with any block directly, but each of them is in the center of 4 blocks of the top layer.
-			// The indexes of the parts of the multi-block structure are stable. So they can be used to retrieve the block positions
-			// and calculate the two center points where the chimneys are located.
-			Vec3i[] chimneys = new Vec3i[]
-			{
-				// TODO: use getPartPos()
-				getCenter(
-					pos.offset(parts[10].offsetToCore),
-					pos.offset(parts[11].offsetToCore),
-					pos.offset(parts[13].offsetToCore),
-					pos.offset(parts[14].offsetToCore)
-				),
-				getCenter(
-					pos.offset(parts[13].offsetToCore),
-					pos.offset(parts[14].offsetToCore),
-					pos.offset(parts[16].offsetToCore),
-					pos.offset(parts[17].offsetToCore)
-				)
-			};
+			var core = level.getBlockEntity(pos, ModBlocks.STILL_CORE);
 
-			for (int i = 0; i < chimneys.length; i++)
+			if (core.isEmpty())
 			{
-				Vec3i chimneyPos = chimneys[i];
-				float particleY = chimneyPos.getY() + 0.9f;
-
-				for (int j = 0; j < 10; j++)
+				SimpleAutomations.LOG.error("Core block entity not found for multiblock part at {}.", pos.toShortString());
+			}
+			else if (core.get().isFueled())
+			{
+				BlockPos[] posAroundChimneyOne = getPartPos(pos, state.getValue(FACING), new int[] { 10, 11, 13, 14 });
+				BlockPos[] posAroundChimneyTwo = getPartPos(pos, state.getValue(FACING), new int[] { 13, 14, 16, 17 });
+				Vec3i[] chimneys = new Vec3i[]
 				{
-					float particleX = chimneyPos.getX() + random.nextIntBetweenInclusive(-1, 1) * random.nextFloat() / 5;
-					float particleZ = chimneyPos.getZ() + random.nextIntBetweenInclusive(-1, 1) * random.nextFloat() / 5;
-					particleY += random.nextIntBetweenInclusive(0, 1) * random.nextFloat() / 10;
+					getCenter(posAroundChimneyOne),
+					getCenter(posAroundChimneyTwo)
+				};
 
-					level.addParticle(ParticleTypes.SMOKE, particleX, particleY, particleZ, 0.0, 0.0, 0.0);
+				for (int i = 0; i < chimneys.length; i++)
+				{
+					Vec3i chimneyPos = chimneys[i];
+					float particleY = chimneyPos.getY() + 0.9f;
+
+					for (int j = 0; j < 10; j++)
+					{
+						float particleX = chimneyPos.getX() + random.nextIntBetweenInclusive(-1, 1) * random.nextFloat() / 5;
+						float particleZ = chimneyPos.getZ() + random.nextIntBetweenInclusive(-1, 1) * random.nextFloat() / 5;
+						particleY += random.nextIntBetweenInclusive(0, 1) * random.nextFloat() / 10;
+
+						level.addParticle(ParticleTypes.SMOKE, particleX, particleY, particleZ, 0.0, 0.0, 0.0);
+					}
 				}
 			}
 		}
