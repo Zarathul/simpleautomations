@@ -401,7 +401,6 @@ public final class Utils
 	 * @return
 	 * The center point.
 	 */
-
 	public static Vec3i getCenter(BlockPos a, BlockPos b, BlockPos c, BlockPos d)
 	{
 		int x = Math.max(
@@ -415,6 +414,11 @@ public final class Utils
 		);
 
 		return new Vec3i(x, a.getY(), z);
+	}
+
+	public static Vec3i getCenter(BlockPos[] pos)
+	{
+		return getCenter(pos[0], pos[1], pos[2], pos[3]);
 	}
 
 	/**
