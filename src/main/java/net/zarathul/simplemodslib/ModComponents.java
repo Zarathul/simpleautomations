@@ -7,7 +7,7 @@ import net.zarathul.simplemodslib.api.fluid.FluidContainerComponent;
 public final class ModComponents
 {
 	private static final ComponentRegistrar REGISTRAR = new ComponentRegistrar(SimpleModsLib.MOD_ID);
-	public static final DataComponentType<FluidContainerComponent> FLUID_CONTAINER_COMPONENT = REGISTRAR.register("fluid_container", FluidContainerComponent.CODEC);
+	public static final DataComponentType<FluidContainerComponent> FLUID_CONTAINER_COMPONENT = REGISTRAR.register("fluid_container", FluidContainerComponent.CODEC, FluidContainerComponent.STREAM_CODEC);
 
 	public static void init()
 	{
