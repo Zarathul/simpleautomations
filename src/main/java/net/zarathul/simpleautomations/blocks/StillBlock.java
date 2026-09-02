@@ -6,6 +6,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -47,20 +49,23 @@ import static net.zarathul.simplemodslib.Utils.reverseOffset;
 
 public class StillBlock extends BaseEntityBlock
 {
-	public static final MapCodec<StillBlock> CODEC = simpleCodec(StillBlock::new);
-	public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
-	public static final EnumProperty<MultiBlockPartType> PART = EnumProperty.create("part", MultiBlockPartType.class);
-	public static final BooleanProperty POWERED_ON = BooleanProperty.create("powered_on");
-	public static final BooleanProperty FUEL_HATCH_OPEN = BooleanProperty.create("fuel_hatch_open");
-	public static final BooleanProperty PRESSURE_RELEASE_PULLED = BooleanProperty.create("pressure_release_pulled");
-	public static final IntegerProperty PRESSURE = IntegerProperty.create("pressure", 0, 7);
-
 	public static final int PRESSURE_RELEASE_INDEX = 0;
 	public static final int FUEL_INPUT_INDEX = 1;
 	public static final int POWER_LEVER_INDEX = 2;
 	public static final int FLUID_OUTPUT_INDEX = 5;
 	public static final int FLUID_INPUT_INDEX = 7;
 	public static final int ITEMS_INPUT_INDEX = 12;
+
+	public static final int MIN_PRESSURE = 0;
+	public static final int MAX_PRESSURE = 7;
+
+	public static final MapCodec<StillBlock> CODEC = simpleCodec(StillBlock::new);
+	public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
+	public static final EnumProperty<MultiBlockPartType> PART = EnumProperty.create("part", MultiBlockPartType.class);
+	public static final BooleanProperty POWERED_ON = BooleanProperty.create("powered_on");
+	public static final BooleanProperty FUEL_HATCH_OPEN = BooleanProperty.create("fuel_hatch_open");
+	public static final BooleanProperty PRESSURE_RELEASE_PULLED = BooleanProperty.create("pressure_release_pulled");
+	public static final IntegerProperty PRESSURE = IntegerProperty.create("pressure", MIN_PRESSURE, MAX_PRESSURE);
 
 	private static final MultiBlockPart[][] PARTS;
 
@@ -260,13 +265,19 @@ public class StillBlock extends BaseEntityBlock
 
 				if (partIndex == PRESSURE_RELEASE_INDEX)
 				{
+					// The handle will release automatically after releasing MAX_PRESSURE or reaching pressure 0.
 					boolean pressureReleaseEngaged = coreState.getValue(PRESSURE_RELEASE_PULLED);
-					level.setBlockAndUpdate(corePos, coreState.setValue(PRESSURE_RELEASE_PULLED, !pressureReleaseEngaged));
+					if (!pressureReleaseEngaged)
+					{
+						level.setBlockAndUpdate(corePos, coreState.setValue(PRESSURE_RELEASE_PULLED, true));
+						level.playSound(player, pos, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, 0.6f, 0.6f);
+					}
 				}
 				else if (partIndex == POWER_LEVER_INDEX)
 				{
 					boolean poweredOn = coreState.getValue(POWERED_ON);
 					level.setBlockAndUpdate(corePos, coreState.setValue(POWERED_ON, !poweredOn));
+					level.playSound(player, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3f, (poweredOn) ? 0.6f : 0.1f);
 				}
 			}
 			default -> {}
