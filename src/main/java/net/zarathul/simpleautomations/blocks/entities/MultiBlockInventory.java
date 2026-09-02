@@ -110,11 +110,13 @@ public class MultiBlockInventory extends BlockEntity implements Container
 
 	public List<ItemStack> getAllItems()
 	{
-		List<ItemStack> items = new ArrayList<>(getContainerSize());
+		List<ItemStack> items = new ArrayList<>();
 
 		for (int i = 0; i < getContainerSize(); i++)
 		{
-			items.add(getItem(i).copy());
+			ItemStack itemInSlot = getItem(i);
+
+			if (!itemInSlot.isEmpty()) items.add(itemInSlot.copy());
 		}
 
 		return items;

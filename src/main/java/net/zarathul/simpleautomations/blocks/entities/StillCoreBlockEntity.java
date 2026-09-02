@@ -153,7 +153,11 @@ public class StillCoreBlockEntity extends BlockEntity
 		}
 
 		StillRecipe.StillRecipeInput input = new StillRecipe.StillRecipeInput(fluidInput.getFluid().copy(), itemInput.getAllItems());
-		Optional<RecipeHolder<StillRecipe>> recipe = level.recipeAccess().getRecipeFor(ModRecipes.STILL, input, level);
+		// Because getRecipeFor() does not reliably match recipes, do it manually.
+		Optional<RecipeHolder<StillRecipe>> recipe = level.recipeAccess().getAllOfType(ModRecipes.STILL)
+				.stream()
+				.filter(holder -> holder.value().matches(input, level))
+				.findFirst();
 
 		// No fitting recipe found, which can either mean the recipe(json) is wrong or the needed items/fluids are not present.
 		if (recipe.isEmpty())

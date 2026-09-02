@@ -47,9 +47,7 @@ public class StillRecipe implements Recipe<StillRecipe.StillRecipeInput>
 		FluidStack.STREAM_CODEC,
 		StillRecipe::getFluidInput,
 
-		StillItemInput.STREAM_CODEC.apply(
-			net.minecraft.network.codec.ByteBufCodecs.list()
-		),
+		StillItemInput.STREAM_CODEC.apply(ByteBufCodecs.list()),
 		StillRecipe::getItemInputs,
 
 		FluidStack.STREAM_CODEC,
@@ -57,7 +55,6 @@ public class StillRecipe implements Recipe<StillRecipe.StillRecipeInput>
 
 		StillRecipe::new
 	);
-
 
 	public FluidStack getFluidInput()
 	{
@@ -78,91 +75,54 @@ public class StillRecipe implements Recipe<StillRecipe.StillRecipeInput>
 	public boolean matches(StillRecipeInput input, Level level)
 	{
 		return !input.fluid().isEmpty() &&
-			input.fluid().isSameFluid(fluidInput) &&
-			(input.fluid().getAmount() >= fluidInput.getAmount()) &&
-			(findMatch(input) != null);
+			input.fluid().isSameFluidSameComponents(fluidInput) &&
+			input.fluid().getAmount() >= fluidInput.getAmount() &&
+			matchItems(input.items());
 	}
 
-
-	/**
-	 * Finds a valid assignment of inventory items to recipe ingredients.
-	 *
-	 * <p>This must be used when actually processing the recipe rather than
-	 * calling {@link #matches(StillRecipeInput, Level)} and then trying to
-	 * determine the consumed items independently. The returned match contains
-	 * the exact slots and amounts that should be consumed.</p>
-	 *
-	 * @return a match, or null if the recipe does not match
-	 */
-	public StillRecipeMatch findMatch(StillRecipeInput input)
+	private boolean matchItems(List<ItemStack> items)
 	{
-		if (input.items().isEmpty() && !itemInputs.isEmpty()) return null;
+		if (itemInputs.isEmpty() != items.isEmpty()) return false;
 
-		int[] remaining = new int[input.items().size()];
-
-		for (int slot = 0; slot < input.items().size(); slot++)
+		// Check if all supplied items are actually needed by the recipe. If not, fail the match.
+		for (int i = 0; i < items.size(); i++)
 		{
-			remaining[slot] = input.items().get(slot).getCount();
+			boolean isRequiredIngredient = false;
+
+			for (var requiredInput : itemInputs)
+			{
+				if (requiredInput.ingredient().test(items.get(i)))
+				{
+					isRequiredIngredient = true;
+					break;
+				}
+			}
+
+			if (!isRequiredIngredient) return false;
 		}
 
-		int[][] consumed = new int[itemInputs.size()][input.items().size()];
-
-		return (matchIngredient(0, remaining, input.items(), consumed)) ? new StillRecipeMatch(consumed) : null;
-	}
-
-	/**
-	 * Matches one recipe ingredient.
-	 *
-	 * <p>Each ingredient starts searching at slot 0 because a later recipe
-	 * ingredient is allowed to use an earlier inventory slot.</p>
-	 */
-	private boolean matchIngredient(int ingredientIndex, int[] remaining, List<ItemStack> available, int[][] consumed)
-	{
-		// All recipe ingredients have been successfully matched.
-		if (ingredientIndex >= itemInputs.size()) return true;
-
-		StillItemInput required = itemInputs.get(ingredientIndex);
-
-		return matchAmount(ingredientIndex, required, required.count(), 0, remaining, available, consumed);
-	}
-
-	/**
-	 * Attempts to satisfy one ingredient using the available inventory slots.
-	 *
-	 * <p>Backtracking is required because Ingredient/tag definitions can
-	 * overlap. For example, a slot containing wheat can match both
-	 * c:grains and minecraft:wheat.</p>
-	 */
-	private boolean matchAmount(int ingredientIndex, StillItemInput required, int amountRemaining, int slot, int[] remaining, List<ItemStack> available, int[][] consumed)
-	{
-		// This ingredient has been completely satisfied. Continue with the next recipe ingredient.
-		if (amountRemaining <= 0) return matchIngredient(ingredientIndex + 1, remaining, available, consumed);
-
-		// There are no more inventory slots to consider.
-		if (slot >= available.size()) return false;
-
-		ItemStack stack = available.get(slot);
-
-		// First try using this slot. Only consume as much as this ingredient needs, or as much as remains in the slot.
-		if (!stack.isEmpty() && remaining[slot] > 0 && required.ingredient().test(stack))
+		// Check if enough items are supplied to satisfy the requirements of the recipe.
+		// For each requirement all supplied item stack counts are processed. If there
+		// are not enough items to fulfill a requirement, the match fails.
+		for (var requiredInput : itemInputs)
 		{
-			int used = Math.min(amountRemaining, remaining[slot]);
+			int requiredRemaining = requiredInput.count();
 
-			remaining[slot] -= used;
-			consumed[ingredientIndex][slot] += used;
+			for (int i = 0; i < items.size(); i++)
+			{
+				ItemStack stack = items.get(i);
+				if (!requiredInput.ingredient().test(stack)) continue;
 
-			if (matchAmount(ingredientIndex, required, amountRemaining - used, slot + 1, remaining, available, consumed)) return true;
+				requiredRemaining -= stack.getCount();
 
-			// That choice led to a dead end. Undo it and try another assignment.
-			remaining[slot] += used;
-			consumed[ingredientIndex][slot] -= used;
+				if (requiredRemaining <= 0) break;
+			}
+
+			if (requiredRemaining > 0) return false;
 		}
 
-		// Try not using this slot for the current ingredient.
-		return matchAmount(ingredientIndex, required, amountRemaining, slot + 1, remaining, available, consumed);
+		return true;
 	}
-
-	public record StillRecipeMatch(int[][] consumed) {}
 
 	@Override
 	public ItemStack assemble(StillRecipeInput input)
@@ -250,7 +210,7 @@ public class StillRecipe implements Recipe<StillRecipe.StillRecipeInput>
 			Ingredient.CONTENTS_STREAM_CODEC,
 			StillItemInput::ingredient,
 
-			ByteBufCodecs.VAR_INT,
+			ByteBufCodecs.INT,
 			StillItemInput::count,
 
 			StillItemInput::new
