@@ -4,7 +4,7 @@
 		"fluid": "simpleautomations:alcohol",
 		"components": {
 			"simpleautomations:alcohol_distillation_level": {
-				"level": "CONCENTRATED"
+				"level": "concentrated"
 			}
 		},
 		"amount": 2000
@@ -14,7 +14,7 @@
 		"fluid": "simpleautomations:alcohol",
 		"components": {
 			"simpleautomations:alcohol_distillation_level": {
-				"level": "PURE"
+				"level": "pure"
 			}
 		},
 		"amount": 250

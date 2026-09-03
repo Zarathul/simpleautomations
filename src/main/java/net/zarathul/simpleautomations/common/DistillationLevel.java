@@ -2,6 +2,8 @@ package net.zarathul.simpleautomations.common;
 
 import net.minecraft.util.StringRepresentable;
 
+import java.util.Locale;
+
 public enum DistillationLevel implements StringRepresentable
 {
 	NORMAL("normal", 3),
@@ -25,6 +27,11 @@ public enum DistillationLevel implements StringRepresentable
 	{
 		this.name = name;
 		this.mixMultiplier = mixMultiplier;
+	}
+
+	public static DistillationLevel fromSerializedName(String name)
+	{
+		return DistillationLevel.valueOf(name.toUpperCase(Locale.ROOT));
 	}
 
 	@Override

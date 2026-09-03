@@ -64,6 +64,7 @@ public class StillBlock extends BaseEntityBlock
 	public static final EnumProperty<MultiBlockPartType> PART = EnumProperty.create("part", MultiBlockPartType.class);
 	public static final BooleanProperty POWERED_ON = BooleanProperty.create("powered_on");
 	public static final BooleanProperty FUEL_HATCH_OPEN = BooleanProperty.create("fuel_hatch_open");
+	public static final EnumProperty<StillFuelState> FUEL = EnumProperty.create("fuel", StillFuelState.class);
 	public static final BooleanProperty PRESSURE_RELEASE_PULLED = BooleanProperty.create("pressure_release_pulled");
 	public static final IntegerProperty PRESSURE = IntegerProperty.create("pressure", MIN_PRESSURE, MAX_PRESSURE);
 
@@ -124,6 +125,7 @@ public class StillBlock extends BaseEntityBlock
 			.setValue(PART, MultiBlockPartType.CORE)
 			.setValue(POWERED_ON, false)
 			.setValue(FUEL_HATCH_OPEN, false)
+			.setValue(FUEL, StillFuelState.EMPTY)
 			.setValue(PRESSURE_RELEASE_PULLED, false)
 			.setValue(PRESSURE, 0)
 		);
@@ -169,6 +171,7 @@ public class StillBlock extends BaseEntityBlock
 		builder.add(PART);
 		builder.add(POWERED_ON);
 		builder.add(FUEL_HATCH_OPEN);
+		builder.add(FUEL);
 		builder.add(PRESSURE_RELEASE_PULLED);
 		builder.add(PRESSURE);
 	}
@@ -192,6 +195,7 @@ public class StillBlock extends BaseEntityBlock
 			.setValue(PART, MultiBlockPartType.CORE)
 			.setValue(POWERED_ON, false)
 			.setValue(FUEL_HATCH_OPEN, false)
+			.setValue(FUEL, StillFuelState.EMPTY)
 			.setValue(PRESSURE_RELEASE_PULLED, false)
 			.setValue(PRESSURE, 0);
 

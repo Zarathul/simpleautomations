@@ -20,6 +20,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.zarathul.simpleautomations.blocks.ModBlocks;
 import net.zarathul.simpleautomations.blocks.StillBlock;
+import net.zarathul.simpleautomations.blocks.StillFuelState;
 import net.zarathul.simpleautomations.recipes.ModRecipes;
 import net.zarathul.simpleautomations.recipes.StillRecipe;
 import net.zarathul.simplemodslib.api.fluid.FluidStack;
@@ -104,6 +105,7 @@ public class StillCoreBlockEntity extends BlockEntity
 		}
 
 		boolean poweredOn = getBlockState().getValue(StillBlock.POWERED_ON);
+		StillFuelState fuelState = getBlockState().getValue(StillBlock.FUEL);
 		int oldBurnTime = burnTime;
 		int oldPressureIncreaseTime = pressureIncreaseTime;
 		int oldPressureDecreaseTime = pressureDecreaseTime;
@@ -124,6 +126,8 @@ public class StillCoreBlockEntity extends BlockEntity
 			if (poweredOn) burnTime = consumeFuel(fuelInput);
 			if (burnTime <= 0) decreasePressure();
 		}
+
+		updateFuelState();
 
 		int pressure = getPressure();
 
@@ -285,10 +289,27 @@ public class StillCoreBlockEntity extends BlockEntity
 
 			inventory.setChanged();
 
+			updateFuelState();
+
 			return burnDuration;
 		}
 
+		updateFuelState();
+
 		return 0;
+	}
+
+	protected void updateFuelState()
+	{
+		StillFuelState fuelState = (burnTime > 0) ?
+								   StillFuelState.LIT :
+								   (getFuelInput().isEmpty()) ?
+								   StillFuelState.EMPTY :
+								   StillFuelState.UNLIT;
+
+		StillFuelState oldFuelState = getBlockState().getValue(StillBlock.FUEL);
+
+		if (oldFuelState != fuelState) level.setBlockAndUpdate(worldPosition, getBlockState().setValue(StillBlock.FUEL, fuelState));
 	}
 
 	protected boolean canOutput(MultiBlockFluidInventory output, FluidStack result)

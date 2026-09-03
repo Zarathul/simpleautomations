@@ -1,0 +1,49 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "block/campfire_fire",
+		"particle": "block/campfire_fire"
+	},
+	"elements": [
+		{
+			"from": [2, 3, -5],
+			"to": [15, 10, -5],
+			"rotation": {"angle": -45, "axis": "y", "origin": [6, 3, -5]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			},
+			"shade": false,
+			"light_emission": 15
+		},
+		{
+			"from": [-0.5, 3, -2.5],
+			"to": [12.5, 10, -2.5],
+			"rotation": {"angle": 45, "axis": "y", "origin": [6, 3, -5]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			},
+			"shade": false,
+			"light_emission": 15
+		}
+	],
+	"groups": [
+		{
+			"name": "Fuel",
+			"origin": [8, 8, 8],
+			"scope": 0,
+			"color": 3,
+			"children": [
+				{
+					"name": "Lit",
+					"origin": [8, 8, 8],
+					"scope": 0,
+					"color": 3,
+					"children": [0, 1]
+				}
+			]
+		}
+	]
+}

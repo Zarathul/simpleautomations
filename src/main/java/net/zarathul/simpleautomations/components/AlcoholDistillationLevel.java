@@ -10,11 +10,11 @@ import net.zarathul.simpleautomations.common.DistillationLevel;
 public record AlcoholDistillationLevel(DistillationLevel level)
 {
 	public static final Codec<AlcoholDistillationLevel> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		Codec.STRING.fieldOf("level").forGetter(alcoholDistillationLevel -> alcoholDistillationLevel.level.name())
-	).apply(instance, name -> new AlcoholDistillationLevel(DistillationLevel.valueOf(name))));
+		Codec.STRING.fieldOf("level").forGetter(alcoholDistillationLevel -> alcoholDistillationLevel.level.getName())
+	).apply(instance, name -> new AlcoholDistillationLevel(DistillationLevel.fromSerializedName(name))));
 
 	public static final StreamCodec<FriendlyByteBuf, AlcoholDistillationLevel> STREAM_CODEC = StreamCodec.composite(
-		ByteBufCodecs.STRING_UTF8, alcoholDistillationLevel -> alcoholDistillationLevel.level.name(),
-		name -> new AlcoholDistillationLevel(DistillationLevel.valueOf(name))
+		ByteBufCodecs.STRING_UTF8, alcoholDistillationLevel -> alcoholDistillationLevel.level.getName(),
+		name -> new AlcoholDistillationLevel(DistillationLevel.fromSerializedName(name))
 	);
 }

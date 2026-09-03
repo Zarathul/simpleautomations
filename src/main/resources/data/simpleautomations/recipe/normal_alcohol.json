@@ -18,7 +18,7 @@
 		"fluid": "simpleautomations:alcohol",
 		"components": {
 			 "simpleautomations:alcohol_distillation_level": {
-				 "level": "NORMAL"
+				 "level": "normal"
 			 }
 		},
 		"amount": 250
