@@ -11,6 +11,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -147,6 +149,12 @@ public class StillBlock extends BaseEntityBlock
 	}
 
 	@Override
+	protected float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos)
+	{
+		return 1.0f;
+	}
+
+	@Override
 	protected boolean isRandomlyTicking(BlockState state)
 	{
 		return false;
@@ -229,6 +237,25 @@ public class StillBlock extends BaseEntityBlock
 	}
 
 	@Override
+	public void stepOn(Level level, BlockPos pos, BlockState onState, Entity entity)
+	{
+		if (onState.getValue(PART) == MultiBlockPartType.ITEMS_INPUT && entity instanceof ItemEntity item)
+		{
+			SimpleAutomations.LOG.info("STEP_ON: {}", entity.getDisplayName().getString());
+
+			BlockPos corePos = getCorePos(level, pos, onState);
+			if (corePos == null)
+			{
+				SimpleAutomations.LOG.error("Core block not found for multiblock part at {}.", Utils.getReadableBlockPos(pos));
+				return;
+			}
+
+			MultiBlockInventory itemInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
+			handleItemsInput(item.getItem(), level, pos);
+		}
+	}
+
+	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult)
 	{
 		BlockPos corePos = getCorePos(level, pos, state);
@@ -253,6 +280,7 @@ public class StillBlock extends BaseEntityBlock
 				else
 				{
 					level.setBlockAndUpdate(corePos, coreState.setValue(FUEL_HATCH_OPEN, !hatchOpen));
+					level.playSound(player, pos, (hatchOpen) ? SoundEvents.IRON_DOOR_OPEN : SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, 0.6f, 0.6f);
 				}
 			}
 			case ITEMS_INPUT ->
@@ -274,7 +302,7 @@ public class StillBlock extends BaseEntityBlock
 					if (!pressureReleaseEngaged)
 					{
 						level.setBlockAndUpdate(corePos, coreState.setValue(PRESSURE_RELEASE_PULLED, true));
-						level.playSound(player, pos, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, 0.6f, 0.6f);
+						level.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.6f, 0.6f);
 					}
 				}
 				else if (partIndex == POWER_LEVER_INDEX)
@@ -304,8 +332,8 @@ public class StillBlock extends BaseEntityBlock
 			InteractionResult result = switch (state.getValue(PART))
 			{
 				case FUEL_INPUT -> handleFuelItemInput(itemStack, level, pos, coreState);
-				case ITEMS_INPUT -> handleItemsInput(itemStack, level, pos, coreState);
-				case FLUID_INPUT,FLUID_OUTPUT -> handleFluidInputOutput(player, hand, itemStack, level, pos, coreState);
+				case ITEMS_INPUT -> handleItemsInput(itemStack, level, pos);
+				case FLUID_INPUT,FLUID_OUTPUT -> handleFluidInputOutput(player, hand, level, pos);
 
 				default -> InteractionResult.PASS;
 			};
@@ -336,7 +364,7 @@ public class StillBlock extends BaseEntityBlock
 		return InteractionResult.PASS;
 	}
 
-	private InteractionResult handleItemsInput(ItemStack itemStack, Level level, BlockPos pos, BlockState coreState)
+	private InteractionResult handleItemsInput(ItemStack itemStack, Level level, BlockPos pos)
 	{
 		if (!level.isClientSide())
 		{
@@ -347,7 +375,7 @@ public class StillBlock extends BaseEntityBlock
 		return (level.isClientSide()) ?  InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
 	}
 
-	private InteractionResult handleFluidInputOutput(Player player, InteractionHand hand, ItemStack itemStack, Level level, BlockPos pos, BlockState coreState)
+	private InteractionResult handleFluidInputOutput(Player player, InteractionHand hand, Level level, BlockPos pos)
 	{
 		if (!level.isClientSide())
 		{

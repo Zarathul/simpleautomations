@@ -21,64 +21,84 @@
 			"apply": { "model": "simpleautomations:block/still", "y": 270 }
 		},
 		{
-			"_comment": "Power switch ON - North",
-			"when": { "part": "core", "facing": "north", "fuel": "unlit" },
-			"apply": { "model": "simpleautomations:block/still_filled_fuel_hatch" }
-		},
-		{
-			"_comment": "Power switch ON - East",
-			"when": { "part": "core", "facing": "east", "fuel": "unlit" },
-			"apply": { "model": "simpleautomations:block/still_filled_fuel_hatch", "y": 90 }
-		},
-		{
-			"_comment": "Power switch ON - South",
-			"when": { "part": "core", "facing": "south", "fuel": "unlit" },
-			"apply": { "model": "simpleautomations:block/still_filled_fuel_hatch", "y": 180 }
-		},
-		{
-			"_comment": "Power switch ON - West",
-			"when": { "part": "core", "facing": "west", "fuel": "unlit" },
-			"apply": { "model": "simpleautomations:block/still_filled_fuel_hatch", "y": 270 }
-		},
-		{
-			"_comment": "Power switch OFF - North",
-			"when": { "part": "core", "facing": "north", "fuel": "lit" },
-			"apply": { "model": "simpleautomations:block/still_fuel_burning" }
-		},
-		{
-			"_comment": "Power switch OFF - East",
-			"when": { "part": "core", "facing": "east", "fuel": "lit" },
-			"apply": { "model": "simpleautomations:block/still_fuel_burning", "y": 90 }
-		},
-		{
-			"_comment": "Power switch OFF - South",
-			"when": { "part": "core", "facing": "south", "fuel": "lit" },
-			"apply": { "model": "simpleautomations:block/still_fuel_burning", "y": 180 }
-		},
-		{
-			"_comment": "Power switch OFF - West",
-			"when": { "part": "core", "facing": "west", "fuel": "lit" },
-			"apply": { "model": "simpleautomations:block/still_fuel_burning", "y": 270 }
-		},
-		{
-			"_comment": "Power switch OFF - North",
+			"_comment": "Empty Fuel Hatch - North",
 			"when": { "part": "core", "facing": "north", "fuel": "empty" },
 			"apply": { "model": "simpleautomations:block/still_empty_fuel_hatch" }
 		},
 		{
-			"_comment": "Power switch OFF - East",
+			"_comment": "Empty Fuel Hatch - East",
 			"when": { "part": "core", "facing": "east", "fuel": "empty" },
 			"apply": { "model": "simpleautomations:block/still_empty_fuel_hatch", "y": 90 }
 		},
 		{
-			"_comment": "Power switch OFF - South",
+			"_comment": "Empty Fuel Hatch - South",
 			"when": { "part": "core", "facing": "south", "fuel": "empty" },
 			"apply": { "model": "simpleautomations:block/still_empty_fuel_hatch", "y": 180 }
 		},
 		{
-			"_comment": "Power switch OFF - West",
+			"_comment": "Empty Fuel Hatch - West",
 			"when": { "part": "core", "facing": "west", "fuel": "empty" },
 			"apply": { "model": "simpleautomations:block/still_empty_fuel_hatch", "y": 270 }
+		},
+		{
+			"_comment": "Filled Fuel Hatch - North",
+			"when": { "part": "core", "facing": "north", "fuel": "unlit" },
+			"apply": { "model": "simpleautomations:block/still_filled_fuel_hatch" }
+		},
+		{
+			"_comment": "Filled Fuel Hatch - East",
+			"when": { "part": "core", "facing": "east", "fuel": "unlit" },
+			"apply": { "model": "simpleautomations:block/still_filled_fuel_hatch", "y": 90 }
+		},
+		{
+			"_comment": "Filled Fuel Hatch - South",
+			"when": { "part": "core", "facing": "south", "fuel": "unlit" },
+			"apply": { "model": "simpleautomations:block/still_filled_fuel_hatch", "y": 180 }
+		},
+		{
+			"_comment": "Filled Fuel Hatch - West",
+			"when": { "part": "core", "facing": "west", "fuel": "unlit" },
+			"apply": { "model": "simpleautomations:block/still_filled_fuel_hatch", "y": 270 }
+		},
+		{
+			"_comment": "Fuel Burning - North",
+			"when": { "part": "core", "facing": "north", "fuel": "lit" },
+			"apply": { "model": "simpleautomations:block/still_fuel_burning" }
+		},
+		{
+			"_comment": "Fuel Burning - East",
+			"when": { "part": "core", "facing": "east", "fuel": "lit" },
+			"apply": { "model": "simpleautomations:block/still_fuel_burning", "y": 90 }
+		},
+		{
+			"_comment": "Fuel Burning - South",
+			"when": { "part": "core", "facing": "south", "fuel": "lit" },
+			"apply": { "model": "simpleautomations:block/still_fuel_burning", "y": 180 }
+		},
+		{
+			"_comment": "Fuel Burning - West",
+			"when": { "part": "core", "facing": "west", "fuel": "lit" },
+			"apply": { "model": "simpleautomations:block/still_fuel_burning", "y": 270 }
+		},
+		{
+			"_comment": "Last Fuel Burning - North",
+			"when": { "part": "core", "facing": "north", "fuel": "lit_last" },
+			"apply": { "model": "simpleautomations:block/still_last_fuel_burning" }
+		},
+		{
+			"_comment": "Last Fuel Burning - East",
+			"when": { "part": "core", "facing": "east", "fuel": "lit_last" },
+			"apply": { "model": "simpleautomations:block/still_last_fuel_burning", "y": 90 }
+		},
+		{
+			"_comment": "Last Fuel Burning - South",
+			"when": { "part": "core", "facing": "south", "fuel": "lit_last" },
+			"apply": { "model": "simpleautomations:block/still_last_fuel_burning", "y": 180 }
+		},
+		{
+			"_comment": "Last Fuel Burning - West",
+			"when": { "part": "core", "facing": "west", "fuel": "lit_last" },
+			"apply": { "model": "simpleautomations:block/still_last_fuel_burning", "y": 270 }
 		},
 		{
 			"_comment": "Power switch ON - North",

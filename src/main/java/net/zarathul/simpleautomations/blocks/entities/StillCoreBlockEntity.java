@@ -94,7 +94,7 @@ public class StillCoreBlockEntity extends BlockEntity
 			if (oldPressure <= 0)
 			{
 				level.setBlockAndUpdate(worldPosition, getBlockState().setValue(StillBlock.PRESSURE_RELEASE_PULLED, false));
-				level.playSound(null, worldPosition, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, 0.6f, 0.5f);
+				level.playSound(null, worldPosition, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 0.6f, 0.6f);
 				pressureToRelease = 0;	// Void remaining pressure release if pressure 0 was reached.
 			}
 			else if (pressureToRelease <= 0)
@@ -105,7 +105,6 @@ public class StillCoreBlockEntity extends BlockEntity
 		}
 
 		boolean poweredOn = getBlockState().getValue(StillBlock.POWERED_ON);
-		StillFuelState fuelState = getBlockState().getValue(StillBlock.FUEL);
 		int oldBurnTime = burnTime;
 		int oldPressureIncreaseTime = pressureIncreaseTime;
 		int oldPressureDecreaseTime = pressureDecreaseTime;
@@ -301,9 +300,13 @@ public class StillCoreBlockEntity extends BlockEntity
 
 	protected void updateFuelState()
 	{
+		boolean fuelInputEmpty = getFuelInput().isEmpty();
+
 		StillFuelState fuelState = (burnTime > 0) ?
+								   (fuelInputEmpty) ?
+								   StillFuelState.LIT_LAST :
 								   StillFuelState.LIT :
-								   (getFuelInput().isEmpty()) ?
+								   (fuelInputEmpty) ?
 								   StillFuelState.EMPTY :
 								   StillFuelState.UNLIT;
 

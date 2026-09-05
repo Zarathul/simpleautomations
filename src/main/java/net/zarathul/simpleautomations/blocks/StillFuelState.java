@@ -6,7 +6,8 @@ public enum StillFuelState implements StringRepresentable
 {
 	EMPTY("empty"),
 	UNLIT("unlit"),
-	LIT("lit");
+	LIT("lit"),
+	LIT_LAST("lit_last");
 
 	private final String name;
 
