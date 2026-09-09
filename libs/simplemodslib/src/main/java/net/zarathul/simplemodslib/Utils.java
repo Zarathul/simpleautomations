@@ -189,16 +189,41 @@ public final class Utils
 	 */
 	public static Direction getRelativeDirection(BlockPos from, BlockPos to)
 	{
+		return getRelativeDirection(from, to, false);
+	}
+
+	/**
+	 * Gets the relative direction from one {@link BlockPos} to another.
+	 *
+	 * @param from
+	 * The starting point.
+	 * @param to
+	 * The end point.
+	 * @param prioritizeHorizontal
+	 * If there is a vertical and a horizontal distance, always prioritize the horizontal.
+	 * @return
+	 * One of the {@link Direction} values or <code>null</code> if one of the arguments was <code>null</code>.
+	 */
+	public static Direction getRelativeDirection(BlockPos from, BlockPos to, boolean prioritizeHorizontal)
+	{
 		if (from == null || to == null) return null;
 
-		BlockPos directionVec = to.subtract(from);
-		// Normalize, because Direction.fromNormal uses a map lookup and expects a vector with only 0, 1 and -1 as values.
-		directionVec = new BlockPos(
-			(directionVec.getX() == 0) ? 0 : directionVec.getX() / Mth.abs(directionVec.getX()),
-			(directionVec.getY() == 0) ? 0 : directionVec.getY() / Mth.abs(directionVec.getY()),
-			(directionVec.getZ() == 0) ? 0 : directionVec.getZ() / Mth.abs(directionVec.getZ()));
+		if (!prioritizeHorizontal)
+		{
+			BlockPos directionDelta = to.subtract(from);
+			return Direction.getNearest(directionDelta.getX(), directionDelta.getY(), directionDelta.getZ(), Direction.DOWN);
+		}
 
-		return Direction.getNearest(directionVec.getX(), directionVec.getY(), directionVec.getZ(), Direction.DOWN);
+		int dX = to.getX() - from.getX();
+		int dY = to.getY() - from.getY();
+		int dZ = to.getZ() - from.getZ();
+
+		Direction relativeDirection = (Math.abs(dX) > Math.abs(dZ)) ?
+									  (dX > 0) ? Direction.EAST : Direction.WEST :
+									  (dZ != 0) ? (dZ > 0) ? Direction.SOUTH : Direction.NORTH :
+									  (dY > 0) ? Direction.UP : Direction.DOWN;
+
+		return  relativeDirection;
 	}
 
 	/**
@@ -441,5 +466,34 @@ public final class Utils
 	public static BlockPos reverseOffset(BlockPos pos, Vec3i offset)
 	{
 		return pos.offset(-offset.getX(), -offset.getY(), -offset.getZ());
+	}
+
+	/**
+	 * Constructs an integer array from the {@link BlockPos} coordinates in x, y, z order.
+	 * @param pos
+	 * The {@link BlockPos} to extract the coordinates from.
+	 * @return
+	 * An integer array containing the x, y, z coordinates or {@code null} if {@code pos} was {@code null}.
+	 */
+	public static int[] arrayFromPos(BlockPos pos)
+	{
+		if (pos == null) return null;
+
+		return new int[] { pos.getX(), pos.getY(), pos.getZ() };
+	}
+
+	/**
+	 * Constructs a {@link BlockPos} from an integer array.
+	 *
+	 * @param components
+	 * The coordinates in x, y, z order.
+	 * @return
+	 * A {@link BlockPos} representing the passed in coordinates or {@code null} if {@code components} was null or had incorrect length.
+	 */
+	public static BlockPos posFromArray(int[] components)
+	{
+		if (components == null || components.length != 3) return null;
+
+		return new BlockPos(components[0], components[1], components[2]);
 	}
 }
