@@ -1,0 +1,67 @@
+{
+	"variants": {
+		"connection=north_to_south": {
+			"model": "simpleautomations:block/fluid_pipe_north_south"
+		},
+		"connection=east_to_west": {
+			"model": "simpleautomations:block/fluid_pipe_north_south",
+			"y": 90
+		},
+		"connection=down_to_up": {
+			"model": "simpleautomations:block/fluid_pipe_north_south",
+			"x": 90
+		},
+		"connection=north_to_up": {
+			"model": "simpleautomations:block/fluid_pipe_north_up"
+		},
+		"connection=north_to_east": {
+			"model": "simpleautomations:block/fluid_pipe_north_up",
+			"z": 90
+		},
+		"connection=north_to_down": {
+			"model": "simpleautomations:block/fluid_pipe_north_up",
+			"z": 180
+		},
+		"connection=north_to_west": {
+			"model": "simpleautomations:block/fluid_pipe_north_up",
+			"z": -90
+		},
+		"connection=south_to_up": {
+			"model": "simpleautomations:block/fluid_pipe_north_up",
+			"y": 180
+		},
+		"connection=south_to_east": {
+			"model": "simpleautomations:block/fluid_pipe_north_up",
+			"y": 180,
+			"z": 90
+		},
+		"connection=south_to_down": {
+			"model": "simpleautomations:block/fluid_pipe_north_up",
+			"y": 180,
+			"z": 180
+		},
+		"connection=south_to_west": {
+			"model": "simpleautomations:block/fluid_pipe_north_up",
+			"y": 180,
+			"z": -90
+		},
+		"connection=east_to_up": {
+			"model": "simpleautomations:block/fluid_pipe_north_up",
+			"y": 90
+		},
+		"connection=east_to_down": {
+			"model": "simpleautomations:block/fluid_pipe_north_up",
+			"y": 90,
+			"z": 90
+		},
+		"connection=west_to_up": {
+			"model": "simpleautomations:block/fluid_pipe_north_up",
+			"y": -90
+		},
+		"connection=west_to_down": {
+			"model": "simpleautomations:block/fluid_pipe_north_up",
+			"y": -90,
+			"z": -90
+		}
+	}
+}

@@ -188,7 +188,7 @@ public class StillCoreBlockEntity extends BlockEntity
 		setChanged();
 	}
 
-	private void increasePressure()
+	protected void increasePressure()
 	{
 		pressureIncreaseTime++;
 

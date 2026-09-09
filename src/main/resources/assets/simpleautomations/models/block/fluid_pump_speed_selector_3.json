@@ -1,0 +1,24 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"pump": "simpleautomations:block/fluid_pump",
+		"particle": "block/iron_block"
+	},
+	"elements": [
+		{
+			"name": "Setting 3",
+			"from": [5, 6, 1],
+			"to": [6, 7, 3],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5, 6, 2]},
+			"faces": {
+				"north": {"uv": [9, 0.5, 9.25, 0.75], "texture": "#pump"},
+				"east": {"uv": [8.5, 0.5, 9, 0.75], "texture": "#pump"},
+				"south": {"uv": [9.75, 0.5, 10, 0.75], "texture": "#pump"},
+				"west": {"uv": [9.25, 0.5, 9.75, 0.75], "texture": "#pump"},
+				"up": {"uv": [9.25, 0.5, 9, 0], "texture": "#pump"},
+				"down": {"uv": [9.5, 0, 9.25, 0.5], "texture": "#pump"}
+			}
+		}
+	]
+}

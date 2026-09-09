@@ -9,6 +9,7 @@ public final class ModComponents
 	private static final ComponentRegistrar REGISTRAR = new ComponentRegistrar(SimpleAutomations.MOD_ID);
 	public static final DataComponentType<AlcoholDistillationLevel> ALCOHOL_DISTILLATION_LEVEL = REGISTRAR.register("alcohol_distillation_level", AlcoholDistillationLevel.CODEC, AlcoholDistillationLevel.STREAM_CODEC);
 	public static final DataComponentType<Tonic> TONIC = REGISTRAR.register("tonic", Tonic.CODEC, Tonic.STREAM_CODEC);
+	public static final DataComponentType<FluidPipePlacementMode> FLUID_PIPE = REGISTRAR.register("fluid_pipe", FluidPipePlacementMode.CODEC, FluidPipePlacementMode.STREAM_CODEC);
 
 	public static void init()
 	{

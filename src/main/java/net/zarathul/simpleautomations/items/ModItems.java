@@ -4,9 +4,11 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.zarathul.simpleautomations.SimpleAutomations;
+import net.zarathul.simpleautomations.blocks.FluidPumpBlock;
 import net.zarathul.simpleautomations.blocks.ModBlocks;
 import net.zarathul.simpleautomations.common.DistillationLevel;
 import net.zarathul.simpleautomations.components.AlcoholDistillationLevel;
+import net.zarathul.simpleautomations.components.FluidPipePlacementMode;
 import net.zarathul.simpleautomations.components.ModComponents;
 import net.zarathul.simpleautomations.components.Tonic;
 import net.zarathul.simpleautomations.fluids.ModFluids;
@@ -79,6 +81,16 @@ public final class ModItems
 	);
 
 	public static final BlockItem STILL = REGISTRAR.register("still", ModBlocks.STILL, BlockItem::new, new Item.Properties().stacksTo(64));
+	public static final FluidPipeItem PIPE = REGISTRAR.register("fluid_pipe", ModBlocks.FLUID_PIPE, FluidPipeItem::new, new Item.Properties()
+		.stacksTo(64)
+		.component(ModComponents.FLUID_PIPE, new FluidPipePlacementMode(FluidPipePlacementMode.Mode.SMART)),
+		(item) -> new Object[] { item.get(ModComponents.FLUID_PIPE).mode() },
+		(item) -> new Object[] {}
+	);
+	public static final BlockItem PUMP = REGISTRAR.register("fluid_pump", ModBlocks.FLUID_PUMP, BlockItem::new, new Item.Properties().stacksTo(64),
+		(item) -> new Object[] {},
+		(item) -> new Object[] { FluidPumpBlock.MODIFIED_PUMP_SPEEDS[0], FluidPumpBlock.MODIFIED_PUMP_SPEEDS[1], FluidPumpBlock.MODIFIED_PUMP_SPEEDS[2], FluidPumpBlock.MODIFIED_PUMP_SPEEDS[3] }
+	);
 
 	public static void init()
 	{
@@ -92,7 +104,9 @@ public final class ModItems
 			ALCOHOL_BUCKET,
 			CONCENTRATED_ALCOHOL_BUCKET,
 			PURE_ALCOHOL_BUCKET,
-			STILL
+			STILL,
+			PIPE,
+			PUMP
 		);
 	}
 

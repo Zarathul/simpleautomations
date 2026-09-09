@@ -20,5 +20,14 @@
 	"item.simpleautomations.concentrated_alcohol_bucket.tooltip_details": "§2A §2vast §2improvement!\nMost impurities are gone, but still quite diluted.",
 	"item.simpleautomations.pure_alcohol_bucket": "Pure Alcohol Bucket",
 	"item.simpleautomations.pure_alcohol_bucket.tooltip": "§7(Hold §e§oshift §7for details)",
-	"item.simpleautomations.pure_alcohol_bucket.tooltip_details": "§2PERFECTION.\nThis will easily remove the last bits of Creeper remnants from your walls."
+	"item.simpleautomations.pure_alcohol_bucket.tooltip_details": "§2PERFECTION.\nThis will easily remove the last bits of Creeper remnants from your walls.",
+	"item.simpleautomations.still": "Still",
+	"item.simpleautomations.still.tooltip": "§7(Hold §e§oshift §7for details)",
+	"item.simpleautomations.still.tooltip_details": "§2Ahh, §2the §2sound §2of §2progress.\nYou would not believe what this little machine can do with just some crops, sugar and water.\n§9(Produces §9and §9distills §9Alcohol.\n§bBlue §9is §9input, §bred §9is §9output.)",
+	"item.simpleautomations.fluid_pipe": "Fluid Pipe",
+	"item.simpleautomations.fluid_pipe.tooltip": "Mode: %s\n§7(Hold §e§oshift §7for details)",
+	"item.simpleautomations.fluid_pipe.tooltip_details": "§2Proper §2connections §2are §2so §2important.\nEver had a leaky pipe? Won't happen with these babies.\n§9(Use §9to §9change §9placement §9mode. §bNormal: §9Place §9on §9the §9looked §9at §9face. §9Hold §9crouch §9to §9make §9the §9other §9end §9face §9you.\n§bSmart: §9Always §9tries §9to §9connect §9to §9other §9pipes, §9pumps §9etc.)",
+	"item.simpleautomations.fluid_pump": "Fluid Pump",
+	"item.simpleautomations.fluid_pump.tooltip": "§7(Hold §e§oshift §7for details)",
+	"item.simpleautomations.fluid_pump.tooltip_details": "§2Sucking §2and §2blowing.\nHey! Get your head out of the gutter. It's just a pump.\n§9(§9Has §9four §9speed §9settings: §b%d, §b%d, §b%d §9and §b%d §9mb/s.\n§bBlue §9is §9input, §bred §9is §9output.)"
 }

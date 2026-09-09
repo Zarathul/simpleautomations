@@ -20,5 +20,14 @@
 	"item.simpleautomations.concentrated_alcohol_bucket.tooltip_details": "§2Eine §2gewaltige §2Verbesserung!\nDie meisten Verunreinigungen sind verschwunden, aber immer noch ziemlich verdünnt.",
 	"item.simpleautomations.pure_alcohol_bucket": "Eimer mit reinem Alkohol",
 	"item.simpleautomations.pure_alcohol_bucket.tooltip": "§7(§e§oShift §7für Details gedrückt halten)",
-	"item.simpleautomations.pure_alcohol_bucket.tooltip_details": "§2PERFEKTION.\nDamit lassen sich die letzten Creeper-Reste an deinen Wänden problemlos entfernen."
+	"item.simpleautomations.pure_alcohol_bucket.tooltip_details": "§2PERFEKTION.\nDamit lassen sich die letzten Creeper-Reste an deinen Wänden problemlos entfernen.",
+	"item.simpleautomations.still": "Destille",
+	"item.simpleautomations.still.tooltip": "§7(§e§oShift §7für Details gedrückt halten)",
+	"item.simpleautomations.still.tooltip_details": "§2Ahh, §2der §2Klang §2des §2Fortschritts.\nDu würdest nicht glauben, was diese kleine Maschine nur mit ein paar Feldfrüchten, Zucker und Wasser anstellen kann.\n§9(Produziert §9und §9destilliert §9Alkohol.\n§bBlau §9ist §9Eingang, §bRot §9ist §9Ausgang.)",
+	"item.simpleautomations.fluid_pipe": "Rohr",
+	"item.simpleautomations.fluid_pipe.tooltip": "Modus: %s\n§7(§e§oShift §7für Details gedrückt halten)",
+	"item.simpleautomations.fluid_pipe.tooltip_details": "§2Die §2richtigen §2Verbindungen §2sind §2so §2wichtig.\nSchon mal ein undichtes Rohr gehabt? Mit diesen Dingern passiert das nicht.\n§9(Verwende §9es, §9um §9den §9Platzierungsmodus §9zu §9ändern. §bNormal: §9Platziere §9es §9auf §9der §9angesehenen §9Seite. §9Halte §9die §9Schleichen-Taste §9gedrückt, §9um §9das §9andere §9Ende §9auf §9dich §9zeigen §9zu §9lassen.\n§bSmart: §9Versucht §9immer, §9sich §9mit §9anderen §9Rohren, §9Pumpen §9usw. §9zu §9verbinden.)",
+	"item.simpleautomations.fluid_pump": "Pumpe",
+	"item.simpleautomations.fluid_pump.tooltip": "§7(§e§oShift §7für Details gedrückt halten)",
+	"item.simpleautomations.fluid_pump.tooltip_details": "§2Saugen §2und §2blasen.\nHey! Raus mit deinem Kopf aus der Gosse. Es ist nur eine Pumpe.\n§9(Hat §9vier §9Geschwindigkeitsstufen: §b%d, §b%d, §b%d §9und §b%d §9mb/s.\n§bBlau §9ist §9Eingang, §bRot §9ist §9Ausgang.)"
 }

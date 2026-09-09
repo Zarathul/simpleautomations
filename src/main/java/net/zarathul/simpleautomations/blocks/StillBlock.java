@@ -250,7 +250,6 @@ public class StillBlock extends BaseEntityBlock
 				return;
 			}
 
-			MultiBlockInventory itemInventory = level.getBlockEntity(pos, ModBlocks.MULTI_BLOCK_INVENTORY).get();
 			handleItemsInput(item.getItem(), level, pos);
 		}
 	}
@@ -488,11 +487,16 @@ public class StillBlock extends BaseEntityBlock
 			if (core.isEmpty())
 			{
 				SimpleAutomations.LOG.error("Core block entity not found for multiblock part at {}.", pos.toShortString());
+				return;
 			}
-			else if (core.get().isFueled())
+
+			if (core.get().isFueled())
 			{
-				BlockPos[] posAroundChimneyOne = getPartPos(pos, state.getValue(FACING), new int[] { 10, 11, 13, 14 });
-				BlockPos[] posAroundChimneyTwo = getPartPos(pos, state.getValue(FACING), new int[] { 13, 14, 16, 17 });
+				Direction facing = state.getValue(FACING);
+
+				BlockPos[] posAroundChimneyOne = getPartPos(pos, facing, new int[] { 10, 11, 13, 14 });
+				BlockPos[] posAroundChimneyTwo = getPartPos(pos, facing, new int[] { 13, 14, 16, 17 });
+
 				Vec3i[] chimneys = new Vec3i[]
 				{
 					getCenter(posAroundChimneyOne),
@@ -514,10 +518,53 @@ public class StillBlock extends BaseEntityBlock
 					}
 				}
 			}
+
+			if (state.getValue(PRESSURE_RELEASE_PULLED))
+			{
+				int pressure = state.getValue(PRESSURE);
+				// pressure < 4 is green zone, 4 < pressure < 6 yellow, pressure > 6 red.
+				int particleSpeedModifier = (pressure < 4) ? 1 : (pressure < 6) ? 2 : 3;
+				Direction facing = state.getValue(FACING);
+				Direction ejectingSide = facing.getCounterClockWise();
+				float xOffset, zOffset;
+				double xSpeed, zSpeed;
+				int xHorizontalVariationMultiplier, zHorizontalVariationMultiplier;
+
+				if (ejectingSide.getAxis() == Direction.Axis.X)
+				{
+					xOffset = Math.max(0, ejectingSide.getStepX());
+					 xSpeed = 0.05 * particleSpeedModifier * ejectingSide.getStepX();
+					zOffset = 0.5f;
+					zSpeed  = 0.0d;
+					zHorizontalVariationMultiplier = 1;
+					xHorizontalVariationMultiplier = 0;
+				}
+				else	// Axis = Z
+				{
+					zOffset = Math.max(0, ejectingSide.getStepZ());
+					zSpeed  = 0.05 * particleSpeedModifier * ejectingSide.getStepZ();
+					xOffset = 0.5f;
+					xSpeed  = 0.0d;
+					zHorizontalVariationMultiplier = 0;
+					xHorizontalVariationMultiplier = 1;
+				}
+
+				BlockPos pressureReleasePos = getPartPos(pos, facing, 3);	// Block under the item input.
+
+				float particleY = pos.getY() + 0.5f;
+
+				for (int i= 0; i < 10; i++)
+				{
+					float particleX = pressureReleasePos.getX() + xOffset + xHorizontalVariationMultiplier * random.nextIntBetweenInclusive(-1, 1) * random.nextFloat() / 2;
+					float particleZ = pressureReleasePos.getZ() + zOffset + zHorizontalVariationMultiplier * random.nextIntBetweenInclusive(-1, 1) * random.nextFloat() / 2;
+
+					level.addParticle(ParticleTypes.WHITE_SMOKE, true, true, particleX, particleY, particleZ, xSpeed, 0.0, zSpeed);
+				}
+			}
 		}
 	}
 
-	protected BlockPos getCorePos(LevelAccessor level, BlockPos pos, BlockState state)
+	private BlockPos getCorePos(LevelAccessor level, BlockPos pos, BlockState state)
 	{
 		if (state.getValue(PART) == MultiBlockPartType.CORE) return pos;
 

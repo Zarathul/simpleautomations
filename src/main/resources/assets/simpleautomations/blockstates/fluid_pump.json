@@ -1,0 +1,144 @@
+{
+	"multipart": [
+		{
+			"_comment": "Base - North",
+			"when": { "facing": "north" },
+			"apply": { "model": "simpleautomations:block/fluid_pump" }
+		},
+		{
+			"_comment": "Base - East",
+			"when": { "facing": "east" },
+			"apply": { "model": "simpleautomations:block/fluid_pump", "y": 90 }
+		},
+		{
+			"_comment": "Base - South",
+			"when": { "facing": "south" },
+			"apply": { "model": "simpleautomations:block/fluid_pump", "y": 180 }
+		},
+		{
+			"_comment": "Base - West",
+			"when": { "facing": "west" },
+			"apply": { "model": "simpleautomations:block/fluid_pump", "y": 270 }
+		},
+		{
+			"_comment": "Powered ON - North",
+			"when": { "facing": "north", "powered_on": true },
+			"apply": { "model": "simpleautomations:block/fluid_pump_power_switch_on" }
+		},
+		{
+			"_comment": "Powered ON - East",
+			"when": { "facing": "east", "powered_on": true },
+			"apply": { "model": "simpleautomations:block/fluid_pump_power_switch_on", "y": 90 }
+		},
+		{
+			"_comment": "Powered ON - South",
+			"when": { "facing": "south", "powered_on": true },
+			"apply": { "model": "simpleautomations:block/fluid_pump_power_switch_on", "y": 180 }
+		},
+		{
+			"_comment": "Powered ON - West",
+			"when": { "facing": "west", "powered_on": true },
+			"apply": { "model": "simpleautomations:block/fluid_pump_power_switch_on", "y": 270 }
+		},
+		{
+			"_comment": "Powered OFF - North",
+			"when": { "facing": "north", "powered_on": false },
+			"apply": { "model": "simpleautomations:block/fluid_pump_power_switch_off" }
+		},
+		{
+			"_comment": "Powered OFF - East",
+			"when": { "facing": "east", "powered_on": false },
+			"apply": { "model": "simpleautomations:block/fluid_pump_power_switch_off", "y": 90 }
+		},
+		{
+			"_comment": "Powered OFF - South",
+			"when": { "facing": "south", "powered_on": false },
+			"apply": { "model": "simpleautomations:block/fluid_pump_power_switch_off", "y": 180 }
+		},
+		{
+			"_comment": "Powered OFF - West",
+			"when": { "facing": "west", "powered_on": false },
+			"apply": { "model": "simpleautomations:block/fluid_pump_power_switch_off", "y": 270 }
+		},
+		{
+			"_comment": "Speed 0 - North",
+			"when": { "facing": "north", "speed": 0 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_0" }
+		},
+		{
+			"_comment": "Speed 0 - East",
+			"when": { "facing": "east", "speed": 0 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_0", "y": 90 }
+		},
+		{
+			"_comment": "Speed 0 - South",
+			"when": { "facing": "south", "speed": 0 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_0", "y": 180 }
+		},
+		{
+			"_comment": "Speed 0 - West",
+			"when": { "facing": "west", "speed": 0 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_0", "y": 270 }
+		},
+		{
+			"_comment": "Speed 1 - North",
+			"when": { "facing": "north", "speed": 1 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_1" }
+		},
+		{
+			"_comment": "Speed 1 - East",
+			"when": { "facing": "east", "speed": 1 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_1", "y": 90 }
+		},
+		{
+			"_comment": "Speed 1 - South",
+			"when": { "facing": "south", "speed": 1 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_1", "y": 180 }
+		},
+		{
+			"_comment": "Speed 1 - West",
+			"when": { "facing": "west", "speed": 1 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_1", "y": 270 }
+		},
+		{
+			"_comment": "Speed 2 - North",
+			"when": { "facing": "north", "speed": 2 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_2" }
+		},
+		{
+			"_comment": "Speed 2 - East",
+			"when": { "facing": "east", "speed": 2 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_2", "y": 90 }
+		},
+		{
+			"_comment": "Speed 2 - South",
+			"when": { "facing": "south", "speed": 2 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_2", "y": 180 }
+		},
+		{
+			"_comment": "Speed 2 - West",
+			"when": { "facing": "west", "speed": 2 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_2", "y": 270 }
+		},
+		{
+			"_comment": "Speed 3 - North",
+			"when": { "facing": "north", "speed": 3 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_3" }
+		},
+		{
+			"_comment": "Speed 3 - East",
+			"when": { "facing": "east", "speed": 3 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_3", "y": 90 }
+		},
+		{
+			"_comment": "Speed 3 - South",
+			"when": { "facing": "south", "speed": 3 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_3", "y": 180 }
+		},
+		{
+			"_comment": "Speed 3 - West",
+			"when": { "facing": "west", "speed": 3 },
+			"apply": { "model": "simpleautomations:block/fluid_pump_speed_selector_3", "y": 270 }
+		}
+	]
+}
