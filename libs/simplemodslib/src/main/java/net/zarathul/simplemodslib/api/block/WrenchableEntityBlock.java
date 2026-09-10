@@ -6,14 +6,14 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.zarathul.simplemodslib.ModItems;
 
-public abstract class WrenchableBlock extends Block implements IWrenchableBlock
+public abstract class WrenchableEntityBlock extends BaseEntityBlock implements IWrenchableBlock
 {
-	protected WrenchableBlock(Properties properties)
+	protected WrenchableEntityBlock(Properties properties)
 	{
 		super(properties);
 	}

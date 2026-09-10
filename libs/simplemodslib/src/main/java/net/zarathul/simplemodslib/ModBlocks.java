@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.zarathul.simplemodslib.api.block.BlockRegistrar;
+import net.zarathul.simplemodslib.api.block.IWrenchableBlock;
 import net.zarathul.simplemodslib.api.fluid.FluidHelper;
 import net.zarathul.simplemodslib.api.fluid.IFluidContainerItem;
 
@@ -24,7 +25,7 @@ public final class ModBlocks
 
 	public static InteractionResult useBlockCallback(Player player, Level level, InteractionHand hand, BlockHitResult hit)
 	{
-		// Make IFluidContainerItems usable on IFluidHandlers while crouching.
+		// Make IFluidContainerItems usable on IFluidHandlers, and Wrenches usable on block implementing IWrenchableBlock while crouching.
 		if (level.isClientSide() || (!player.isCrouching()) || player.isSpectator()) return InteractionResult.PASS;
 
 		ItemStack heldItemStack = player.getItemInHand(hand);
@@ -35,6 +36,16 @@ public final class ModBlocks
 			InteractionResult result = blockState.useItemOn(heldItemStack, level, player, hand, hit);
 
 			return result;
+		}
+		else if (heldItemStack.is(ModItems.WRENCH))
+		{
+			 BlockState state = level.getBlockState(hit.getBlockPos());
+
+			 if (state.getBlock() instanceof IWrenchableBlock)
+			 {
+				 ((IWrenchableBlock)state.getBlock()).handleToolWrenchClick(state, level, hit.getBlockPos(), player, heldItemStack);
+				 return InteractionResult.SUCCESS_SERVER;
+			 }
 		}
 
 		return InteractionResult.PASS;
