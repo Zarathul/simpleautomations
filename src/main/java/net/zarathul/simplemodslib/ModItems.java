@@ -14,14 +14,20 @@ import net.zarathul.simplemodslib.api.fluid.FluidHelper;
 import net.zarathul.simplemodslib.api.item.ItemRegistrar;
 import net.zarathul.simplemodslib.mixin.ItemAccessor;
 
+import static net.zarathul.simplemodslib.SimpleModsLib.creativeModeTabItems;
+
 public final class ModItems
 {
 	private static final ItemRegistrar REGISTRAR = new ItemRegistrar(SimpleModsLib.MOD_ID);
+
 	public static final BlockItem LOGO = REGISTRAR.register("logo", ModBlocks.LOGO, BlockItem::new);
+	public static final Item WRENCH = REGISTRAR.register("wrench", Item::new, new Item.Properties().stacksTo(1));
 
 	public static void init()
 	{
 		SimpleModsLib.LOG.info("Registering items.");
+
+		creativeModeTabItems.add(WRENCH);
 	}
 	public static void registerTooltips() { REGISTRAR.registerTooltips(); }
 

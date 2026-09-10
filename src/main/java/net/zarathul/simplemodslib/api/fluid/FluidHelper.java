@@ -54,6 +54,20 @@ public final class FluidHelper
 		public static FluidHandlerInteractionResult success(FluidHandlerInteraction interaction, FluidStack fluid) { return new FluidHandlerInteractionResult(true, interaction, fluid); }
 	}
 
+	/**
+	 * Completely handles the interaction between a player and a fluid handler.<br>
+	 * Specifically a player using buckets, bottles or fluid container items on the fluid handler.
+	 *
+	 * @param player
+	 * The player using the item.
+	 * @param hand
+	 * The hand the player used.
+	 * @param handler
+	 * The fluid handler the item was used on.
+	 *
+	 * @return
+	 * Returns a {@link FluidHandlerInteractionResult} that indicates whether the interaction was completed successfully or not.
+	 */
 	public static FluidHandlerInteractionResult InteractWithFluidHandler(ServerPlayer player, InteractionHand hand, IFluidHandler handler)
 	{
 		ItemStack heldItemsStack = player.getItemInHand(hand);
@@ -108,22 +122,93 @@ public final class FluidHelper
 		return result;
 	}
 
+	/**
+	 * Transfers a specific amount of fluid, from one fluid handler to another.<br>
+	 * Transfer will fail if the fluid handlers contain different fluids. And the
+	 * transferred amount is limited by the remaining capacity of the receiving
+	 * fluid handler.
+	 *
+	 * @param source
+	 * The fluid handler to drain the fluid from.
+	 * @param destination
+	 * The fluid handler to fill the fluid in.
+	 * @param amount
+	 * The amount to transfer.
+	 * @return
+	 * A {@link FluidStack} representing the transferred fluid.
+	 */
+	public static FluidStack transfer(IFluidHandler source, IFluidHandler destination, long amount)
+	{
+		if (amount <= 0 || source == null || destination == null) return FluidStack.empty();
+
+		FluidStack sourceFluid = source.getFluid();
+		FluidStack destinationFluid = destination.getFluid();
+
+		if (!sourceFluid.isEmpty() && (destinationFluid.isEmpty() || sourceFluid.isSameFluidSameComponents(destinationFluid)))
+		{
+			amount = Math.min(amount, destination.getRemainingCapacity());
+			FluidStack drainFluid = sourceFluid.copy();
+			drainFluid.setAmount(amount);
+
+			FluidStack drainedFluid = source.drain(drainFluid);
+			destination.fill(drainedFluid);
+
+			return drainedFluid;
+		}
+
+		return FluidStack.empty();
+	}
+
+	/**
+	 * Checks if there is a fluid handler at the given position.
+	 *
+	 * @param world
+	 * The world.
+	 * @param pos
+	 * The position to check.
+	 * @return
+	 * {@code true} if there is a fluid handler block entity at {@code pos}.
+	 */
 	public static boolean isFluidHandler(Level world, BlockPos pos)
 	{
 		BlockEntity blockEntity = world.getChunkAt(pos).getBlockEntity(pos, LevelChunk.EntityCreationType.CHECK);
 		return (blockEntity instanceof IFluidHandler);
 	}
 
+	/**
+	 * Determines if the given item is a fluid container implementing {@link IFluidContainerItem}.
+	 *
+	 * @param item
+	 * The item to check.
+	 * @return
+	 * {@code true} if the item is implementing {@link IFluidContainerItem}, otherwise {@code false}.
+	 */
 	public static boolean isFluidContainerItem(ItemStack item)
 	{
 		return isFluidContainerItem(item.getItem());
 	}
 
+	/**
+	 * Determines if the given item is a fluid container implementing {@link IFluidContainerItem}.
+	 *
+	 * @param item
+	 * The item to check.
+	 * @return
+	 * {@code true} if the item is implementing {@link IFluidContainerItem}, otherwise {@code false}.
+	 */
 	public static boolean isFluidContainerItem(Item item)
 	{
 		return IFluidContainerItem.class.isAssignableFrom(item.getClass());
 	}
 
+	/**
+	 * Gets the name for a fluid by its id.
+	 *
+	 * @param fluidId
+	 * The fluids' id.
+	 * @return
+	 * The fluids name or an empty string, if no fluid could be found for the given id.
+	 */
 	public static String getFluidName(Identifier fluidId)
 	{
 		if (fluidId == null) return "";
@@ -137,12 +222,38 @@ public final class FluidHelper
 		return fluidName;
 	}
 
+	/**
+	 * Tries to determine the color of a fluid, that can be used to tint a texture.
+	 *
+	 * @param fluid
+	 * The fluid to get the color for.
+	 * @param level
+	 * The world that is passed to the block tint source, if it exists. May be {@code null}.
+	 * @param pos
+	 * The position that is passed to the block tint source, if it exists. May be {@code null}.
+	 * @return
+	 * Returns an {@code int} representing an opaque ARGB color or {@code -1}, if no color could be determined.
+	 */
 	@Environment(EnvType.CLIENT)
 	public static int getFluidColor(Fluid fluid, BlockAndTintGetter level, BlockPos pos)
 	{
 		return getFluidColor(fluid, level, pos, false);
 	}
 
+	/**
+	 * Tries to determine the color of a fluid, that can be used to tint a texture.
+	 *
+	 * @param fluid
+	 * The fluid to get the color for.
+	 * @param level
+	 * The world that is passed to the block tint source, if it exists. May be {@code null}.
+	 * @param pos
+	 * The position that is passed to the block tint source, if it exists. May be {@code null}.
+	 * @param useDominantTextureColorFallback
+	 * {@code true} to use the alternate method (dominant color), if there is no block tint source for the given fluid. Otherwise, set to {@code false}.
+	 * @return
+	 * Returns an {@code int} representing an opaque ARGB color or {@code -1}, if no color could be determined.
+	 */
 	@Environment(EnvType.CLIENT)
 	public static int getFluidColor(Fluid fluid, BlockAndTintGetter level, BlockPos pos, boolean useDominantTextureColorFallback)
 	{
@@ -409,7 +520,7 @@ public final class FluidHelper
 		FluidStack handlerFluid = handler.getFluid();
 		IFluidContainerItem heldItem = (IFluidContainerItem)stack.getItem();
 
-		int itemFillAmount = heldItem.fill(stack, handler.getFluid().copy());
+		long itemFillAmount = heldItem.fill(stack, handler.getFluid().copy());
 		if (itemFillAmount > 0)
 		{
 			FluidStack fillFluid = new FluidStack(handlerFluid.getFluid(), itemFillAmount);
@@ -428,7 +539,7 @@ public final class FluidHelper
 		FluidStack handlerFluid = handler.getFluid();
 		IFluidContainerItem heldItem = (IFluidContainerItem)stack.getItem();
 
-		int remainingHandlerCapacity = handler.getCapacity() - handlerFluid.getAmount();
+		long remainingHandlerCapacity = handler.getCapacity() - handlerFluid.getAmount();
 		// If the handler is empty, it means it can accept any fluid type. Use the fluid type of the container in that case.
 		FluidStack drainableFluid = (handlerFluid.isEmpty()) ? FluidStack.getFluid(stack) : handlerFluid.copy();
 		drainableFluid.setAmount(remainingHandlerCapacity);

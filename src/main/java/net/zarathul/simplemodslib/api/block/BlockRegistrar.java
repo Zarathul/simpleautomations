@@ -12,8 +12,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import java.util.Set;
 import java.util.function.Function;
 
-public record BlockRegistrar(String modId)
+public class BlockRegistrar
 {
+	private final String modId;
+
+	public BlockRegistrar(String modId)
+	{
+		this.modId = modId;
+	}
+
 	public <T extends Block> T register(String name, Function<Block.Properties, Block> factory)
 	{
 		return register(name, factory, Block.Properties.of());
