@@ -1,9 +1,15 @@
 {
+	"_comment": "ConfigUI",
 	"config.gui.input_invalid": "Value is invalid and will not be saved!",
 	"config.gui.needs_world_restart": "Changing this value requires a world restart to take effect!",
 	"config.gui.reset_to_default": "Press to reset to default.",
 	"config.gui.save": "Save",
+
+	"_comment": "Items",
 	"item.simplemodslib.logo": "LOGO",
 	"item.simplemodslib.logo.tooltip": "§7(Hold §e§oshift §7for details)",
-	"item.simplemodslib.logo.tooltip_details": "You are §bNOT§r allowed to have this!"
+	"item.simplemodslib.logo.tooltip_details": "You are §bNOT§r allowed to have this!",
+	"item.simplemodslib.wrench": "Wrench",
+	"item.simplemodslib.wrench.tooltip": "§7Hold §e§oshift §7for details.",
+	"item.simplemodslib.wrench.tooltip_details": "Used to change the orientation of machines, dismantle them or perform other functions on a machine, that are different for each type."
 }

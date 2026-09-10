@@ -27,7 +27,7 @@ import java.util.List;
 
 public abstract class FluidContainerItemBase extends Item implements IFluidContainerItem
 {
-	protected FluidContainerItemBase(Properties properties, int defaultCapacity)
+	protected FluidContainerItemBase(Properties properties, long defaultCapacity)
 	{
 		super(properties
 			.component(ModComponents.FLUID_CONTAINER_COMPONENT, new FluidContainerComponent(FluidStack.empty(), defaultCapacity, false))
@@ -59,7 +59,7 @@ public abstract class FluidContainerItemBase extends Item implements IFluidConta
 		FluidContainerComponent componentData = stack.get(ModComponents.FLUID_CONTAINER_COMPONENT);
 		if (componentData != null)
 		{
-			int capacity = componentData.capacity();
+			long capacity = componentData.capacity();
 			float freeCapacity = Math.max(0.0F, ((float)capacity - componentData.fluid().getAmount()) / capacity);
 			return Mth.hsvToRgb(freeCapacity / 3.0F, 1.0F, 1.0F);
 		}
@@ -103,7 +103,7 @@ public abstract class FluidContainerItemBase extends Item implements IFluidConta
 			if (!fluidStateAtClickedPos.isEmpty() && fluidStateAtClickedPos.isSource())
 			{
 				FluidStack sourceFluid = new FluidStack(fluidStateAtClickedPos.getType(), FluidStack.BUCKET_VOLUME);
-				int filledAmount = fill(heldItemStack, sourceFluid);
+				long filledAmount = fill(heldItemStack, sourceFluid);
 
 				if (filledAmount == FluidStack.BUCKET_VOLUME)
 				{
@@ -162,7 +162,7 @@ public abstract class FluidContainerItemBase extends Item implements IFluidConta
 	}
 
 	@Override
-	public void onFluidChanged(ItemStack itemStack, int amount, int capacity, Identifier fluidId)
+	public void onFluidChanged(ItemStack itemStack, long amount, long capacity, Identifier fluidId)
 	{
 		// Update custom model data.
 		float fillLevel = Math.clamp(amount / (float)capacity, 0f, 1f);

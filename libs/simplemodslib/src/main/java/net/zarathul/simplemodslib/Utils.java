@@ -12,7 +12,6 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Mth;
 
 import java.util.*;
 import java.util.function.Supplier;

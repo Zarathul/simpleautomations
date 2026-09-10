@@ -28,21 +28,21 @@ public class FluidStack implements DataComponentHolder
 	private static final String COMPONENTS = "fluid_components";
 
 	private Fluid fluid;
-	private int amount;
+	private long amount;
 	private Identifier fluidId;
 	private PatchedDataComponentMap components;
 
-	public FluidStack(Fluid fluid, int amount)
+	public FluidStack(Fluid fluid, long amount)
 	{
 		this(fluid, amount, BuiltInRegistries.FLUID.getKey(fluid), DataComponentPatch.EMPTY);
 	}
 
-	private FluidStack(Fluid fluid, int amount, Identifier fluidId)
+	private FluidStack(Fluid fluid, long amount, Identifier fluidId)
 	{
 		this(fluid, amount, fluidId, DataComponentPatch.EMPTY);
 	}
 
-	private FluidStack(Fluid fluid, int amount, Identifier fluidId, DataComponentPatch componentPatch)
+	private FluidStack(Fluid fluid, long amount, Identifier fluidId, DataComponentPatch componentPatch)
 	{
 		this.fluid = fluid;
 		this.amount = amount;
@@ -51,7 +51,7 @@ public class FluidStack implements DataComponentHolder
 		this.components = PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, componentPatch);
 	}
 
-	private FluidStack(Fluid fluid, int amount, Identifier fluidId, PatchedDataComponentMap components)
+	private FluidStack(Fluid fluid, long amount, Identifier fluidId, PatchedDataComponentMap components)
 	{
 		this.fluid = fluid;
 		this.amount = amount;
@@ -72,7 +72,7 @@ public class FluidStack implements DataComponentHolder
 				.fieldOf("fluid")
 				.forGetter(FluidStack::getRegistryKey),
 
-			Codec.INT
+			Codec.LONG
 				.fieldOf("amount")
 				.forGetter(FluidStack::getAmount),
 
@@ -89,7 +89,7 @@ public class FluidStack implements DataComponentHolder
 		Identifier.STREAM_CODEC,
 		FluidStack::getRegistryKey,
 
-		ByteBufCodecs.INT,
+		ByteBufCodecs.LONG,
 		FluidStack::getAmount,
 
 		DataComponentPatch.STREAM_CODEC,
@@ -98,12 +98,12 @@ public class FluidStack implements DataComponentHolder
 		FluidStack::from
 	);
 
-	public static FluidStack from(Identifier fluidId, int amount)
+	public static FluidStack from(Identifier fluidId, long amount)
 	{
 		return from(fluidId, amount, DataComponentPatch.EMPTY);
 	}
 
-	public static FluidStack from(Identifier fluidId, int amount, DataComponentPatch componentPatch)
+	public static FluidStack from(Identifier fluidId, long amount, DataComponentPatch componentPatch)
 	{
 		if (amount <= 0) return empty();
 
@@ -122,18 +122,18 @@ public class FluidStack implements DataComponentHolder
 		return fluid;
 	}
 
-	public int getAmount()
+	public long getAmount()
 	{
 		return amount;
 	}
 
-	public void setAmount(int amount)
+	public void setAmount(long amount)
 	{
 		this.amount = amount;
 		if (this.amount <= 0) makeEmpty();
 	}
 
-	public void changeAmount(int delta)
+	public void changeAmount(long delta)
 	{
 		this.amount += delta;
 		if (this.amount <= 0) makeEmpty();
@@ -229,7 +229,7 @@ public class FluidStack implements DataComponentHolder
 
 	public void save(ValueOutput output)
 	{
-		output.putInt(FLUID_AMOUNT, amount);
+		output.putLong(FLUID_AMOUNT, amount);
 		output.putString(FLUID_ID, fluidId.toString());
 
 		if (!isComponentsPatchEmpty())
@@ -240,7 +240,7 @@ public class FluidStack implements DataComponentHolder
 
 	public void load(ValueInput input)
 	{
-		amount = input.getInt(FLUID_AMOUNT).get();
+		amount = input.getLong(FLUID_AMOUNT).get();
 
 		if (amount <= 0)
 		{

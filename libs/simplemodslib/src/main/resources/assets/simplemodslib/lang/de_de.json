@@ -1,9 +1,15 @@
 {
+	"_comment": "ConfigUI",
 	"config.gui.input_invalid": "Wert ist ungültig und wird nicht gespeichert!",
 	"config.gui.needs_world_restart": "Änderungen an diesem Wert setzen einen Neustart der Welt vorraus!",
 	"config.gui.reset_to_default": "Drücken um auf Standartwert zurückzusetzen.",
 	"config.gui.save": "Speichern",
+
+	"_comment": "Items",
 	"item.simplemodslib.logo": "LOGO",
 	"item.simplemodslib.logo.tooltip": "§7(§e§oShift §7für Details gedrückt halten)",
-	"item.simplemodslib.logo.tooltip_details": "Das darfst du §bNICHT§r haben!"
+	"item.simplemodslib.logo.tooltip_details": "Das darfst du §bNICHT§r haben!",
+	"item.simplemodslib.wrench": "Schraubenschlüssel",
+	"item.simplemodslib.wrench.tooltip": "§e§oUmschalten §7gedrückt halten für Details.",
+	"item.simplemodslib.wrench.tooltip_details": "Wird benutzt um die Ausrichtung von Maschinen zu ändern, sie zu zerlegen oder andere beliebige Funktionen auszuführen, die sich je nach Art der Maschine unterscheiden."
 }

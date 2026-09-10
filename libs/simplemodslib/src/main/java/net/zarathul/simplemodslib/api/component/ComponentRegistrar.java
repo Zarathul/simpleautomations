@@ -8,8 +8,15 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
-public record ComponentRegistrar(String modId)
+public class ComponentRegistrar
 {
+	private final String modId;
+
+	public ComponentRegistrar(String modId)
+	{
+		this.modId = modId;
+	}
+
 	public <T> DataComponentType<T> register(String name, Codec<T> codec)
 	{
 		Identifier id = Identifier.fromNamespaceAndPath(modId, name);
