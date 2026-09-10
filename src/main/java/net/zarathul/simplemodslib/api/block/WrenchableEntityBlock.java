@@ -33,5 +33,5 @@ public abstract class WrenchableEntityBlock extends BaseEntityBlock implements I
 		return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
 	}
 
-	public abstract void handleToolWrenchClick(BlockState state, Level world, BlockPos pos, Player player, ItemStack equippedItemStack);
+	public abstract void handleToolWrenchClick(BlockState state, Level level, BlockPos pos, Player player, ItemStack equippedItemStack);
 }
