@@ -28,9 +28,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.zarathul.simpleautomations.blocks.entities.FluidPumpBlockEntity;
+import net.zarathul.simplemodslib.api.block.WrenchableEntityBlock;
 import org.jspecify.annotations.Nullable;
 
-public class FluidPumpBlock extends BaseEntityBlock
+public class FluidPumpBlock extends WrenchableEntityBlock
 {
 	public static final int MIN_SPEED = 0;
 	public static final int SPEED_STEPS = 4;
@@ -157,6 +158,18 @@ public class FluidPumpBlock extends BaseEntityBlock
 		}
 
 		return (level.isClientSide()) ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
+	}
+
+	@Override
+	public void handleToolWrenchClick(BlockState state, Level level, BlockPos pos, Player player, ItemStack equippedItemStack)
+	{
+		Direction facing = state.getValue(FACING);
+		Direction newFacing = (player.isCrouching()) ? facing.getCounterClockWise() : facing.getClockWise();
+
+		level.setBlockAndUpdate(pos, state.setValue(FACING, newFacing));
+
+		FluidPumpBlockEntity pumpEntity = level.getBlockEntity(pos, ModBlocks.FLUID_PUMP_ENTITY).get();
+		pumpEntity.updateConnections();
 	}
 
 	@Override

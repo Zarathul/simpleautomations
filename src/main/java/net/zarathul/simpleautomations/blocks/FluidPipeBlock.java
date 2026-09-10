@@ -22,13 +22,12 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.zarathul.simpleautomations.components.FluidPipePlacementMode;
 import net.zarathul.simpleautomations.components.ModComponents;
-import net.zarathul.simplemodslib.ModItems;
 import net.zarathul.simplemodslib.Utils;
-import net.zarathul.simplemodslib.api.block.IWrenchableBlock;
+import net.zarathul.simplemodslib.api.block.WrenchableBlock;
 import net.zarathul.simplemodslib.api.fluid.IFluidHandler;
 import org.jspecify.annotations.Nullable;
 
-public class FluidPipeBlock extends Block implements IWrenchableBlock
+public class FluidPipeBlock extends WrenchableBlock
 {
 	public static final EnumProperty<PipeConnection> CONNECTION = EnumProperty.create("connection", PipeConnection.class);
 	public static final BooleanProperty LINE_CONNECTED = BooleanProperty.create("line_connected");
@@ -120,10 +119,8 @@ public class FluidPipeBlock extends Block implements IWrenchableBlock
 	}
 
 	@Override
-	public void handleToolWrenchClick(Level level, BlockPos pos, Player player, ItemStack equippedItemStack)
+	public void handleToolWrenchClick(BlockState state, Level level, BlockPos pos, Player player, ItemStack equippedItemStack)
 	{
-		BlockState state = level.getBlockState(pos);
-
 		if (!state.getValue(LINE_CONNECTED))
 		{
 			PipeConnection pipeConnection = state.getValue(CONNECTION);
@@ -142,25 +139,13 @@ public class FluidPipeBlock extends Block implements IWrenchableBlock
 		{
 			return InteractionResult.FAIL;
 		}
-		else
-		{
-			ItemStack heldItem = player.getItemInHand(player.getUsedItemHand());
 
-			if (heldItem.is(ModItems.WRENCH))
-			{
-				handleToolWrenchClick(level, pos, player, heldItem);
-				return InteractionResult.SUCCESS;
-			}
-		}
-
-		return InteractionResult.TRY_WITH_EMPTY_HAND;
+		return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
 	}
 
 	@Override
 	protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean movedByPiston)
 	{
-		// TODO: incomplete handle pipe, fluid handler and pump destruction
-
 		PipeConnection pipeConnection = state.getValue(CONNECTION);
 		BlockPos fromPos = pos.relative(pipeConnection.from());
 		BlockPos toPos = pos.relative(pipeConnection.to());
