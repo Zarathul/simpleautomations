@@ -23,14 +23,11 @@ public abstract class WrenchableEntityBlock extends BaseEntityBlock implements I
 	{
 		ItemStack heldStack = player.getItemInHand(hand);
 
-		if (!heldStack.is(ModItems.WRENCH))
+		if (!level.isClientSide() && heldStack.is(ModItems.WRENCH))
 		{
-			if (!level.isClientSide())
-			{
-				handleToolWrenchClick(state, level, pos, player, heldStack);
+			handleToolWrenchClick(state, level, pos, player, heldStack);
 
-				return InteractionResult.SUCCESS_SERVER;
-			}
+			return InteractionResult.SUCCESS_SERVER;
 		}
 
 		return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
