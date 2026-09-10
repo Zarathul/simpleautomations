@@ -22,11 +22,13 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.zarathul.simpleautomations.components.FluidPipePlacementMode;
 import net.zarathul.simpleautomations.components.ModComponents;
+import net.zarathul.simplemodslib.ModItems;
 import net.zarathul.simplemodslib.Utils;
+import net.zarathul.simplemodslib.api.block.IWrenchableBlock;
 import net.zarathul.simplemodslib.api.fluid.IFluidHandler;
 import org.jspecify.annotations.Nullable;
 
-public class FluidPipeBlock extends Block
+public class FluidPipeBlock extends Block implements IWrenchableBlock
 {
 	public static final EnumProperty<PipeConnection> CONNECTION = EnumProperty.create("connection", PipeConnection.class);
 	public static final BooleanProperty LINE_CONNECTED = BooleanProperty.create("line_connected");
@@ -118,23 +120,19 @@ public class FluidPipeBlock extends Block
 	}
 
 	@Override
-	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult)
+	public void handleToolWrenchClick(Level level, BlockPos pos, Player player, ItemStack equippedItemStack)
 	{
-		// TODO: remove / adjust to be used with wrench
-		if (player.getItemInHand(player.getUsedItemHand()).isEmpty())
+		BlockState state = level.getBlockState(pos);
+
+		if (!state.getValue(LINE_CONNECTED))
 		{
-			if (!state.getValue(LINE_CONNECTED))
-			{
-				PipeConnection pipeConnection = state.getValue(CONNECTION);
-				int nextOrdinal = Math.floorMod(pipeConnection.ordinal() + (player.isCrouching() ? -1 : 1), PipeConnection.values().length);
-				PipeConnection nextPipeConnection = PipeConnection.values()[nextOrdinal];
-				boolean lineConnected = isLineConnected(level, pos, nextPipeConnection);
+			PipeConnection pipeConnection = state.getValue(CONNECTION);
+			int nextOrdinal = Math.floorMod(pipeConnection.ordinal() + (player.isCrouching() ? -1 : 1), PipeConnection.values().length);
+			PipeConnection nextPipeConnection = PipeConnection.values()[nextOrdinal];
+			boolean lineConnected = isLineConnected(level, pos, nextPipeConnection);
 
-				level.setBlockAndUpdate(pos, state.setValue(CONNECTION, nextPipeConnection).setValue(LINE_CONNECTED, lineConnected));
-			}
+			level.setBlockAndUpdate(pos, state.setValue(CONNECTION, nextPipeConnection).setValue(LINE_CONNECTED, lineConnected));
 		}
-
-		return (level.isClientSide()) ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
 	}
 
 	@Override
@@ -143,6 +141,16 @@ public class FluidPipeBlock extends Block
 		if (itemStack.getItem() instanceof BlockItem)
 		{
 			return InteractionResult.FAIL;
+		}
+		else
+		{
+			ItemStack heldItem = player.getItemInHand(player.getUsedItemHand());
+
+			if (heldItem.is(ModItems.WRENCH))
+			{
+				handleToolWrenchClick(level, pos, player, heldItem);
+				return InteractionResult.SUCCESS;
+			}
 		}
 
 		return InteractionResult.TRY_WITH_EMPTY_HAND;
@@ -155,9 +163,7 @@ public class FluidPipeBlock extends Block
 
 		PipeConnection pipeConnection = state.getValue(CONNECTION);
 		BlockPos fromPos = pos.relative(pipeConnection.from());
-		BlockState fromState = level.getBlockState(fromPos);
 		BlockPos toPos = pos.relative(pipeConnection.to());
-		BlockState toState = level.getBlockState(toPos);
 
 		boolean oldLineConnected = state.getValue(LINE_CONNECTED);
 		boolean lineConnected = ((findConnectedFluidHandlerPos(level, pos, fromPos) != null) ||

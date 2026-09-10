@@ -241,8 +241,6 @@ public class StillBlock extends BaseEntityBlock
 	{
 		if (onState.getValue(PART) == MultiBlockPartType.ITEMS_INPUT && entity instanceof ItemEntity item)
 		{
-			SimpleAutomations.LOG.info("STEP_ON: {}", entity.getDisplayName().getString());
-
 			BlockPos corePos = getCorePos(level, pos, onState);
 			if (corePos == null)
 			{
@@ -519,9 +517,10 @@ public class StillBlock extends BaseEntityBlock
 				}
 			}
 
-			if (state.getValue(PRESSURE_RELEASE_PULLED))
+			int pressure = state.getValue(PRESSURE);
+
+			if (state.getValue(PRESSURE_RELEASE_PULLED) && pressure > 0)
 			{
-				int pressure = state.getValue(PRESSURE);
 				// pressure < 4 is green zone, 4 < pressure < 6 yellow, pressure > 6 red.
 				int particleSpeedModifier = (pressure < 4) ? 1 : (pressure < 6) ? 2 : 3;
 				Direction facing = state.getValue(FACING);
@@ -560,6 +559,8 @@ public class StillBlock extends BaseEntityBlock
 
 					level.addParticle(ParticleTypes.WHITE_SMOKE, true, true, particleX, particleY, particleZ, xSpeed, 0.0, zSpeed);
 				}
+
+				level.playLocalSound(pos, SoundEvents.BREEZE_LAND, SoundSource.BLOCKS, 0.2f, 0.5f, true);
 			}
 		}
 	}

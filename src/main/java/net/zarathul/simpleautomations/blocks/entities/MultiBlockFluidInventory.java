@@ -14,9 +14,9 @@ public class MultiBlockFluidInventory extends BlockEntity implements IFluidHandl
 	private static final String CAPACITY = "capacity";
 
 	private FluidStack fluid = FluidStack.empty();
-	private int capacity = FluidStack.BUCKET_VOLUME * 32;
+	private long capacity = FluidStack.BUCKET_VOLUME * 32;
 
-	public MultiBlockFluidInventory(BlockPos worldPosition, BlockState blockState, int capacity)
+	public MultiBlockFluidInventory(BlockPos worldPosition, BlockState blockState, long capacity)
 	{
 		this(worldPosition, blockState);
 
@@ -34,7 +34,7 @@ public class MultiBlockFluidInventory extends BlockEntity implements IFluidHandl
 		super.loadAdditional(input);
 
 		fluid.load(input);
-		capacity = input.getIntOr(CAPACITY, 0);
+		capacity = input.getLongOr(CAPACITY, 0);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class MultiBlockFluidInventory extends BlockEntity implements IFluidHandl
 		super.saveAdditional(output);
 
 		fluid.save(output);
-		output.putInt(CAPACITY, capacity);
+		output.putLong(CAPACITY, capacity);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class MultiBlockFluidInventory extends BlockEntity implements IFluidHandl
 	}
 
 	@Override
-	public int getCapacity()
+	public long getCapacity()
 	{
 		return capacity;
 	}

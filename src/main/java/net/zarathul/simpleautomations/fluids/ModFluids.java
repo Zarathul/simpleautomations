@@ -19,31 +19,22 @@ import net.minecraft.world.level.material.Fluid;
 import net.zarathul.simpleautomations.SimpleAutomations;
 import net.zarathul.simpleautomations.common.Colors;
 import net.zarathul.simpleautomations.common.DistillationLevel;
+import net.zarathul.simplemodslib.api.fluid.FluidRegistrar;
 
 import java.util.Set;
 
 public final class ModFluids
 {
+	private static final FluidRegistrar REGISTRAR = new FluidRegistrar(SimpleAutomations.MOD_ID);
+
 	public static final EnumProperty<DistillationLevel> DISTILLATION_LEVEL = EnumProperty.create("distillation_level", DistillationLevel.class);
 
-	public static final ResourceKey<Fluid> ALCOHOL_STILL_KEY = createKey("alcohol");
-	public static final ResourceKey<Fluid> ALCOHOL_FLOWING_KEY = createKey("flowing_alcohol");
-	public static final FlowingFluid ALCOHOL_STILL = register(ALCOHOL_STILL_KEY, new AlcoholFluid.Source());
-	public static final FlowingFluid ALCOHOL_FLOWING = register(ALCOHOL_FLOWING_KEY, new AlcoholFluid.Flowing());
-
-	private static FlowingFluid register(ResourceKey<Fluid> key, FlowingFluid fluid)
-	{
-		return Registry.register(BuiltInRegistries.FLUID, key, fluid);
-	}
+	public static final FlowingFluid ALCOHOL_STILL = REGISTRAR.register("alcohol", new AlcoholFluid.Source());
+	public static final FlowingFluid ALCOHOL_FLOWING = REGISTRAR.register("flowing_alcohol", new AlcoholFluid.Flowing());
 
 	public static void init()
 	{
 		SimpleAutomations.LOG.info("Registering fluids.");
-	}
-
-	private static ResourceKey<Fluid> createKey(String name)
-	{
-		return ResourceKey.create(Registries.FLUID, SimpleAutomations.modId(name));
 	}
 
 	@Environment(EnvType.CLIENT)

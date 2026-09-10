@@ -3,6 +3,8 @@ package net.zarathul.simpleautomations.blocks;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -123,14 +125,32 @@ public class FluidPumpBlock extends BaseEntityBlock
 
 			if (hitIsOnRightSide)
 			{
+				int speedDelta;
+				float selectorPitch;
+
+				if (player.isCrouching())
+				{
+					speedDelta = -1;
+					selectorPitch = 1.8f;
+				}
+				else
+				{
+					speedDelta = 1;
+					selectorPitch = 1.65f;
+				}
+
 				int speed = state.getValue(SPEED);
 				int newSpeed = Math.floorMod(speed + ((player.isCrouching()) ? -1 : 1), SPEED_STEPS);
 				newState = state.setValue(SPEED, newSpeed);
+
+				level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3f, selectorPitch);
 			}
 			else
 			{
 				boolean poweredOn = state.getValue(POWERED_ON);
 				newState = state.setValue(POWERED_ON, !poweredOn);
+
+				level.playSound(player, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3f, (poweredOn) ? 0.6f : 0.1f);
 			}
 
 			level.setBlockAndUpdate(pos, newState);

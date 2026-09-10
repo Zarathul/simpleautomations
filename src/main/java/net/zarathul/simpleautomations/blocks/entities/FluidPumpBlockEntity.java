@@ -17,6 +17,7 @@ import net.zarathul.simpleautomations.blocks.FluidPumpBlock;
 import net.zarathul.simpleautomations.blocks.ModBlocks;
 import net.zarathul.simpleautomations.blocks.StillBlock;
 import net.zarathul.simplemodslib.Utils;
+import net.zarathul.simplemodslib.api.fluid.FluidHelper;
 import net.zarathul.simplemodslib.api.fluid.FluidStack;
 import net.zarathul.simplemodslib.api.fluid.IFluidHandler;
 import org.jspecify.annotations.Nullable;
@@ -62,32 +63,16 @@ public class FluidPumpBlockEntity extends BlockEntity
 		progress = 0;
 		setChanged();
 
-		// TODO: add transfer method to fluidhelper (IFluidHandler<->IFluidHandler)
-		// TODO: add getRemainingCapacity method to fluidhelper
-
 		BlockEntity sourceBlockEntity = level.getBlockEntity(sourcePos);
 		BlockEntity destinationBlockEntity = level.getBlockEntity(destinationPos);
 
 		if (sourceBlockEntity instanceof IFluidHandler source &&
 			destinationBlockEntity instanceof IFluidHandler destination)
 		{
-			FluidStack sourceFluid = source.getFluid();
-			FluidStack destinationFluid = destination.getFluid();
+			int speedSetting = getBlockState().getValue(FluidPumpBlock.SPEED);
+			long drainAmount = FluidPumpBlock.MODIFIED_PUMP_SPEEDS[speedSetting];
 
-			if (!sourceFluid.isEmpty() && (destinationFluid.isEmpty() || sourceFluid.isSameFluidSameComponents(destinationFluid)))
-			{
-				int speedSetting = getBlockState().getValue(FluidPumpBlock.SPEED);
-				int drainAmount = Math.min(FluidPumpBlock.MODIFIED_PUMP_SPEEDS[speedSetting] , destination.getCapacity() - destinationFluid.getAmount());
-
-				if (drainAmount > 0)
-				{
-					FluidStack drainFluid = sourceFluid.copy();
-					drainFluid.setAmount(drainAmount);
-
-					FluidStack drainedFluid = source.drain(drainFluid);
-					destination.fill(drainedFluid);
-				}
-			}
+			FluidHelper.transfer(source, destination, drainAmount);
 		}
 	}
 
