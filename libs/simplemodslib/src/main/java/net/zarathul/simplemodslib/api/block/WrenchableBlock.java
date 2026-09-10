@@ -27,7 +27,7 @@ public abstract class WrenchableBlock extends Block implements IWrenchableBlock
 		{
 			if (!level.isClientSide())
 			{
-				handleToolWrenchClick(level, pos, player, heldStack);
+				handleToolWrenchClick(state, level, pos, player, heldStack);
 
 				return InteractionResult.SUCCESS_SERVER;
 			}
@@ -36,5 +36,5 @@ public abstract class WrenchableBlock extends Block implements IWrenchableBlock
 		return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
 	}
 
-	public abstract void handleToolWrenchClick(Level world, BlockPos pos, Player player, ItemStack equippedItemStack);
+	public abstract void handleToolWrenchClick(BlockState state, Level world, BlockPos pos, Player player, ItemStack equippedItemStack);
 }
