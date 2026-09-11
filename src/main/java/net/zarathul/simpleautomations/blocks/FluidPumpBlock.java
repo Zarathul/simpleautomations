@@ -41,14 +41,6 @@ public class FluidPumpBlock extends WrenchableEntityBlock
 	public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 	public static final BooleanProperty POWERED_ON = BooleanProperty.create("powered_on");
 	public static final IntegerProperty SPEED = IntegerProperty.create("speed", MIN_SPEED, MAX_SPEED);
-
-	private static final VoxelShape[] SHAPES = new VoxelShape[]
-	{
-		Block.boxZ(16.0d, 16.0d, 3.0d, 14.0d),							// SOUTH
-		Block.box(2.0d, 0.0d, 0.0d, 13.0d, 16.0d, 16.0d),	// WEST
-		Block.boxZ(16.0d, 16.0d, 2.0d, 13.0d),							// NORTH
-		Block.box(3.0d, 0.0d, 0.0d, 14.0d, 16.0d, 16.0d)		// EAST
-	};
 	public static final FluidPumpBlockEntity.PumpSpeed BASE_PUMP_SPEED = new FluidPumpBlockEntity.PumpSpeed(100, 20);
 	public static final int[] MODIFIED_PUMP_SPEEDS =
 	{
@@ -57,6 +49,15 @@ public class FluidPumpBlock extends WrenchableEntityBlock
 		Math.round(BASE_PUMP_SPEED.amount() * 5f),
 		BASE_PUMP_SPEED.amount() * 10
 	};
+
+	private static final VoxelShape[] SHAPES = new VoxelShape[]
+	{
+		Block.boxZ(16.0d, 16.0d, 3.0d, 14.0d),							// SOUTH
+		Block.box(2.0d, 0.0d, 0.0d, 13.0d, 16.0d, 16.0d),	// WEST
+		Block.boxZ(16.0d, 16.0d, 2.0d, 13.0d),							// NORTH
+		Block.box(3.0d, 0.0d, 0.0d, 14.0d, 16.0d, 16.0d)		// EAST
+	};
+
 
 	public FluidPumpBlock(Properties properties)
 	{
@@ -132,26 +133,25 @@ public class FluidPumpBlock extends WrenchableEntityBlock
 				if (player.isCrouching())
 				{
 					speedDelta = -1;
-					selectorPitch = 1.8f;
+					selectorPitch = 1.65f;
 				}
 				else
 				{
 					speedDelta = 1;
-					selectorPitch = 1.65f;
+					selectorPitch = 1.8f;
 				}
 
-				int speed = state.getValue(SPEED);
-				int newSpeed = Math.floorMod(speed + ((player.isCrouching()) ? -1 : 1), SPEED_STEPS);
+				int newSpeed = Math.floorMod(state.getValue(SPEED) + ((player.isCrouching()) ? -1 : 1), SPEED_STEPS);
 				newState = state.setValue(SPEED, newSpeed);
 
 				level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3f, selectorPitch);
 			}
 			else
 			{
-				boolean poweredOn = state.getValue(POWERED_ON);
-				newState = state.setValue(POWERED_ON, !poweredOn);
+				boolean newPoweredOn = !state.getValue(POWERED_ON);
+				newState = state.setValue(POWERED_ON, newPoweredOn);
 
-				level.playSound(player, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3f, (poweredOn) ? 0.6f : 0.1f);
+				level.playSound(player, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3f, (newPoweredOn) ? 0.6f : 0.1f);
 			}
 
 			level.setBlockAndUpdate(pos, newState);

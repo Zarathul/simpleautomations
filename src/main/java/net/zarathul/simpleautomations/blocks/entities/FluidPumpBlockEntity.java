@@ -8,6 +8,8 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,9 +30,20 @@ public class FluidPumpBlockEntity extends BlockEntity
 	private static final String DESTINATION = "destination";
 	private static final String PROGRESS = "progress";
 
+	private record SoundInfo(float pitch, int delay) {}
+	private static final SoundInfo[] SOUND_INFO_BY_SPEED =
+	{
+		// SoundEvents.CONDUIT_AMBIENT is 0:04.549s long which is about 91 ticks.
+		new SoundInfo(0.60f, 100),
+		new SoundInfo(0.65f, 120),
+		new SoundInfo(0.70f, 100),
+		new SoundInfo(0.80f, 100)
+	};
+
 	private BlockPos sourcePos;
 	private BlockPos destinationPos;
 	private int progress;
+	private int ticksSinceLastAmbientSound = 0;
 
 	public FluidPumpBlockEntity(BlockPos worldPosition, BlockState blockState)
 	{
@@ -39,20 +52,19 @@ public class FluidPumpBlockEntity extends BlockEntity
 
 	public static void tick(Level level, BlockPos pos, BlockState state, FluidPumpBlockEntity blockEntity)
 	{
-		if (!(level instanceof ServerLevel serverLevel)) return;
-
-		blockEntity.serverTick(serverLevel, state);
+		if (level instanceof ServerLevel serverLevel) blockEntity.serverTick(serverLevel, state);
 	}
 
 	private void serverTick(ServerLevel level, BlockState state)
 	{
 		if (!state.getValue(FluidPumpBlock.POWERED_ON) || sourcePos == null || destinationPos == null)
 		{
+			ticksSinceLastAmbientSound = 200; // Make sure the sound is played after turning the pump back on.
 			resetProgress();
 			return;
 		}
-
 		progress++;
+		ticksSinceLastAmbientSound++;
 
 		if (progress < FluidPumpBlock.BASE_PUMP_SPEED.ticks())
 		{
@@ -72,7 +84,13 @@ public class FluidPumpBlockEntity extends BlockEntity
 			int speedSetting = getBlockState().getValue(FluidPumpBlock.SPEED);
 			long drainAmount = FluidPumpBlock.MODIFIED_PUMP_SPEEDS[speedSetting];
 
-			FluidHelper.transfer(source, destination, drainAmount);
+			FluidStack transferredFluid = FluidHelper.transfer(source, destination, drainAmount);
+
+			if (!transferredFluid.isEmpty() && (ticksSinceLastAmbientSound >= SOUND_INFO_BY_SPEED[speedSetting].delay))
+			{
+				level.playSound(null, worldPosition, SoundEvents.CONDUIT_AMBIENT, SoundSource.BLOCKS, 1.0f, SOUND_INFO_BY_SPEED[speedSetting].pitch);
+				ticksSinceLastAmbientSound = 0;
+			}
 		}
 	}
 
