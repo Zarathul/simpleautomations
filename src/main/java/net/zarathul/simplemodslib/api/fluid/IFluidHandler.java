@@ -1,6 +1,10 @@
 package net.zarathul.simplemodslib.api.fluid;
 
 
+import net.minecraft.core.Direction;
+
+import java.util.EnumSet;
+
 public interface IFluidHandler
 {
 	/**
@@ -26,6 +30,14 @@ public interface IFluidHandler
 	 * A value of {@code 0} or greater.
 	 */
 	long getCapacity();
+
+	/**
+	 * Gets the sides that e.g. pipes can connect to.
+	 *
+	 * @return
+	 * An <code>EnumSet</code> containing the connectable sides.
+	 */
+	EnumSet<Direction> getConnectableSides();
 
 	/**
 	 * Get the remaining capacity.
@@ -91,7 +103,7 @@ public interface IFluidHandler
 
 		if (!fluid.isSameFluidSameComponents(fillFluid)) return 0;
 
-		long fillAmount = Math.min(getCapacity() - fluid.getAmount(), fillFluid.getAmount());
+		long fillAmount = Math.min(getRemainingCapacity(), fillFluid.getAmount());
 
 		if (fillAmount > 0)
 		{
@@ -103,7 +115,7 @@ public interface IFluidHandler
 	}
 
 	/**
-	 *  Gets called when the fluid in the tank changes.
+	 *  Gets called when the fluid in the container changes.
 	 *
 	 * @param change
 	 * One of the {@link FluidChange} values.{@link FluidChange#TYPE} means always from empty to a fluid, not the other way around.

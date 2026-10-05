@@ -139,16 +139,51 @@ public final class FluidHelper
 	 */
 	public static FluidStack transfer(IFluidHandler source, IFluidHandler destination, long amount)
 	{
+		return transfer(source, destination, amount, ForceTransfer.NONE);
+	}
+
+	/**
+	 * Transfers a specific amount of fluid, from one fluid handler to another.<br>
+	 * Transfer will fail if the fluid handlers contain different fluids. And the
+	 * transferred amount is limited by the remaining capacity of the receiving
+	 * fluid handler.<br>
+	 * Allows for forced draining and filling. Both is done using an empty {@link FluidStack}.
+	 * This can be useful to ensure the {@link IFluidHandler}s {@code fill} and {@code drain}
+	 * methods are always called.
+	 *
+	 * @param source
+	 * The fluid handler to drain the fluid from.
+	 * @param destination
+	 * The fluid handler to fill the fluid in.
+	 * @param amount
+	 * The amount to transfer.
+	 * @param forceMode
+	 * If {@code true}, always try to drain the source or fill the destination, even if they appear to be empty or full respectively.
+	 * @return
+	 * A {@link FluidStack} representing the transferred fluid.
+	 */
+	public static FluidStack transfer(IFluidHandler source, IFluidHandler destination, long amount, ForceTransfer forceMode)
+	{
 		if (amount <= 0 || source == null || destination == null) return FluidStack.empty();
 
 		FluidStack sourceFluid = source.getFluid();
 		FluidStack destinationFluid = destination.getFluid();
 
+		if (forceMode.isFillForced() && destination.getRemainingCapacity() == 0)
+		{
+			destination.fill(FluidStack.empty());
+		}
+
+		if (forceMode.isDrainForced() && sourceFluid.isEmpty())
+		{
+			source.drain(FluidStack.empty());
+		}
+
 		if (!sourceFluid.isEmpty() && (destinationFluid.isEmpty() || sourceFluid.isSameFluidSameComponents(destinationFluid)))
 		{
-			amount = Math.min(amount, destination.getRemainingCapacity());
+			long drainAmount = Math.min(amount, destination.getRemainingCapacity());
 			FluidStack drainFluid = sourceFluid.copy();
-			drainFluid.setAmount(amount);
+			drainFluid.setAmount(drainAmount);
 
 			FluidStack drainedFluid = source.drain(drainFluid);
 			destination.fill(drainedFluid);
@@ -572,5 +607,33 @@ public final class FluidHelper
 		}
 
 		return false;
+	}
+
+	public enum ForceTransfer
+	{
+		NONE(false, false),
+		FILL(true, false),
+		DRAIN(false, true),
+		BOTH(true, true);
+
+		private final boolean fillForced;
+		private final boolean drainForced;
+
+		ForceTransfer(boolean fillForced, boolean drainForced)
+		{
+			this.fillForced = fillForced;
+			this.drainForced = drainForced;
+		}
+
+		public boolean isFillForced()  { return fillForced; }
+		public boolean isDrainForced() { return drainForced; }
+
+		public static ForceTransfer create(boolean fill, boolean drain)
+		{
+			if (fill && drain) return BOTH;
+			if (fill)          return FILL;
+			if (drain)         return DRAIN;
+			return NONE;
+		}
 	}
 }
