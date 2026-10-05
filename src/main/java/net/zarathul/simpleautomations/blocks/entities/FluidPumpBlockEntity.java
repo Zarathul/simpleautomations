@@ -63,6 +63,7 @@ public class FluidPumpBlockEntity extends BlockEntity
 			resetProgress();
 			return;
 		}
+
 		progress++;
 		ticksSinceLastAmbientSound++;
 
@@ -84,7 +85,13 @@ public class FluidPumpBlockEntity extends BlockEntity
 			int speedSetting = getBlockState().getValue(FluidPumpBlock.SPEED);
 			long drainAmount = FluidPumpBlock.MODIFIED_PUMP_SPEEDS[speedSetting];
 
-			FluidStack transferredFluid = FluidHelper.transfer(source, destination, drainAmount);
+			// Enforce filling or draining of fluid grates, to allow them to suck in fluid blocks if empty, or push them out if full.
+			FluidHelper.ForceTransfer forceMode = FluidHelper.ForceTransfer.create(
+				level.getBlockState(destinationPos).getBlock() == ModBlocks.FLUID_GRATE,
+				level.getBlockState(sourcePos).getBlock() == ModBlocks.FLUID_GRATE
+			);
+
+			FluidStack transferredFluid = FluidHelper.transfer(source, destination, drainAmount, forceMode);
 
 			if (!transferredFluid.isEmpty() && (ticksSinceLastAmbientSound >= SOUND_INFO_BY_SPEED[speedSetting].delay))
 			{
@@ -166,8 +173,8 @@ public class FluidPumpBlockEntity extends BlockEntity
 		BlockPos oldSource 		= sourcePos;
 		BlockPos oldDestination = destinationPos;
 
-		sourcePos = ModBlocks.FLUID_PIPE.findConnectedFluidHandlerPos(level, worldPosition, worldPosition.relative(getInputSide()));
-		destinationPos = ModBlocks.FLUID_PIPE.findConnectedFluidHandlerPos(level, worldPosition, worldPosition.relative(getOutputSide()));
+		sourcePos = ModBlocks.FLUID_PIPE.findConnectedBlockPos(level, worldPosition, worldPosition.relative(getInputSide()));
+		destinationPos = ModBlocks.FLUID_PIPE.findConnectedBlockPos(level, worldPosition, worldPosition.relative(getOutputSide()));
 
 		if (sourcePos != oldSource || destinationPos != oldDestination) setChanged();
 	}

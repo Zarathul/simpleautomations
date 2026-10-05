@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"vertical_direction=up": {
+			"model": "simpleautomations:block/fluid_grate"
+		},
+		"vertical_direction=down": {
+			"model": "simpleautomations:block/fluid_grate",
+			"x": 180
+		}
+	}
+}

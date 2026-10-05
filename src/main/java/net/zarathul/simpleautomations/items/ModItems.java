@@ -85,12 +85,13 @@ public final class ModItems
 		.stacksTo(64)
 		.component(ModComponents.FLUID_PIPE, new FluidPipePlacementMode(FluidPipePlacementMode.Mode.SMART)),
 		(item) -> new Object[] { item.get(ModComponents.FLUID_PIPE).mode() },
-		(item) -> new Object[] {}
+		null
 	);
 	public static final BlockItem PUMP = REGISTRAR.register("fluid_pump", ModBlocks.FLUID_PUMP, BlockItem::new, new Item.Properties().stacksTo(64),
-		(item) -> new Object[] {},
+		null,
 		(item) -> new Object[] { FluidPumpBlock.MODIFIED_PUMP_SPEEDS[0], FluidPumpBlock.MODIFIED_PUMP_SPEEDS[1], FluidPumpBlock.MODIFIED_PUMP_SPEEDS[2], FluidPumpBlock.MODIFIED_PUMP_SPEEDS[3] }
 	);
+	public static final BlockItem GRATE = REGISTRAR.register("fluid_grate", ModBlocks.FLUID_GRATE, BlockItem::new, new Item.Properties().stacksTo(64));
 
 	public static void init()
 	{
@@ -106,7 +107,8 @@ public final class ModItems
 			PURE_ALCOHOL_BUCKET,
 			STILL,
 			PIPE,
-			PUMP
+			PUMP,
+			GRATE
 		);
 	}
 

@@ -12,11 +12,15 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.FluidState;
 import net.zarathul.simpleautomations.common.DistillationLevel;
+import net.zarathul.simpleautomations.components.AlcoholDistillationLevel;
+import net.zarathul.simpleautomations.components.ModComponents;
 import net.zarathul.simpleautomations.fluids.ModFluids;
 import net.zarathul.simpleautomations.items.ModItems;
+import net.zarathul.simplemodslib.api.fluid.FluidStack;
+import net.zarathul.simplemodslib.api.fluid.IModFluidBlock;
 import org.jspecify.annotations.Nullable;
 
-public class AlcoholBlock extends LiquidBlock
+public class AlcoholBlock extends LiquidBlock implements IModFluidBlock
 {
 	public static final EnumProperty<DistillationLevel> DISTILLATION_LEVEL = ModFluids.DISTILLATION_LEVEL;
 
@@ -55,5 +59,24 @@ public class AlcoholBlock extends LiquidBlock
 	{
 		super.createBlockStateDefinition(builder);
 		builder.add(DISTILLATION_LEVEL);
+	}
+
+	@Override
+	public FluidStack getFluidStackFromState(FluidState state)
+	{
+		FluidStack stack = (fluid.isSource(state)) ?
+						   new FluidStack(fluid, FluidStack.BUCKET_VOLUME).with(ModComponents.ALCOHOL_DISTILLATION_LEVEL, new AlcoholDistillationLevel(state.getValue(DISTILLATION_LEVEL))) :
+						   FluidStack.empty();
+
+		return stack;
+	}
+
+	@Override
+	public FluidState getStateFromFluidStack(FluidStack stack)
+	{
+		AlcoholDistillationLevel stackLevel = stack.get(ModComponents.ALCOHOL_DISTILLATION_LEVEL);
+		FluidState state = fluid.defaultFluidState().setValue(DISTILLATION_LEVEL, stackLevel.level());
+
+		return state;
 	}
 }

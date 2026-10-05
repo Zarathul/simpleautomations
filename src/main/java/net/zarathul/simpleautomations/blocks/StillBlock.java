@@ -61,6 +61,8 @@ public class StillBlock extends BaseEntityBlock
 	public static final int MIN_PRESSURE = 0;
 	public static final int MAX_PRESSURE = 7;
 
+	public static final int FLUID_CAPACITY = 32 * FluidStack.BUCKET_VOLUME;
+
 	public static final MapCodec<StillBlock> CODEC = simpleCodec(StillBlock::new);
 	public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 	public static final EnumProperty<MultiBlockPartType> PART = EnumProperty.create("part", MultiBlockPartType.class);
@@ -141,9 +143,13 @@ public class StillBlock extends BaseEntityBlock
 		return switch (partType)
 		{
 			case CORE 		 			   -> new StillCoreBlockEntity(worldPosition, blockState);
-			case FLUID_INPUT, FLUID_OUTPUT -> new MultiBlockFluidInventory(worldPosition, blockState, 32 * FluidStack.BUCKET_VOLUME);
 			case ITEMS_INPUT  			   -> new MultiBlockInventory(worldPosition, blockState, 4, 64);
 			case FUEL_INPUT   			   -> new MultiBlockInventory(worldPosition, blockState, 1, 64);
+			case FLUID_INPUT, FLUID_OUTPUT -> {
+				Direction multiBlockFacing = blockState.getValue(FACING);
+				Direction connectorDirection = (partType == MultiBlockPartType.FLUID_INPUT) ? multiBlockFacing.getOpposite() : multiBlockFacing.getClockWise();
+				yield new MultiBlockFluidInventory(worldPosition, blockState, FLUID_CAPACITY, connectorDirection);
+			}
 			default 		  			   -> null;
 		};
 	}
@@ -605,8 +611,7 @@ public class StillBlock extends BaseEntityBlock
 	}
 
 	/**
-	 * Gets a stable index for a block in the multi-block structure independent of it's facing. Meaning,
-	 * for the purpose of the order of indexes the
+	 * Gets a stable index for a block in the multi-block structure independent of it's facing.
 	 * <pre>
 	 *     {@code
 	 *                       NORTH

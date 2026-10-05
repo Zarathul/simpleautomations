@@ -27,6 +27,8 @@ import net.zarathul.simplemodslib.api.block.WrenchableBlock;
 import net.zarathul.simplemodslib.api.fluid.IFluidHandler;
 import org.jspecify.annotations.Nullable;
 
+import java.util.EnumSet;
+
 public class FluidPipeBlock extends WrenchableBlock
 {
 	public static final EnumProperty<PipeConnection> CONNECTION = EnumProperty.create("connection", PipeConnection.class);
@@ -151,8 +153,8 @@ public class FluidPipeBlock extends WrenchableBlock
 		BlockPos toPos = pos.relative(pipeConnection.to());
 
 		boolean oldLineConnected = state.getValue(LINE_CONNECTED);
-		boolean lineConnected = ((findConnectedFluidHandlerPos(level, pos, fromPos) != null) ||
-								 (findConnectedFluidHandlerPos(level, pos, toPos) != null));
+		boolean lineConnected = ((findConnectedBlockPos(level, pos, fromPos) != null) ||
+								 (findConnectedBlockPos(level, pos, toPos) != null));
 
 		if (lineConnected != oldLineConnected) level.setBlockAndUpdate(pos, state.setValue(LINE_CONNECTED, lineConnected));
 	}
@@ -165,12 +167,13 @@ public class FluidPipeBlock extends WrenchableBlock
 		for (int i = 0; i < Direction.values().length; i++)
 		{
 			Direction dir = Direction.BY_ID.apply(i);
+			Direction oppositeDirection = dir.getOpposite();
 			BlockPos candidatePos = pos.offset(dir.getUnitVec3i());
-			BlockState state = level.getBlockState(candidatePos);
+			BlockState candidateState = level.getBlockState(candidatePos);
 
-			if ((state.is(ModBlocks.FLUID_PIPE) && state.getValue(CONNECTION).has(dir.getOpposite())) ||
-				(state.is(ModBlocks.FLUID_PUMP) && ModBlocks.FLUID_PUMP.hasConnectorOnSide(state, dir)) ||
-				(level.getBlockEntity(candidatePos) instanceof IFluidHandler)
+			if ((candidateState.is(ModBlocks.FLUID_PIPE) && candidateState.getValue(CONNECTION).has(oppositeDirection)) ||
+				(candidateState.is(ModBlocks.FLUID_PUMP) && ModBlocks.FLUID_PUMP.hasConnectorOnSide(candidateState, oppositeDirection)) ||
+				(level.getBlockEntity(candidatePos) instanceof IFluidHandler handler && handler.getConnectableSides().contains(oppositeDirection))
 			)
 			{
 				directions[dirIndex++] = dir;
@@ -196,7 +199,7 @@ public class FluidPipeBlock extends WrenchableBlock
 		);
 	}
 
-	public BlockPos findConnectedFluidHandlerPos(Level level, BlockPos origin, BlockPos startingPos)
+	public BlockPos findConnectedBlockPos(Level level, BlockPos origin, BlockPos startingPos)
 	{
 		BlockPos lastPos = origin;
 		BlockPos posToCheck = startingPos;
@@ -214,9 +217,13 @@ public class FluidPipeBlock extends WrenchableBlock
 				lastPos = posToCheck;
 				posToCheck = (toDirection != null) ? posToCheck.relative(toDirection) : null;
 			}
-			else if (level.getBlockEntity(posToCheck) instanceof IFluidHandler)
+			else if (level.getBlockEntity(posToCheck) instanceof IFluidHandler handler)
 			{
-				return posToCheck;
+				EnumSet<Direction> connectorFacings = handler.getConnectableSides();
+				Direction fromDirection = Utils.getRelativeDirection(posToCheck, lastPos);
+
+				if (connectorFacings.contains(fromDirection)) return posToCheck;
+				else break;
 			}
 			else
 			{
